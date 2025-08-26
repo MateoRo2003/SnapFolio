@@ -26,6 +26,40 @@
   --nav-dropdown-hover-color: #ececec; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
 }
 
+
+/* Frontend */
+.html:hover { color: #e44f26; }        /* Naranja HTML */
+.css:hover { color: #264de4; }         /* Azul CSS */
+.javascript:hover { color: #f0db4f; }   /* Amarillo JS */
+.bootstrap:hover { color: #563d7c; }    /* Morado Bootstrap */
+.sass:hover { color: #cd6799; }         /* Rosado Sass */
+.angular:hover { color: #dd1b16; }      /* Rojo Angular */
+.gulp:hover { color: #cf4647; }         /* Rojo Gulp */
+
+/* Backend */
+.php:hover { color: #777bb3; }          /* Azul PHP */
+.laravel:hover { color: #ff2d20; }      /* Rojo Laravel */
+.typescript:hover { color: #007acc; }   /* Azul TypeScript */
+.mysql:hover { color: #00758f; }        /* Azul MySQL */
+.sqlserver:hover { color: #cc2927; }    /* Rojo SQL Server */
+.java:hover { color: #f89820; }         /* Naranja Java */
+.cpp:hover { color: #00599c; }          /* Azul C++ */
+.csharp:hover { color: #68217a; }       /* Morado C# */
+
+/* Herramientas */
+.figma:hover { color: #f24e1e; }        /* Rojo Figma */
+.vscode:hover { color: #0078d7; }       /* Azul VS Code */
+.chatgpt:hover { color: #10a37f; }      /* Verde ChatGPT */
+.gemini:hover { color: #8a2be2; }       /* Púrpura Gemini */
+.canva:hover { color: #00c4cc; }        /* Turquesa Canva */
+.github:hover { color: #333; }          /* Negro GitHub */
+.docker:hover { color: #0db7ed; }       /* Azul Docker */
+.postman:hover { color: #ff6c37; }      /* Naranja Postman */
+.insomnia:hover { color: #0f1e2d; }     /* Azul oscuro Insomnia */
+
+
+
+
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
 
 .light-background {
@@ -1130,6 +1164,18 @@ section,
   margin-top: 2rem;
 }
 
+/* Hover colors por tecnología */
+.tech-icon-container {
+  display: inline-block;
+  transition: transform 0.3s, filter 0.3s;
+}
+
+.tech-icon-container:hover {
+  transform: translateY(-6px);
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+
 
 .stats .stats-wrapper {
   display: flex;
@@ -1295,7 +1341,7 @@ section,
   transform: translateY(-5px);
 }
 
-/* Íconos más compactos */
+
 .tech-icon {
   max-height: 55px;
   transition: transform 0.3s ease, filter 0.3s ease;
@@ -1303,10 +1349,7 @@ section,
   margin: 0 auto;
 }
 
-.tech-icon:hover {
-  transform: scale(1.2);
-  filter: drop-shadow(0 0 8px rgba(0, 200, 255, 0.7));
-}
+
 
 /* Ocultar nombres por defecto */
 .col-4 p,
@@ -1342,6 +1385,26 @@ section,
   filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.6));
 } */
 
+/* Contenedor de la barra */
+.skill-bar {
+  display: flex;
+  gap: 4px; /* separación entre bloques */
+  margin-top: 6px;
+}
+
+/* Cada bloque de la barra */
+.skill-block {
+  flex: 1; /* cada bloque ocupa el mismo ancho */
+  height: 8px; /* altura de la barra */
+  background-color: rgba(255, 255, 255, 0.2); /* color de bloques vacíos */
+  border-radius: 3px;
+  transition: background-color 0.3s ease;
+}
+
+/* Bloques llenos según nivel */
+.skill-block.filled {
+  background-color: #ffffff; /* color de bloques llenos */
+}
 
 
 .tecnology{
