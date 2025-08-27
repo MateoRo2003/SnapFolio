@@ -28,9 +28,12 @@ export default async function handler(req, res) {
       text: `Nombre: ${name}\nEmail: ${email}\nMensaje: ${message}`
     });
 
-    return res.status(200).json({ message: "Correo enviado correctamente!" });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Error enviando el correo." });
+    // IMPORTANTE: devolver JSON
+    return res.status(200).json({ success: true, message: "Correo enviado" });
+
+  } catch (error) {
+    console.error("Error enviando correo:", error);
+    return res.status(500).json({ success: false, error: "Error al enviar el correo" });
   }
-}
+  }
+
