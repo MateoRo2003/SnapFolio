@@ -1,0 +1,22 @@
+{
+  "name": "snapfolio",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "glob": "^10.4.5"
+  },
+  "devDependencies": {
+    "gulp": "^5.0.1",
+    "gulp-webp": "^5.0.0",
+    "sharp": "^0.34.3",
+    "through2": "^4.0.2"
+  }
+}
