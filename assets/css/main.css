@@ -89,7 +89,7 @@ body {
   color: var(--default-color);
   background-color: var(--background-color);
   font-family: var(--default-font);
-  margin-left: 5rem;
+  /* margin-left: 5rem; */
 }
 
 a {
@@ -183,6 +183,17 @@ h6 {
 /*--------------------------------------------------------------
 # Global Header
 --------------------------------------------------------------*/
+
+/* Reducir ancho del header */
+#header {
+  width: 230px; /* ajusta este valor según lo que quieras */
+}
+
+/* Para que el contenido interior se adapte */
+#header .header-container {
+  width: 100%;
+}
+
 .header {
   --background-color: #1b1b1b;
   --contrast-color: #444444;
@@ -1281,6 +1292,63 @@ section,
   }
 }
 
+
+#skills.skills{
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+/* Estilo general de los círculos */
+.skills .background-elements .bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--accent-color), transparent 70%),
+    color-mix(in srgb, var(--accent-color), transparent 95%)
+  );
+  opacity: 0.3;
+}
+
+/* Círculos con animaciones independientes */
+.skills .background-elements .circle-1 {
+  width: 220px;
+  height: 220px;
+  top: 10%;
+  left: 15%;
+  animation: skillsFloat1 12s ease-in-out infinite;
+}
+
+.skills .background-elements .circle-2 {
+  width: 180px;
+  height: 180px;
+  bottom: 2%;
+  right: 10%;
+  animation: skillsFloat2 10s ease-in-out infinite;
+  opacity: 0.25;
+}
+
+
+/* Animaciones independientes */
+@keyframes skillsFloat1 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(20px, -15px) rotate(10deg); }
+  50% { transform: translate(-10px, 10px) rotate(-10deg); }
+  75% { transform: translate(15px, 5px) rotate(5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes skillsFloat2 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-15px, 10px) rotate(-5deg); }
+  50% { transform: translate(10px, -10px) rotate(10deg); }
+  75% { transform: translate(-10px, 5px) rotate(-5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+
 .stats .stats-item {
   background: linear-gradient(135deg, color-mix(in srgb, var(--surface-color), transparent 5%), var(--surface-color));
   border-radius: 15px;
@@ -1665,6 +1733,14 @@ margin-bottom: 2rem;
   animation: resumeFloat2 10s ease-in-out infinite;
   opacity: 0.25;
 }
+.resume .background-elements .circle-3 {
+  width: 130px;
+  height: 130px;
+  bottom: 88%;
+  right: 20%;
+  animation: resumeFloat3 10s ease-in-out infinite;
+  opacity: 0.25;
+}
 
 /* Animaciones independientes */
 @keyframes resumeFloat1 {
@@ -1680,6 +1756,15 @@ margin-bottom: 2rem;
   25% { transform: translate(-15px, 10px) rotate(-5deg); }
   50% { transform: translate(10px, -10px) rotate(10deg); }
   75% { transform: translate(-10px, 5px) rotate(-5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+
+@keyframes resumeFloat3 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(20px, -15px) rotate(10deg); }
+  50% { transform: translate(-10px, 10px) rotate(-10deg); }
+  75% { transform: translate(15px, 5px) rotate(5deg); }
   100% { transform: translate(0, 0) rotate(0deg); }
 }
 
@@ -1849,7 +1934,7 @@ margin-bottom: 2rem;
 .portfolio .background-elements .circle-1 {
   width: 250px;
   height: 250px;
-  top: 0%;
+  top: 2%;
   right: 10%;
   animation: float1 12s ease-in-out infinite;
 }
@@ -2500,6 +2585,61 @@ margin-bottom: 2rem;
 /*--------------------------------------------------------------
 # Contact Section
 --------------------------------------------------------------*/
+
+#contact.contact{
+  position: relative;
+  overflow: hidden;
+}
+
+/* Estilo general de los círculos */
+.contact .background-elements .bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--accent-color), transparent 70%),
+    color-mix(in srgb, var(--accent-color), transparent 95%)
+  );
+  opacity: 0.3;
+}
+
+/* Círculos con animaciones independientes */
+.contact .background-elements .circle-1 {
+  width: 220px;
+  height: 220px;
+  top: 10%;
+  left: 15%;
+  animation: contactFloat1 12s ease-in-out infinite;
+}
+
+.contact .background-elements .circle-2 {
+  width: 180px;
+  height: 180px;
+  bottom: -14%;
+  right: 10%;
+  animation: contactFloat2 10s ease-in-out infinite;
+  opacity: 0.25;
+}
+
+/* Animaciones independientes */
+@keyframes contactFloat1 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(20px, -15px) rotate(10deg); }
+  50% { transform: translate(-10px, 10px) rotate(-10deg); }
+  75% { transform: translate(15px, 5px) rotate(5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes contactFloat2 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-15px, 10px) rotate(-5deg); }
+  50% { transform: translate(10px, -10px) rotate(10deg); }
+  75% { transform: translate(-10px, 5px) rotate(-5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+
+
 
 .contact-form textarea {
   resize: none;
