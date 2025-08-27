@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "glob": "^10.4.5"
+    "glob": "^10.4.5",
+    "nodemailer": "^7.0.5"
   },
   "devDependencies": {
     "gulp": "^5.0.1",

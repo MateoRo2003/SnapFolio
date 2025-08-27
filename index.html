@@ -1463,7 +1463,7 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
-  <script type="module">
+  <!-- <script type="module">
     // Importar Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -1525,7 +1525,61 @@
         });
       }
     });
-  </script>
+  </script> -->
+<script type="module">
+  // import Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js";
+
+  const form = document.getElementById("contactForm");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Mostrar alerta de espera
+    Swal.fire({
+      title: 'Enviando correo...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading()
+      }
+    });
+
+    // Capturar datos del formulario
+    const formData = {
+      name: form.name.value,
+      email: form.email.value,
+      subject: form.subject.value,
+      message: form.message.value
+    };
+
+    try {
+      // Llamar a la función serverless de Vercel
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Mensaje enviado!',
+          text: data.message || 'Tu mensaje se envió correctamente.',
+        });
+        form.reset();
+      } else {
+        throw new Error(data.error || 'Ocurrió un error al enviar el mensaje.');
+      }
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.message
+      });
+    }
+  });
+</script>
 
 
 
