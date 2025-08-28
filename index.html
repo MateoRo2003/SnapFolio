@@ -23,6 +23,8 @@
   <!-- Bootstrap JS Bundle (incluye Popper) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -177,8 +179,8 @@
                   <div class="stat-label">Años de Experiencia</div>
                 </div>
                 <div class="stat-item">
-                  <div class="stat-number">+2</div>
-                  <div class="stat-label"></div>
+                  <div class="stat-number">4+</div>
+                  <div class="stat-label">Proyectos en Línea</div>
                 </div>
               </div>
 
@@ -580,9 +582,8 @@
           <div class="col-lg-4">
             <div class="resume-side" data-aos="fade-right" data-aos-delay="100">
               <div class="profile-img mb-4">
-                <img src="assets/img/profile/2" alt="Profile" class="img-fluid rounded">
+                <canvas id="avatarCanvas"></canvas>
               </div>
-
               <h3>Resumen Profesional</h3>
               <p>Desarrollador web junior con experiencia en proyectos freelance y académicos, enfocado en UX/UI y
                 tecnologías modernas.</p>
@@ -770,6 +771,84 @@
       </div>
 
     </section><!-- /Resume Section -->
+
+
+
+    <script type="module">
+      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.0/build/three.module.js';
+      import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.150.0/examples/jsm/loaders/GLTFLoader.js';
+
+      const canvas = document.getElementById('avatarCanvas');
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(35, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+      camera.position.z = 2.5;
+
+      // Luces
+      const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+      scene.add(hemiLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+      dirLight.position.set(2, 2, 5);
+      scene.add(dirLight);
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(ambientLight);
+
+      // Cargar avatar GLB
+      const loader = new GLTFLoader();
+      loader.load(
+        './assets/img/profile/avatar.glb',
+        (gltf) => {
+          const model = gltf.scene;
+          model.scale.set(1, 1, 1);
+          model.position.set(0, -1, 0);
+          scene.add(model);
+
+          // Movimiento del avatar con el mouse
+          document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 2;
+            const y = (e.clientY / window.innerHeight - 0.5) * 2;
+            model.rotation.y = x * 0.5;
+            model.rotation.x = -y * 0.3;
+          });
+        },
+        undefined,
+        (error) => console.error('Error cargando el GLB:', error)
+      );
+
+      // Animación
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Responsivo
+      function onWindowResize() {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height, false);
+      }
+
+      window.addEventListener('resize', onWindowResize);
+      onWindowResize();
+    </script>
+
+
+    <style>
+      #avatarCanvas {
+        width: 100%;
+        height: 300px;
+        /* Ajusta según tu diseño */
+        display: block;
+      }
+    </style>
 
     <!-- Portfolio -->
     <section id="portfolio" class="portfolio section">
@@ -1421,7 +1500,8 @@
 
     <div class="container">
       <div class="copyright text-center ">
-        <p>© <span>Copyright-2025</span> <strong class="px-1 sitename">Mateo Rojas</strong> <span>Todos los derechos reservados</span>
+        <p>© <span>Copyright-2025</span> <strong class="px-1 sitename">Mateo Rojas</strong> <span>Todos los derechos
+            reservados</span>
         </p>
       </div>
       <div class="credits">
@@ -1520,60 +1600,60 @@
       }
     });
   </script> -->
-<script type="module">
-  // import Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js";
+  <script type="module">
+    // import Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js";
 
-  const form = document.getElementById("contactForm");
+    const form = document.getElementById("contactForm");
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    // Mostrar alerta de espera
-    Swal.fire({
-      title: 'Enviando correo...',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading()
+      // Mostrar alerta de espera
+      Swal.fire({
+        title: 'Enviando correo...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading()
+        }
+      });
+
+      // Capturar datos del formulario
+      const formData = {
+        name: form.name.value,
+        email: form.email.value,
+        subject: form.subject.value,
+        message: form.message.value
+      };
+
+      try {
+        // Llamar a la función serverless de Vercel
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Mensaje enviado!',
+            text: data.message || 'Tu mensaje se envió correctamente.',
+          });
+          form.reset();
+        } else {
+          throw new Error(data.error || 'Ocurrió un error al enviar el mensaje.');
+        }
+      } catch (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: err.message
+        });
       }
     });
-
-    // Capturar datos del formulario
-    const formData = {
-      name: form.name.value,
-      email: form.email.value,
-      subject: form.subject.value,
-      message: form.message.value
-    };
-
-    try {
-      // Llamar a la función serverless de Vercel
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        Swal.fire({
-          icon: 'success',
-          title: '¡Mensaje enviado!',
-          text: data.message || 'Tu mensaje se envió correctamente.',
-        });
-        form.reset();
-      } else {
-        throw new Error(data.error || 'Ocurrió un error al enviar el mensaje.');
-      }
-    } catch (err) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err.message
-      });
-    }
-  });
-</script>
+  </script>
 
 
 
