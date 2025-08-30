@@ -169,14 +169,14 @@ h6 {
 @media (min-width: 768px) {
     .col-md-2 {
         flex: 0 0 auto;
-        width: 10% !important;
+        width: 9% !important;
     }
 }
 
 @media (min-width: 768px) {
     .col-md-3 {
         flex: 0 0 auto;
-        width: 22%;
+        width: 21%;
     }
 }
 
@@ -912,6 +912,7 @@ section,
   inset: 0;
   overflow: hidden;
   z-index: 0;
+  pointer-events: none; 
 }
 
 /* Estilo general del círculo */
@@ -1204,7 +1205,7 @@ section,
 .about .cta-section .btn.btn-primary:hover {
   background-color: color-mix(in srgb, var(--accent-color), black 15%);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px color-mix(in srgb, var(--accent-color), transparent 60%);
+ /* // box-shadow: 0 10px 30px color-mix(in srgb, var(--accent-color), transparent 60%); */
 }
 
 .about .cta-section .btn.btn-outline {
@@ -1489,8 +1490,8 @@ section,
 
 /* Apretar grillas */
 .row.g-4 {
-  --bs-gutter-x: 1rem;
-  --bs-gutter-y: 1rem;
+  --bs-gutter-x: -1rem;
+  --bs-gutter-y: -1rem;
 }
 
 
