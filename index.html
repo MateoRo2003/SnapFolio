@@ -26,6 +26,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/CustomEase.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomWiggle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -102,6 +104,14 @@
               <div class="hero-visual">
                 <div class="profile-container">
                   <div class="profile-background"></div>
+                  <div id="lamp">
+                    <div class="cable"></div>
+                    <div class="block dragable"></div>
+                    <div class="shade dragable"></div>
+                    <div class="bulb_wrapper">
+                      <div class="bulb dragable"></div>
+                    </div>
+                  </div>
                   <svg viewBox="0 10 211.73 180" stroke-linecap="round" stroke-linejoin="round">
                     <defs>
                       <clipPath id="background-clip">
@@ -109,6 +119,12 @@
                           d="M39 153.73s31.57 19.71 77.26 15.21 90.18-37.23 90.36-72.33-8.82-80.28-33.59-86.29C136.84-6.57 114.13-5.82 88-2.82S34.73 11.45 16.71 48.24C-1.5 66.64-4.88 125.2 39 153.73z"
                           fill="none" />
                       </clipPath>
+                      <g class="hair-back"></g>
+                      <g class="glasses"></g>
+                      <g class="dizzy"></g>
+                      <g class="oh"></g>
+                      <g class="dizzy-1"></g>
+                      <g class="dizzy-2"></g>
 
                       <linearGradient id="linear-gradient" x1="102.94" y1="154.47" x2="102.94" y2="36.93"
                         gradientUnits="userSpaceOnUse">
@@ -162,6 +178,7 @@
                               fill="#b5aa9a" />
                           </g>
                           <g class="face">
+
                             <rect x="73.99" y="48.26" width="61.54" height="80.49" rx="24"
                               transform="rotate(180 104.76 88.5)" fill="#ede3d1" />
                             <g class="inner-face">
@@ -169,7 +186,7 @@
                                 stroke-width="1.5" />
                               <path class="eyebrow-left" d="M97.12 79h-6" fill="none" stroke="#b5aa9a"
                                 stroke-width="1.5" />
-                              <path class="mouth" d="M97 107.52h14" fill="none" stroke="#b5aa9a" stroke-width="1.04" />
+                             <path class="mouth" d="M95 107 C100 108, 110 108, 115 107" fill="none" stroke="#b5aa9a" stroke-width="1.2" />
                               <g class="eyes">
                                 <path class="eye-left eye"
                                   d="M89.48 87.37c-.07 1.2 1.25 2.2 2.94 2.2s3.1-1.1 3.16-2.1-1.25-2.2-2.94-2.2-3.1 1.1-3.16 2.1z"
@@ -204,14 +221,11 @@
       </div>
 
     </section><!-- /Hero Section -->
-    <!-- <style>
-   svg {
-   display: flex;
-  justify-content: center; /* centra horizontal */
-  align-items: center;     /* centra vertical */
-  height: 100vh; 
-    }
-</style> -->
+
+
+
+
+
     <!-- About Section -->
     <section id="about" class="about section">
       <div class="background-elements">
@@ -300,8 +314,7 @@
               </div>
             </div>
             <div class="cta-section">
-              <a href="assets/files/Mateo Rojas.pdf" class="btn btn-primary"
-                download="Mateo_Rojas_CV.pdf">
+              <a href="assets/files/Mateo Rojas.pdf" class="btn btn-primary" download="Mateo_Rojas_CV.pdf">
                 <i class="bi bi-download"></i>
                 Descargar CV
               </a>
@@ -674,100 +687,10 @@
           <div class="col-lg-4">
             <div class="resume-side" data-aos="fade-right" data-aos-delay="100">
               <div class="profile-img mb-4">
-                <svg viewBox="0 10 211.73 180" stroke-linecap="round" stroke-linejoin="round">
-                  <defs>
-                    <clipPath id="background-clip">
-                      <path
-                        d="M39 153.73s31.57 19.71 77.26 15.21 90.18-37.23 90.36-72.33-8.82-80.28-33.59-86.29C136.84-6.57 114.13-5.82 88-2.82S34.73 11.45 16.71 48.24C-1.5 66.64-4.88 125.2 39 153.73z"
-                        fill="none" />
-                    </clipPath>
-
-                    <linearGradient id="linear-gradient" x1="102.94" y1="154.47" x2="102.94" y2="36.93"
-                      gradientUnits="userSpaceOnUse">
-                      <stop offset="0" stop-color="#fff5cc" />
-                      <stop offset="0.01" stop-color="#faf0c8" />
-                      <stop offset="0.19" stop-color="#c2b599" />
-                      <stop offset="0.35" stop-color="#998977" />
-                      <stop offset="0.47" stop-color="#806f62" />
-                      <stop offset="0.54" stop-color="#77655a" />
-                      <stop offset="0.6" stop-color="#77655a" />
-                      <stop offset="1" stop-color="#77655a" />
-                    </linearGradient>
-                  </defs>
-                  <path class="bg"
-                    d="M39 153.73s31.57 19.71 77.26 15.21 90.18-37.23 90.36-72.33-10.51-57-35.28-63-50.22 17-76.31 20-60.12-15.88-78.32 2.51S-4.88 125.2 39 153.73z"
-                    fill="#252525" />
-                  <g clip-path="url(#background-clip)">
-                    <g class="me" opacity="0">
-                      <g class="body">
-                        <!-- Cuello -->
-                        <path class="neck"
-                          d="M114.26 143.16v-14a9.22 9.22 0 10-18.43 0v14c-15.27 2.84-24.74 15.08-24.74 27.33H139c0-12.24-9.5-24.49-24.74-27.33z"
-                          fill="#ede3d1" />
-
-                        <!-- Ropa / Torso -->
-                        <path class="top"
-                          d="M105.61 167c-30.17 0-25.36-40-25.36 15.84h25.35l25-2.14c-.05-55.79 5.17-13.7-24.99-13.7z"
-                          fill="#fff" stroke="#404040" stroke-width=".5" />
-
-                        <!-- Hombros -->
-                        <path class="shoulder" d="M95.82 142.87c-16 1.84-29.37 19.5-29.37 40h29.37z" fill="#404040" />
-                        <path class="shoulder" d="M114.23 142.67c15.76 1.85 29 19.6 29 40.2h-29z" fill="#404040" />
-                      </g>
-
-                      <path class="shadow" d="M95.82 122.36h18.41v14.31s-10.5 5.54-18.41 0z" fill="#efceb9" />
-                      <g class="head-male">
-                        <g class="ear-left ear">
-                          <path
-                            d="M63.52 100.5A8.21 8.21 0 0072 108.5a8.36 8.36 0 008.51-8.1 8.21 8.21 0 00-8.51-8.06 8.36 8.36 0 00-8.48 8.16z"
-                            fill="#ede3d1" />
-                          <path
-                            d="M68.54 99.8a17 17 0 014.14.41c1.07.31 1.94 1 3 1.31a.39.39 0 00.43-.57c-1.15-2.38-5.49-1.86-7.58-1.67a.26.26 0 000 .52z"
-                            fill="#b5aa9a" />
-                        </g>
-                        <g class="ear-right ear">
-                          <path
-                            d="M144.37 100.5a8.2 8.2 0 01-8.37 8.06 8.35 8.35 0 01-8.51-8.1 8.21 8.21 0 018.42-8.06 8.35 8.35 0 018.46 8.1z"
-                            fill="#ede3d1" />
-                          <path
-                            d="M139.6 99.8c-2.1-.19-6.43-.72-7.59 1.67a.39.39 0 00.44.57c1.07-.26 1.92-1 3-1.31a17.51 17.51 0 014.15-.41.26.26 0 000-.52z"
-                            fill="#b5aa9a" />
-                        </g>
-                        <g class="face">
-                          <rect x="73.99" y="48.26" width="61.54" height="80.49" rx="24"
-                            transform="rotate(180 104.76 88.5)" fill="#ede3d1" />
-                          <g class="inner-face">
-                            <path class="eyebrow-right" d="M120.73 79h-6" fill="none" stroke="#b5aa9a"
-                              stroke-width="1.5" />
-                            <path class="eyebrow-left" d="M97.12 79h-6" fill="none" stroke="#b5aa9a"
-                              stroke-width="1.5" />
-                            <path class="mouth" d="M97 107.52h14" fill="none" stroke="#b5aa9a" stroke-width="1.04" />
-                            <g class="eyes">
-                              <path class="eye-left eye"
-                                d="M89.48 87.37c-.07 1.2 1.25 2.2 2.94 2.2s3.1-1.1 3.16-2.1-1.25-2.2-2.94-2.2-3.1 1.1-3.16 2.1z"
-                                fill="#2b343b" />
-                              <path class="eye-right eye"
-                                d="M113.67 87.37c-.07 1.2 1.25 2.2 2.94 2.2s3.1-1.1 3.16-2.1-1.25-2.2-2.94-2.2-3.1 1.1-3.16 2.1z"
-                                fill="#2b343b" />
-                            </g>
-                            <path class="nose" d="M102.39 98.13s3.5 1.8 6 0" fill="none" stroke="#e0d5c1" />
-                          </g>
-                          <path class="hair-front" d="M130,50
-                              c-12,-6 -10,-8 -33,-8
-                              s-22,8 -25,18
-                              s2,20 6,22
-                              s14,-6 27,-6
-                              s22,2 30,-10
-                              s6,-18 2,-16
-                              z" fill="#77655a" />
-
-
-                        </g>
-                      </g>
-
-                    </g>
-                  </g>
-                </svg>
+                <div class="profile-img mb-4">
+                  <img src="assets/img/profile/mateo2.webp" alt="Profile"
+                    class="img-fluid rounded">
+                </div>
               </div>
 
               <h3>Resumen Profesional</h3>
@@ -1285,8 +1208,8 @@
                       <div class="portfolio-links">
                         <a href="assets/img/portfolio/SITBarber.webp"
                           class="glightbox btn btn-sm btn-outline-light me-1"><i class="bi bi-plus-lg"></i> Imagen</a>
-                        <a href="https://github.com/MateoRo2003/AppSalon_PHP_MVC_JS_SASS_FIN"
-                          target="_blank" class="btn btn-sm btn-light" title="Detalles">Ver Repositorio <i
+                        <a href="https://github.com/MateoRo2003/AppSalon_PHP_MVC_JS_SASS_FIN" target="_blank"
+                          class="btn btn-sm btn-light" title="Detalles">Ver Repositorio <i
                             class="bi bi-arrow-right"></i></a>
                       </div>
                     </div>
@@ -1377,8 +1300,8 @@
                       <div class="portfolio-links">
                         <a href="assets/img/portfolio/DevWebCamp.webp"
                           class="glightbox btn btn-sm btn-outline-light me-1"><i class="bi bi-plus-lg"></i> Imagen</a>
-                        <a href="https://github.com/MateoRo2003/DevWebCamp" class="btn btn-sm btn-light"
-                           target="_blank" title="Detalles">Ver Repositorio <i class="bi bi-arrow-right"></i></a>
+                        <a href="https://github.com/MateoRo2003/DevWebCamp" class="btn btn-sm btn-light" target="_blank"
+                          title="Detalles">Ver Repositorio <i class="bi bi-arrow-right"></i></a>
                       </div>
                     </div>
                   </div>
@@ -1423,7 +1346,7 @@
                         <a href="assets/img/portfolio/bienesraices.webp"
                           class="glightbox btn btn-sm btn-outline-light me-1"><i class="bi bi-plus-lg"></i> Imagen</a>
                         <a href="https://github.com/MateoRo2003/bienesRaicesMVC" class="btn btn-sm btn-light"
-                           target="_blank" title="Detalles">Ver Repositorio <i class="bi bi-arrow-right"></i></a>
+                          target="_blank" title="Detalles">Ver Repositorio <i class="bi bi-arrow-right"></i></a>
                       </div>
                     </div>
                   </div>
@@ -1476,8 +1399,8 @@
                       <div class="portfolio-links">
                         <a href="assets/img/portfolio/EnDesarrollo.webp"
                           class="glightbox btn btn-sm btn-outline-light me-1"><i class="bi bi-plus-lg"></i> Imagen</a>
-                        <a href="#" class="btn btn-sm btn-light" title="Detalles" target="_blank">Repositorio En Proceso<i
-                            class="bi bi-arrow-right"></i></a>
+                        <a href="#" class="btn btn-sm btn-light" title="Detalles" target="_blank">Repositorio En
+                          Proceso<i class="bi bi-arrow-right"></i></a>
                       </div>
                     </div>
                   </div>
@@ -2122,6 +2045,121 @@
     updateWindowSize();
     window.addEventListener("resize", updateWindowSize);
 
+  </script>
+
+
+
+
+  <script>
+    $(document).ready(function () {
+      var speed, swing, rotation = 0,
+        time, gravity = 1,
+        length = 250,
+        startAngle = 0;
+
+      function startLampSwing() {
+        time = 0;
+        speed = 1;
+        lampSwing();
+      }
+
+      function stopLampSwing() {
+        clearTimeout(swing);
+        $("#lamp").removeClass("swinging").css({
+          "-webkit-transform": "rotate(" + rotation + "deg)"
+        });
+      }
+
+      function lampSwing() {
+        time += 1;
+        if (Math.abs(startAngle) > 0.5) {
+          rotation = Math.cos(Math.sqrt(gravity / length) * time) * startAngle;
+          $("#lamp").css({
+            "-webkit-transform": "rotate(" + rotation + "deg)"
+          });
+
+          startAngle *= 0.996;
+          swing = setTimeout(function () {
+            lampSwing()
+          }, 1000 / 60);
+        } else {
+          rotation = 0;
+          $("#lamp").css({
+            "-webkit-transform": "rotate(" + rotation + "deg)"
+          });
+        }
+      }
+
+      var mousedown = false,
+        startDegree;
+      $("#lamp .dragable").mousedown(function (e) {
+        $("body, .dragable").addClass("dragging");
+
+        var _deltaX = window.innerWidth / 2 - e.pageX;
+        var _deltaY = 0 - e.pageY;
+        var _degree = Math.atan(_deltaX / _deltaY) * (180 / Math.PI);
+        startDegree = rotation;
+
+        mousedown = {
+          "start": {
+            "x": e.pageX,
+            "y": e.pageY,
+            "deltaX": _deltaX,
+            "deltaY": _deltaY,
+            "degree": _degree
+          },
+          "event": e
+        };
+        stopLampSwing();
+        return false;
+      });
+      $(document).mousemove(function (e) {
+        if (mousedown != false) {
+          var deltaX = window.innerWidth / 2 - e.pageX;
+          var deltaY = 0 - e.pageY;
+          var degree = Math.atan(deltaX / deltaY) * (180 / Math.PI);
+          console.log(degree);
+
+          degree = Math.min(Math.max(startDegree + (mousedown.start.degree - degree), -75), 75);
+          $("#lamp").css({
+            "-webkit-transform": "rotate(" + degree + "deg)"
+          });
+          startAngle = degree;
+        }
+      });
+      $(document).mouseup(function () {
+        if (mousedown != false) {
+          $("body, .dragable").removeClass("dragging");
+
+          mousedown = false;
+          startLampSwing();
+
+          $(".arrow").fadeOut(400);
+          $("#info").fadeOut(600);
+        }
+      });
+
+      function flicker() {
+        toggleLamp();
+        setTimeout(function () {
+          toggleLamp();
+        }, Math.round(Math.random() * 150 + 100));
+
+        setTimeout(function () {
+          flicker();
+        }, Math.round(Math.random() * 4000 + 100));
+      }
+      flicker();
+
+      function toggleLamp() {
+        if ($("#lamp").hasClass("off")) {
+          $("#lamp").removeClass("off");
+        } else {
+          $("#lamp").addClass("off");
+        }
+      }
+
+    });
   </script>
 
 </body>

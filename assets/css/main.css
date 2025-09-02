@@ -60,6 +60,94 @@
 .insomnia:hover { color: #678cb2; }     /* Azul oscuro Insomnia */
 
 
+/* body {
+  margin: 0px;
+  background: #666;
+  overflow: hidden;
+} */
+
+.dragable {
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.dragging {
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+
+#lamp {
+  position: absolute;
+  top: -310px;
+  left: 50%;
+  margin-left: -65px;
+  width: 130px;
+  -webkit-transform-origin: 65px 0px;
+  -webkit-transform: rotate(0deg);
+}
+
+#lamp.swinging {
+  -webkit-transition: all 0.6s ease-in-out;
+}
+
+#lamp .cable {
+  width: 6px;
+  height: 180px;
+  margin: auto;
+  background: #2e2e2e;
+}
+
+#lamp .block {
+  width: 40px;
+  height: 40px;
+  margin: auto;
+  margin-bottom: -10px;
+  background: #333;
+}
+
+#lamp .shade {
+  width: 130px;
+  height: 65px;
+  background: #333;
+  -webkit-border-top-right-radius: 65px;
+  -webkit-border-top-left-radius: 65px;
+  -moz-border-radius-topright: 65px;
+  -moz-border-radius-topleft: 65px;
+  border-top-right-radius: 65px;
+  border-top-left-radius: 65px;
+}
+
+#lamp .bulb_wrapper {
+  position: absolute;
+  width: 500px;
+  height: 250px;
+  overflow: hidden;
+  margin-left: -185px;
+  z-index: -1;
+}
+
+#lamp .bulb_wrapper .bulb {
+  position: absolute;
+  z-index: -1;
+  width: 44px;
+  height: 22px;
+  margin-left: 228px;
+  background: #F1ECB9;
+  -webkit-border-bottom-right-radius: 22px;
+  -webkit-border-bottom-left-radius: 22px;
+  -moz-border-radius-bottomright: 22px;
+  -moz-border-radius-bottomleft: 22px;
+  border-bottom-right-radius: 22px;
+  border-bottom-left-radius: 22px;
+  box-shadow: 0px 0px 200px 20px #F1ECB9;
+}
+
+#lamp.off .bulb_wrapper .bulb {
+  background: #C2C0B2;
+  box-shadow: none;
+}
 
 
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
@@ -1779,8 +1867,8 @@ margin-bottom: 2rem;
 }
 
 .resume .resume-side .profile-img img {
-  width: 200px;
-  height: 200px;
+  width: 205px;
+  height: 255px;
   object-fit: cover;
   border: 5px solid color-mix(in srgb, var(--accent-color), transparent 85%);
   border-radius: 50%;
