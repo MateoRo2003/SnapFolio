@@ -958,7 +958,42 @@ section,
   .hero .hero-visual .profile-container {
     width: 300px;
     height: 300px;
-  }
+    margin-top: 17rem; 
+   }
+
+#lamp{
+  top: -243px;
+  left: 53%;
+  margin-left: -65px;
+  width: 130px;
+}
+
+#lamp .cable {
+  width: 4px;
+  height: 115px;
+  margin-left:3.5rem;
+}
+
+#lamp .shade {
+  width: 112px;
+  height: 58px;
+}
+
+#lamp .block {
+  width: 36px;
+  height: 40px;
+  margin-left: 2.5rem;
+  
+}
+
+#lamp .bulb_wrapper .bulb {
+  position: absolute;
+  z-index: -1;
+  width: 40px;
+  height: 20px;
+  margin-left: 220px;
+}
+
 
   .hero .background-elements .bg-circle.circle-1 {
     width: 200px;
