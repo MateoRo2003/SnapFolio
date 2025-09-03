@@ -223,9 +223,6 @@
     </section><!-- /Hero Section -->
 
 
-
-
-
     <!-- About Section -->
     <section id="about" class="about section">
       <div class="background-elements">
@@ -2050,117 +2047,136 @@
 
 
 
-  <script>
-    $(document).ready(function () {
-      var speed, swing, rotation = 0,
-        time, gravity = 1,
-        length = 250,
-        startAngle = 20;
+<script>
+$(document).ready(function() {
+  var speed, swing, rotation = 0,
+      time, gravity = 1,
+      length = 250,
+      startAngle = 15; // Empujón inicial hacia arriba
 
-      function startLampSwing() {
-        time = 0;
-        speed = 1;
-        lampSwing();
-      }
+  // Función para iniciar el balanceo
+  function startLampSwing() {
+    time = 0;
+    speed = 1;
+    lampSwing();
+  }
 
-      function stopLampSwing() {
-        clearTimeout(swing);
-        $("#lamp").removeClass("swinging").css({
-          "-webkit-transform": "rotate(" + rotation + "deg)"
-        });
-      }
-
-      function lampSwing() {
-        time += 1;
-        if (Math.abs(startAngle) > 0.5) {
-          rotation = Math.cos(Math.sqrt(gravity / length) * time) * startAngle;
-          $("#lamp").css({
-            "-webkit-transform": "rotate(" + rotation + "deg)"
-          });
-
-          startAngle *= 0.996;
-          swing = setTimeout(function () {
-            lampSwing()
-          }, 1000 / 60);
-        } else {
-          rotation = 0;
-          $("#lamp").css({
-            "-webkit-transform": "rotate(" + rotation + "deg)"
-          });
-        }
-      }
-
-      var mousedown = false,
-        startDegree;
-      $("#lamp .dragable").mousedown(function (e) {
-        $("body, .dragable").addClass("dragging");
-
-        var _deltaX = window.innerWidth / 2 - e.pageX;
-        var _deltaY = 0 - e.pageY;
-        var _degree = Math.atan(_deltaX / _deltaY) * (180 / Math.PI);
-        startDegree = rotation;
-
-        mousedown = {
-          "start": {
-            "x": e.pageX,
-            "y": e.pageY,
-            "deltaX": _deltaX,
-            "deltaY": _deltaY,
-            "degree": _degree
-          },
-          "event": e
-        };
-        stopLampSwing();
-        return false;
-      });
-      $(document).mousemove(function (e) {
-        if (mousedown != false) {
-          var deltaX = window.innerWidth / 2 - e.pageX;
-          var deltaY = 0 - e.pageY;
-          var degree = Math.atan(deltaX / deltaY) * (180 / Math.PI);
-          console.log(degree);
-
-          degree = Math.min(Math.max(startDegree + (mousedown.start.degree - degree), -75), 75);
-          $("#lamp").css({
-            "-webkit-transform": "rotate(" + degree + "deg)"
-          });
-          startAngle = degree;
-        }
-      });
-      $(document).mouseup(function () {
-        if (mousedown != false) {
-          $("body, .dragable").removeClass("dragging");
-
-          mousedown = false;
-          startLampSwing();
-
-          $(".arrow").fadeOut(400);
-          $("#info").fadeOut(600);
-        }
-      });
-
-      function flicker() {
-        toggleLamp();
-        setTimeout(function () {
-          toggleLamp();
-        }, Math.round(Math.random() * 150 + 100));
-
-        setTimeout(function () {
-          flicker();
-        }, Math.round(Math.random() * 4000 + 100));
-      }
-      flicker();
-
-      function toggleLamp() {
-        if ($("#lamp").hasClass("off")) {
-          $("#lamp").removeClass("off");
-        } else {
-          $("#lamp").addClass("off");
-        }
-      }
-
+  // Función para detener el balanceo
+  function stopLampSwing() {
+    clearTimeout(swing);
+    $("#lamp").removeClass("swinging").css({
+      "-webkit-transform": "rotate(" + rotation + "deg)"
     });
-  </script>
+  }
+
+  // Función que realiza el balanceo
+  function lampSwing() {
+    time += 1;
+    if (Math.abs(startAngle) > 0.5) {
+      rotation = Math.cos(Math.sqrt(gravity / length) * time) * startAngle;
+      $("#lamp").css({
+        "-webkit-transform": "rotate(" + rotation + "deg)"
+      });
+      startAngle *= 0.996; // Amortiguación
+      swing = setTimeout(function() {
+        lampSwing()
+      }, 1000 / 60);
+    } else {
+      rotation = 0;
+      $("#lamp").css({
+        "-webkit-transform": "rotate(" + rotation + "deg)"
+      });
+    }
+  }
+
+  // --- Simula el arrastre inicial hacia arriba y bajada ---
+  function simulateInitialDrag() {
+    var peak = startAngle;
+    var step = 1;
+    var current = 0;
+    var down = false;
+
+    var simulate = setInterval(function() {
+      if (!down) {
+        rotation = peak - step;
+        step += 1;
+        if (rotation <= 0) down = true;
+      } else {
+        clearInterval(simulate);
+        startLampSwing(); // Inicia el balanceo real
+      }
+      $("#lamp").css({"-webkit-transform": "rotate(" + rotation + "deg)"});
+    }, 16); // ~60fps
+  }
+
+  simulateInitialDrag(); // Llamada al cargar
+
+  // Drag & Drop manual
+  var mousedown = false,
+      startDegree;
+  $("#lamp .dragable").mousedown(function(e) {
+    $("body, .dragable").addClass("dragging");
+
+    var _deltaX = window.innerWidth / 2 - e.pageX;
+    var _deltaY = 0 - e.pageY;
+    var _degree = Math.atan(_deltaX / _deltaY) * (180 / Math.PI);
+    startDegree = rotation;
+
+    mousedown = {
+      "start": {
+        "x": e.pageX,
+        "y": e.pageY,
+        "deltaX": _deltaX,
+        "deltaY": _deltaY,
+        "degree": _degree
+      },
+      "event": e
+    };
+    stopLampSwing();
+    return false;
+  });
+
+  $(document).mousemove(function(e) {
+    if (mousedown != false) {
+      var deltaX = window.innerWidth / 2 - e.pageX;
+      var deltaY = 0 - e.pageY;
+      var degree = Math.atan(deltaX / deltaY) * (180 / Math.PI);
+
+      degree = Math.min(Math.max(startDegree + (mousedown.start.degree - degree), -75), 75);
+      $("#lamp").css({"-webkit-transform": "rotate(" + degree + "deg)"});
+      startAngle = degree;
+    }
+  });
+
+  $(document).mouseup(function() {
+    if (mousedown != false) {
+      $("body, .dragable").removeClass("dragging");
+      mousedown = false;
+      startLampSwing();
+
+      $(".arrow").fadeOut(400);
+      $("#info").fadeOut(600);
+    }
+  });
+
+  // Flicker de la lámpara
+  function flicker() {
+    toggleLamp();
+    setTimeout(function() { toggleLamp(); }, Math.round(Math.random() * 150 + 100));
+    setTimeout(function() { flicker(); }, Math.round(Math.random() * 4000 + 100));
+  }
+  flicker();
+
+  function toggleLamp() {
+    if ($("#lamp").hasClass("off")) {
+      $("#lamp").removeClass("off");
+    } else {
+      $("#lamp").addClass("off");
+    }
+  }
+
+});
+</script>
 
 </body>
 
