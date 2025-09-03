@@ -2065,7 +2065,8 @@ $(document).ready(function() {
   function stopLampSwing() {
     clearTimeout(swing);
     $("#lamp").removeClass("swinging").css({
-      "-webkit-transform": "rotate(" + rotation + "deg)"
+      "-webkit-transform": "rotate(" + rotation + "deg)",
+      "transform": "rotate(" + rotation + "deg)"
     });
   }
 
@@ -2075,16 +2076,18 @@ $(document).ready(function() {
     if (Math.abs(startAngle) > 0.5) {
       rotation = Math.cos(Math.sqrt(gravity / length) * time) * startAngle;
       $("#lamp").css({
-        "-webkit-transform": "rotate(" + rotation + "deg)"
+        "-webkit-transform": "rotate(" + rotation + "deg)",
+        "transform": "rotate(" + rotation + "deg)"
       });
       startAngle *= 0.996; // Amortiguación
       swing = setTimeout(function() {
-        lampSwing()
+        lampSwing();
       }, 1000 / 60);
     } else {
       rotation = 0;
       $("#lamp").css({
-        "-webkit-transform": "rotate(" + rotation + "deg)"
+        "-webkit-transform": "rotate(" + rotation + "deg)",
+        "transform": "rotate(" + rotation + "deg)"
       });
     }
   }
@@ -2105,27 +2108,34 @@ $(document).ready(function() {
         clearInterval(simulate);
         startLampSwing(); // Inicia el balanceo real
       }
-      $("#lamp").css({"-webkit-transform": "rotate(" + rotation + "deg)"});
+      $("#lamp").css({
+        "-webkit-transform": "rotate(" + rotation + "deg)",
+        "transform": "rotate(" + rotation + "deg)"
+      });
     }, 16); // ~60fps
   }
 
   simulateInitialDrag(); // Llamada al cargar
 
-  // Drag & Drop manual
-  var mousedown = false,
-      startDegree;
-  $("#lamp .dragable").mousedown(function(e) {
+  // --- Drag & Drop manual con soporte para mouse y táctil ---
+  var mousedown = false, startDegree;
+
+  // Inicio de arrastre
+  $("#lamp .dragable").on("mousedown touchstart", function(e) {
     $("body, .dragable").addClass("dragging");
 
-    var _deltaX = window.innerWidth / 2 - e.pageX;
-    var _deltaY = 0 - e.pageY;
+    var pageX = e.type === "touchstart" ? e.originalEvent.touches[0].pageX : e.pageX;
+    var pageY = e.type === "touchstart" ? e.originalEvent.touches[0].pageY : e.pageY;
+
+    var _deltaX = window.innerWidth / 2 - pageX;
+    var _deltaY = 0 - pageY;
     var _degree = Math.atan(_deltaX / _deltaY) * (180 / Math.PI);
     startDegree = rotation;
 
     mousedown = {
       "start": {
-        "x": e.pageX,
-        "y": e.pageY,
+        "x": pageX,
+        "y": pageY,
         "deltaX": _deltaX,
         "deltaY": _deltaY,
         "degree": _degree
@@ -2136,20 +2146,28 @@ $(document).ready(function() {
     return false;
   });
 
-  $(document).mousemove(function(e) {
-    if (mousedown != false) {
-      var deltaX = window.innerWidth / 2 - e.pageX;
-      var deltaY = 0 - e.pageY;
+  // Movimiento de arrastre
+  $(document).on("mousemove touchmove", function(e) {
+    if (mousedown !== false) {
+      var pageX = e.type === "touchmove" ? e.originalEvent.touches[0].pageX : e.pageX;
+      var pageY = e.type === "touchmove" ? e.originalEvent.touches[0].pageY : e.pageY;
+
+      var deltaX = window.innerWidth / 2 - pageX;
+      var deltaY = 0 - pageY;
       var degree = Math.atan(deltaX / deltaY) * (180 / Math.PI);
 
       degree = Math.min(Math.max(startDegree + (mousedown.start.degree - degree), -75), 75);
-      $("#lamp").css({"-webkit-transform": "rotate(" + degree + "deg)"});
+      $("#lamp").css({
+        "-webkit-transform": "rotate(" + degree + "deg)",
+        "transform": "rotate(" + degree + "deg)"
+      });
       startAngle = degree;
     }
   });
 
-  $(document).mouseup(function() {
-    if (mousedown != false) {
+  // Fin del arrastre
+  $(document).on("mouseup touchend", function() {
+    if (mousedown !== false) {
       $("body, .dragable").removeClass("dragging");
       mousedown = false;
       startLampSwing();
@@ -2168,15 +2186,11 @@ $(document).ready(function() {
   flicker();
 
   function toggleLamp() {
-    if ($("#lamp").hasClass("off")) {
-      $("#lamp").removeClass("off");
-    } else {
-      $("#lamp").addClass("off");
-    }
+    $("#lamp").toggleClass("off");
   }
-
 });
 </script>
+
 
 </body>
 
