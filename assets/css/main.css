@@ -2863,6 +2863,7 @@ margin-bottom: 2rem;
 @media (max-width: 992px) {
   .contact .contact-form {
     padding: 1.5rem;
+    margin-top: 4rem;
   }
 }
 
