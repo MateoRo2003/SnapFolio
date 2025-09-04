@@ -926,6 +926,7 @@ section,
   .hero .hero-visual .profile-container {
     width: 350px;
     height: 350px;
+    margin-top: 20rem;
   }
 }
 
@@ -1088,6 +1089,12 @@ section,
   .about .profile-card {
     margin-bottom: 3rem;
   }
+  /* .about .details-grid{
+    text-align: center;
+  } */
+  /* .about .cta-section{
+    justify-content: space-around;
+  } */
 }
 
 .about .profile-header {
