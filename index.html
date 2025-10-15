@@ -1698,14 +1698,14 @@
       .to(".glasses", { duration: 1, keyframes: [{ yPercent: -10 }, { yPercent: 0 }], ease: "elastic.out(0.5,0.2)" }, 0.75)
       .from(".eyebrow-right , .eyebrow-left", { duration: 1, yPercent: 300, ease: "elastic.out(0.5,0.2)" }, 0.7)
       .to(".eye-right , .eye-left", { duration: 0.01, opacity: 1 }, 0.85)
-      .to(".eye-right-2 , .eye-left-2", { duration: 0.01, opacity: 0 }, 0.85);
+
 
     // ======= PARPADEO =======
     const blink = gsap.timeline({ repeat: -1, repeatDelay: 5, paused: true });
     blink.to(".eye-right, .eye-left", { duration: 0.01, opacity: 0 }, 0)
-      .to(".eye-right-2, .eye-left-2", { duration: 0.01, opacity: 1 }, 0)
+     
       .to(".eye-right, .eye-left", { duration: 0.01, opacity: 1 }, 0.15)
-      .to(".eye-right-2 , .eye-left-2", { duration: 0.01, opacity: 0 }, 0.15);
+      
 
     // ======= DIZZY =======
     CustomWiggle.create("myWiggle", { wiggles: 6, type: "ease-out" });
