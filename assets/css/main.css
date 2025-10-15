@@ -65,7 +65,13 @@
   background: #666;
   overflow: hidden;
 } */
-
+.hair-front {
+  cursor: grab;
+  pointer-events: all; /* Asegura que el SVG detecte clicks */
+}
+.hair-front.dragging {
+  cursor: grabbing;
+}
 .dragable {
   cursor: -moz-grab;
   cursor: -webkit-grab;
