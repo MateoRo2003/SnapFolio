@@ -921,6 +921,38 @@
               <div class="row gy-4 portfolio-container isotope-container" data-aos="fade-up" data-aos-delay="200">
 
                 <!-- Landing Pages -->
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                  <div class="portfolio-wrap position-relative">
+                    <div class="portfolio-img-wrapper overflow-hidden rounded">
+                      <img src="assets/img/portfolio/DanyTours.webp" class="img-fluid portfolio-img"
+                        alt="EduRodriguezTraslados" loading="lazy">
+                    </div>
+                    <div class="portfolio-content mt-2 p-3 rounded" style="background-color: var(--surface-color);">
+                      <span class="category d-block mb-1" style="color: var(--accent-color);">LANDING PAGE</span>
+                      <h4 class="mb-2" style="color: var(--heading-color);">DanyTours</h4>
+                      <p class="mb-2" style="color: var(--default-color);">Servicio de traslados turísticos en Misiones.
+                      </p>
+                      <div class="tech-tags mb-2">
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">HTML</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">CSS</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">JavaScript</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Firebase</span>
+                           <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Bootstrap</span>
+                      </div>
+                      <div class="portfolio-links">
+                        <a href="assets/img/portfolio/DanyTours.webp"
+                          class="glightbox btn btn-sm btn-outline-light me-1"><i class="bi bi-plus-lg"></i> Imagen</a>
+                        <a href="https://www.danytours.com.ar" target="_blank" class="btn btn-sm btn-light"
+                          title="Detalles">Ver Web <i class="bi bi-arrow-right"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
                   <div class="portfolio-wrap position-relative">
@@ -1703,9 +1735,9 @@
     // ======= PARPADEO =======
     const blink = gsap.timeline({ repeat: -1, repeatDelay: 5, paused: true });
     blink.to(".eye-right, .eye-left", { duration: 0.01, opacity: 0 }, 0)
-     
+
       .to(".eye-right, .eye-left", { duration: 0.01, opacity: 1 }, 0.15)
-      
+
 
     // ======= DIZZY =======
     CustomWiggle.create("myWiggle", { wiggles: 6, type: "ease-out" });
@@ -2012,6 +2044,53 @@
         $("#lamp").toggleClass("off");
       }
     });
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: 'AIzaSyCIZoy4fl0mW73MFx9cubLbJPcSJmaDD_c',
+      authDomain: 'remis-agustin.firebaseapp.com',
+      projectId: 'remis-agustin',
+      storageBucket: 'remis-agustin.firebasestorage.app',
+      messagingSenderId: '945721930153',
+      appId: '1:945721930153:web:84dcff9c699357c7d994b8',
+      measurementId: 'G-KPHS9G2FK4',
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const testimoniosList = document.getElementById('testimoniosList');
+
+    async function loadTestimonios() {
+      testimoniosList.innerHTML = '<div class="swiper-slide"><p style="text-align:center; color:#555;">Cargando testimonios...</p></div>';
+      try {
+        const snapshot = await db.collection('testimonios').orderBy('timestamp', 'desc').get();
+        if (snapshot.empty) {
+          testimoniosList.innerHTML = '<div class="swiper-slide"><p style="text-align:center; color:#555;">No hay testimonios aún.</p></div>';
+          return;
+        }
+        testimoniosList.innerHTML = '';
+        snapshot.forEach(doc => {
+          const t = doc.data();
+          const divSlide = document.createElement('div');
+          divSlide.className = 'swiper-slide';
+          divSlide.innerHTML = `
+                <div class="testimonial-item" style="padding:1rem; border-radius:10px; background:#f9f9f9; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center;">
+                  <p style="font-style:italic;">"${t.remarks}"</p>
+                  <h4 style="margin-top:0.5rem; color:#00b894;">${t.name}</h4>
+                </div>
+              `;
+          testimoniosList.appendChild(divSlide);
+        });
+      } catch (error) {
+        testimoniosList.innerHTML = '<div class="swiper-slide"><p style="text-align:center; color:red;">Error al cargar testimonios.</p></div>';
+        console.error(error);
+      }
+    }
+
+    loadTestimonios();
   </script>
 
 
