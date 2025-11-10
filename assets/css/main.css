@@ -1489,6 +1489,7 @@ section,
 .stats .stats-item {
   background: linear-gradient(135deg, color-mix(in srgb, var(--surface-color), transparent 5%), var(--surface-color));
   border-radius: 15px;
+  margin: 0.3rem;
   padding: 40px 20px;
   text-align: center;
   position: relative;
@@ -1591,6 +1592,7 @@ section,
   background-color: #232323 !important;
   border: none;
   transition: transform 0.3s ease;
+  margin: 0.3rem;
 }
 
 .card:hover {
