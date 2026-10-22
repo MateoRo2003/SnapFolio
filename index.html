@@ -1,34 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Mateo Rojas — Full Stack Developer & Analista de Sistemas</title>
+  <title>Mateo Rojas — Full Stack Developer & Analista de Sistemas | Argentina</title>
   <meta name="description"
-    content="Portfolio de Mateo Rojas: Desarrollador Full Stack especializado en sistemas escalables con Angular, Laravel, React, Next.js y NestJS. Integración de IA, APIs REST y arquitectura de software.">
+    content="Mateo Rojas — Full Stack Developer y Analista de Sistemas de Puerto Iguazú, Argentina. Desarrollo sistemas escalables con Angular, Laravel, React y NestJS. Integración de IA en producción.">
   <meta name="keywords"
-    content="Desarrollador Full Stack, Angular, Laravel, React, Next.js, NestJS, TypeScript, APIs REST, IA, Analista de Sistemas, Argentina">
+    content="Full Stack Developer Argentina, Angular Laravel developer, desarrollador web Misiones, integración IA, NestJS, React, Docker">
   <meta name="author" content="Mateo Rojas">
   <!-- Favicons -->
-  <link href="assets/img/favicon.webp" rel="icon">
-  <link href="assets/img/apple-touch-icon.webp" rel="apple-touch-icon">
+  <link href="assets/img/favicon.svg" rel="icon" type="image/svg+xml">
+  <link href="assets/img/favicon-32.png" rel="icon" type="image/png" sizes="32x32">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@300;400;600;700&display=swap"
     rel="stylesheet">
-  <!-- Bootstrap JS Bundle (incluye Popper) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/CustomEase.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomWiggle.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- SweetAlert solo hace falta al enviar el formulario: no frena la carga. GSAP y jQuery los pide app.js si el 3D no arranca -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.22.5/dist/sweetalert2.all.min.js" defer></script>
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -39,10 +34,74 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
+  <link href="assets/css/studio.css" rel="stylesheet">
 
+  <!-- Tema y modo 3D: se deciden antes de pintar para que nada parpadee ni se reacomode -->
+  <script>
+    (function () {
+      var root = document.documentElement, theme = 'dark';
+      try { if (localStorage.getItem('theme') === 'light') theme = 'light'; } catch (e) { }
+      root.dataset.theme = theme;
+      try {
+        var c = document.createElement('canvas');
+        if (c.getContext('webgl2') || c.getContext('webgl')) root.classList.add('stage-on');
+      } catch (e) { }
+    })();
+  </script>
+  <noscript>
+    <style>#loader { display: none }</style>
+  </noscript>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Mateo Rojas — Full Stack Developer & Analista de Sistemas" />
+  <meta property="og:description"
+    content="Desarrollo sistemas escalables, APIs robustas e integro IA en soluciones de negocio reales." />
+  <meta property="og:url" content="https://mateorojas.com.ar" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://mateorojas.com.ar/assets/img/profile/mateo.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Mateo Rojas — Full Stack Developer" />
+  <meta name="twitter:description" content="Desarrollo sistemas full-stack con IA integrada. +15 proyectos reales." />
+  <meta name="twitter:image" content="https://mateorojas.com.ar/assets/img/profile/mateo.webp" />
+  <link rel="canonical" href="https://mateorojas.com.ar/" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mateo Rojas",
+    "jobTitle": "Full Stack Developer & Analista de Sistemas",
+    "url": "https://mateorojas.com.ar",
+    "email": "rojas.mateo.web@gmail.com",
+    "address": "Puerto Iguazú, Misiones, Argentina",
+    "sameAs": [
+      "https://github.com/MateoRo2003",
+      "https://linkedin.com/in/mateo-rojas"
+    ],
+    "knowsAbout": ["Angular", "Laravel", "React", "NestJS", "Docker", "TypeScript", "MySQL", "Python", "IA"]
+  }
+  </script>
 </head>
 
 <body class="index-page">
+
+  <!-- Carga: una terminal que corre el portfolio; cada paso se tilda cuando de verdad terminó -->
+  <div id="loader" aria-hidden="true">
+    <div class="term">
+      <div class="term-bar"><i></i><i></i><i></i><span>mateo@portfolio: ~</span></div>
+      <pre class="term-body" id="loaderTerm"></pre>
+    </div>
+  </div>
+
+  <!-- Mundo 3D: lo arma assets/js/studio/app.js -->
+  <div id="stage" aria-hidden="true"></div>
 
   <header id="header" class="header dark-background d-flex flex-column justify-content-center">
     <i class="header-toggle d-xl-none bi bi-list"></i>
@@ -57,6 +116,7 @@
           <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Portfolio</a></li>
           <li><a href="#blog"><i class="bi bi-journal-text navicon"></i> Blog</a></li>
           <li><a href="#contact"><i class="bi bi-envelope navicon"></i> Contacto</a></li>
+          <li class="mt-4"><a href="en.html" title="Switch to English"><i class="bi bi-globe navicon"></i> English</a></li>
         </ul>
       </nav>
 
@@ -90,9 +150,10 @@
                 <h1>Mateo <span class="accent-text">Rojas</span></h1>
                 <h2>Full Stack Developer & Analista de Sistemas</h2>
                 <p class="lead">Soy <span class="typed"
-                    data-typed-items="Desarrollador Full Stack, Analista de Sistemas, Integrador de IA"></span></p>
+                    data-typed-items="Desarrollador Full Stack, Diseñador UI/UX"></span></p>
                 <p class="description">
-                  Desarrollo sistemas escalables, APIs robustas e integro inteligencia artificial en soluciones de
+                  Desarrollo sistemas inteligentes escalables, APIs robustas e integro inteligencia artificial en
+                  soluciones de
                   negocio reales. De la arquitectura al deploy.
                 </p>
 
@@ -241,7 +302,8 @@
             <div class="profile-card">
               <div class="profile-header">
                 <div class="profile-image">
-                  <img src="assets/img/profile/mateo.webp" alt="Imagen Perfil" class="img-fluid">
+                  <img src="assets/img/profile/mateo.webp" alt="Mateo Rojas — Full Stack Developer de Argentina"
+                    class="img-fluid">
                 </div>
                 <div class="profile-badge">
                   <i class="bi bi-check-circle-fill"></i>
@@ -290,7 +352,7 @@
                 <div class="stat-label">Proyectos Entregados</div>
               </div>
               <div class="stat-item">
-                <div class="stat-number">+3</div>
+                <div class="stat-number">4</div>
                 <div class="stat-label">Años de Experiencia</div>
               </div>
               <div class="stat-item">
@@ -418,8 +480,7 @@
                     </div>
                     <h5 class="mb-2" style="color: var(--default-color);">Desarrollo Web FrontEnd Web Developer</h5>
                     <p class="text-muted mb-3" style="color: var(--accent-color);">Udemy - 2025</p>
-                    <a href="https://www.udemy.com/certificate/JKL" target="_blank"
-                      class="btn btn-outline-light btn-sm">Ver Certificado</a>
+                    <!-- <a href="#" target="_blank" class="btn btn-outline-light btn-sm">Ver Certificado</a> -->
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -519,8 +580,7 @@
                 </div>
                 <h5 class="mb-2" style="color: var(--default-color);">Desarrollo Web FrontEnd Web Developer</h5>
                 <p class="text-muted mb-3" style="color: var(--accent-color);">Udemy - 2025</p>
-                <a href="https://www.udemy.com/certificate/JKL" target="_blank" class="btn btn-outline-light btn-sm">Ver
-                  Certificado</a>
+                <!-- <a href="#" target="_blank" class="btn btn-outline-light btn-sm">Ver Certificado</a> -->
               </div>
             </div>
 
@@ -556,87 +616,80 @@
     <section id="skills" class="skills section">
       <div class="container text-center" data-aos="fade-up">
         <div class="section-title mb-5">
-          <h2>Stack Tecnológico</h2>
-          <p>Lenguajes, frameworks y herramientas que utilizo para construir sistemas completos</p>
+          <h2>Stack Tecnológico & Especialización</h2>
+          <p class="lead mt-3" style="max-width: 850px; margin: 0 auto; color: var(--default-color);">
+            Mi especialización es el <strong>desarrollo de sistemas web con integración de Inteligencia
+              Artificial</strong>. Me enfoco en aplicar modelos y asistentes de IA para resolver problemas reales,
+            optimizando tareas y automatizando procesos para el cliente.<br><br>
+            Mi stack principal de desarrollo se basa en <strong style="color: var(--accent-color);">Laravel y
+              Angular</strong>.
+          </p>
         </div>
 
-        <div class="row g-4">
+        <div class="row">
           <!-- Frontend -->
-          <div class="col-lg-6">
-            <div class="card bg-secondary text-light h-100 shadow-sm rounded-4 p-4">
-              <h3 class="mb-4">Frontend</h3>
+          <div class="col-lg-6 p-3">
+            <div class="skill-category-card">
+              <h3>Frontend</h3>
               <div class="row g-4 justify-content-center">
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg"
-                      class="img-fluid tech-icon" alt="HTML5">
-                    <p class="mt-2">HTML5</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #dd1b16;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" alt="Angular">
+                    <p>Angular</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg"
-                      class="img-fluid tech-icon" alt="CSS3">
-                    <p class="mt-2">CSS3</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #61dafb;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="React">
+                    <p>React</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img
-                      src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg"
-                      class="img-fluid tech-icon" alt="JavaScript">
-                    <p class="mt-2">JavaScript</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #ffffff;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" style="filter: invert(1);" alt="Next.js">
+                    <p>Next.js</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img
-                      src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg"
-                      class="img-fluid tech-icon" alt="TypeScript">
-                    <p class="mt-2">TypeScript</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #3178c6;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" alt="TypeScript">
+                    <p>TS</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg"
-                      class="img-fluid tech-icon" alt="Angular">
-                    <p class="mt-2">Angular</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #f7df1e;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript">
+                    <p>JS</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg"
-                      class="img-fluid tech-icon" alt="React">
-                    <p class="mt-2">React</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #e34f26;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="HTML5">
+                    <p>HTML5</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg"
-                      class="img-fluid tech-icon" alt="Next.js" style="filter: invert(1);">
-                    <p class="mt-2">Next.js</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #1572b6;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="CSS3">
+                    <p>CSS3</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sass/sass-original.svg"
-                      class="img-fluid tech-icon" alt="SASS">
-                    <p class="mt-2">SASS</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #06b6d4;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" alt="Tailwind">
+                    <p>Tailwind</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img
-                      src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg"
-                      class="img-fluid tech-icon" alt="Bootstrap">
-                    <p class="mt-2">Bootstrap</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #7952b3;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg" alt="Bootstrap">
+                    <p>Bootstrap</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tauri/tauri-original.svg"
-                      class="img-fluid tech-icon" alt="Tauri">
-                    <p class="mt-2">Tauri</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #cc6699;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sass/sass-original.svg" alt="SASS">
+                    <p>SASS</p>
                   </div>
                 </div>
               </div>
@@ -644,79 +697,44 @@
           </div>
 
           <!-- Backend -->
-          <div class="col-lg-6">
-            <div class="card bg-secondary text-light h-100 shadow-sm rounded-4 p-4">
-              <h3 class="mb-4">Backend</h3>
+          <div class="col-lg-6 p-3">
+            <div class="skill-category-card">
+              <h3>Backend</h3>
               <div class="row g-4 justify-content-center">
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg"
-                      class="img-fluid tech-icon" alt="Node.js">
-                    <p class="mt-2">Node.js</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #ff2d20;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg" alt="Laravel">
+                    <p>Laravel</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nestjs/nestjs-original.svg"
-                      class="img-fluid tech-icon" alt="NestJS">
-                    <p class="mt-2">NestJS</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #ea2845;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nestjs/nestjs-original.svg" alt="NestJS">
+                    <p>NestJS</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg"
-                      class="img-fluid tech-icon" alt="PHP">
-                    <p class="mt-2">PHP</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #339933;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" alt="Node.js">
+                    <p>Node.js</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg"
-                      class="img-fluid tech-icon" alt="Laravel">
-                    <p class="mt-2">Laravel</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #777bb4;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg" alt="PHP">
+                    <p>PHP</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg"
-                      class="img-fluid tech-icon" alt="Java">
-                    <p class="mt-2">Java</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #3776ab;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python">
+                    <p>Python</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg"
-                      class="img-fluid tech-icon" alt="Python">
-                    <p class="mt-2">Python</p>
-                  </div>
-                </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg"
-                      class="img-fluid tech-icon" alt="MySQL">
-                    <p class="mt-2">MySQL</p>
-                  </div>
-                </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img
-                      src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg"
-                      class="img-fluid tech-icon" alt="PostgreSQL">
-                    <p class="mt-2">PostgreSQL</p>
-                  </div>
-                </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg"
-                      class="img-fluid tech-icon" alt="Supabase">
-                    <p class="mt-2">Supabase</p>
-                  </div>
-                </div>
-                <div class="col-4 col-md-3">
-                  <div class="tech-icon-container text-center">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg"
-                      class="img-fluid tech-icon" alt="Rust" style="filter: invert(1);">
-                    <p class="mt-2">Rust</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #ffffff;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/prisma/prisma-original.svg" style="filter: invert(1);" alt="Prisma">
+                    <p>Prisma</p>
                   </div>
                 </div>
               </div>
@@ -724,112 +742,122 @@
           </div>
         </div>
 
-        <!-- Herramientas & DevOps -->
-        <div class="row mt-4">
-          <div class="col-12">
-            <div class="card bg-secondary text-light shadow-sm rounded-4 p-4">
-              <h3 class="mb-4">Herramientas & DevOps</h3>
-              <div class="row g-2 justify-content-center">
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg"
-                      class="img-fluid tech-icon" alt="Docker">
-                    <p class="mt-1">Docker</p>
+        <div class="row">
+          <!-- Bases de Datos & Cloud -->
+          <div class="col-lg-6 p-3">
+            <div class="skill-category-card">
+              <h3>Bases de Datos & Cloud</h3>
+              <div class="row g-4 justify-content-center">
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #4479a1;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="MySQL">
+                    <p>MySQL</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg"
-                      class="img-fluid tech-icon" alt="Git">
-                    <p class="mt-1">Git</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #336791;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="PostgreSQL">
+                    <p>Postgres</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg"
-                      class="img-fluid tech-icon" alt="GitHub" style="filter: invert(1);">
-                    <p class="mt-1">GitHub</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #3ecf8e;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg" alt="Supabase">
+                    <p>Supabase</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg"
-                      class="img-fluid tech-icon" alt="Figma">
-                    <p class="mt-1">Figma</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #ffca28;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" alt="Firebase">
+                    <p>Firebase</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg"
-                      class="img-fluid tech-icon" alt="Postman">
-                    <p class="mt-1">Postman</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #ffffff;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" style="filter: invert(1);" alt="Vercel">
+                    <p>Vercel</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg"
-                      class="img-fluid tech-icon" alt="Firebase">
-                    <p class="mt-1">Firebase</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #f38020;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cloudflare/cloudflare-original.svg" alt="Cloudflare">
+                    <p>Cloudflare</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cloudflare/cloudflare-original.svg"
-                      class="img-fluid tech-icon" alt="Cloudflare">
-                    <p class="mt-1">Cloudflare</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Herramientas, DevOps & IA -->
+          <div class="col-lg-6 p-3">
+            <div class="skill-category-card">
+              <h3>Herramientas, DevOps & IA</h3>
+              <div class="row g-4 justify-content-center">
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #f05032;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="Git">
+                    <p>Git</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg"
-                      class="img-fluid tech-icon" alt="Vercel" style="filter: invert(1);">
-                    <p class="mt-1">Vercel</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #2496ed;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="Docker">
+                    <p>Docker</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg"
-                      class="img-fluid tech-icon" alt="VS Code">
-                    <p class="mt-1">VS Code</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #2088ff;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/githubactions/githubactions-original.svg" alt="GitHub Actions">
+                    <p>GitHub Actions</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <img src="assets/img/tech/icons8-chatear-48.webp" class="img-fluid tech-icon" alt="ChatGPT">
-                    <p class="mt-1">ChatGPT</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #cf4647;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/gulp/gulp-plain.svg" style="filter: invert(1);" alt="Gulp">
+                    <p>Gulp</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <img src="assets/img/tech/gemini.webp" class="img-fluid tech-icon" alt="Gemini">
-                    <p class="mt-1">Gemini</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #f24e1e;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" alt="Figma">
+                    <p>Figma</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <i class="bi bi-braces tech-icon d-flex align-items-center justify-content-center"
-                      style="font-size: 2.5rem; color: #d0905d;"></i>
-                    <p class="mt-1">Claude Code</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #10a37f;">
+                    <img src="assets/img/tech/icons8-chatear-48.webp" alt="OpenAI">
+                    <p>OpenAI</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <i class="bi bi-plug tech-icon d-flex align-items-center justify-content-center"
-                      style="font-size: 2.5rem; color: #00d8ff;"></i>
-                    <p class="mt-1">MCP</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #8e75b2;">
+                    <img src="assets/img/tech/gemini.webp" alt="Gemini">
+                    <p>Gemini</p>
                   </div>
                 </div>
-                <div class="col-4 col-md-2 text-center mb-2">
-                  <div class="tech-icon-container">
-                    <i class="bi bi-rocket-takeoff tech-icon d-flex align-items-center justify-content-center"
-                      style="font-size: 2.5rem; color: #ff5722;"></i>
-                    <p class="mt-1">Antigravity</p>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #00d8ff;">
+                    <i class="bi bi-plug" style="font-size: 2rem;"></i>
+                    <p>MCP</p>
+                  </div>
+                </div>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #D97757;">
+                    <img src="https://cdn.simpleicons.org/claude" alt="Claude">
+                    <p>Claude</p>
+                  </div>
+                </div>
+                <div class="col-4 col-sm-3 col-md-3">
+                  <div class="skill-item" style="--skill-color: #ff4d4d;">
+                    <img src="https://docs.openclaw.ai/assets/openclaw.svg" alt="OpenClaw">
+                    <p>OpenClaw</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -844,7 +872,7 @@
 
         <!-- Texto con cantidad total -->
         <p style="font-size: 18px;" class="lead fw-bold text-success">
-          Total de contribuciones en 2025: <span class="text-white">358</span>
+          Total de contribuciones en 2026: <span class="text-white">592</span>
         </p>
       </div>
     </section>
@@ -866,164 +894,135 @@
       </div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row gy-4">
+        <div class="row justify-content-center">
 
-          <!-- LEFT COLUMN -->
-          <div class="col-lg-4">
-            <div class="resume-side" data-aos="fade-right">
+          <!-- MAIN TIMELINE COLUMN -->
+          <div class="col-lg-10 col-xl-9">
 
-              <h3>Perfil Profesional</h3>
-              <p>
-                Analista de Sistemas y Desarrollador Full Stack con experiencia en arquitectura de software,
-                APIs REST, integración de IA en sistemas de gestión, y docencia en Ciencia de Datos.
-                Participación en proyectos end-to-end con Angular, Laravel, React y Next.js.
-              </p>
-
-              <h3 class="mt-4">Contacto</h3>
-              <ul class="contact-info list-unstyled">
-                <li><i class="bi bi-geo-alt"></i> Puerto Iguazú, Misiones, Argentina</li>
-                <li><i class="bi bi-telephone"></i> +54 3757 673226</li>
-                <li><i class="bi bi-envelope"></i> rojas.mateo.web@gmail.com</li>
-                <li><i class="bi bi-globe"></i> mateorojas.com.ar</li>
-                <li><i class="bi bi-github"></i> github.com/MateoRo2003</li>
-              </ul>
-
-              <h3 class="mt-4">Habilidades Técnicas</h3>
-              <ul class="contact-info list-unstyled">
-                <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript, TypeScript, Angular 17, Bootstrap, React.js</li>
-                <li><strong>Backend:</strong> Laravel 12, PHP, Python, Java, Node.js, APIs REST</li>
-                <li><strong>Bases de datos:</strong> MySQL, Firebase, PostgreSQL, SQL Server</li>
-                <li><strong>IA / Data Science:</strong> Python, ciencia de datos, IA generativa, automatización con IA
-                </li>
-                <li><strong>Análisis:</strong> Relevamiento de requerimientos, documentación funcional, modelado</li>
-                <li><strong>UX/UI:</strong> Prototipado y diseño con Figma</li>
-                <li><strong>Herramientas:</strong> Git, GitHub, n8n, control de versiones, despliegues</li>
-                <li><strong>Docencia:</strong> Robótica, programación, ciencia de datos, inteligencia artificial</li>
-              </ul>
-
-              <h3 class="mt-4">Idiomas</h3>
-              <ul class="contact-info list-unstyled">
-                <li>Español — Nativo</li>
-                <li>Inglés — Intermedio</li>
-                <li>Portugués — Intermedio</li>
-              </ul>
-
-              <h3 class="mt-4">Habilidades Personales</h3>
-              <ul class="contact-info list-unstyled">
-                <li>Comunicación efectiva</li>
-                <li>Resolución de problemas</li>
-                <li>Trabajo en equipo</li>
-                <li>Proactividad</li>
-                <li>Aprendizaje continuo</li>
-              </ul>
-
-            </div>
-          </div>
-
-          <!-- RIGHT COLUMN -->
-          <div class="col-lg-8 ps-4 ps-lg-5">
-
-            <!-- EXPERIENCE -->
+            <!-- EXPERIENCE & EDUCATION -->
             <div class="resume-section" data-aos="fade-up">
-              <h3><i class="bi bi-briefcase me-2"></i>Experiencia Laboral</h3>
 
-              <div class="resume-item">
-                <h4>Profesor de Robótica e Informática</h4>
-                <p class="company"><i class="bi bi-building"></i> Instituto Tecnológico Itec</p>
-                <span class="date">Mar 2026 – Presente</span>
-                <ul>
-                  <li>Diseño e impartición de clases de robótica y programación.</li>
-                  <li>Desarrollo de material didáctico y proyectos prácticos para estudiantes.</li>
-                  <li>Formación en tecnologías emergentes y metodologías de desarrollo.</li>
-                </ul>
-              </div>
+              <div class="timeline-container">
 
-              <div class="resume-item">
-                <h4>Profesor Tec. Sup. Ciencia de Datos e IA</h4>
-                <p class="company"><i class="bi bi-building"></i> Instituto Crecer</p>
-                <span class="date">Mar 2026 – Presente</span>
-                <ul>
-                  <li>Diseño e impartición de clases de ciencia de datos e inteligencia artificial.</li>
-                  <li>Desarrollo de material didáctico y proyectos prácticos para estudiantes de nivel superior.</li>
-                  <li>Formación en IA generativa y automatización.</li>
-                </ul>
-              </div>
+                <div class="timeline-item">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-card">
+                    <div class="row">
+                      <div class="col-md-4 timeline-header">
+                        <h4>Desarrollador Full Stack</h4>
+                        <p class="company"><i class="bi bi-building"></i> Paperlux · Chile</p>
+                        <span class="badge date-badge">Ene 2026 – Actualidad</span>
+                      </div>
+                      <div class="col-md-8 timeline-body mt-3 mt-md-0">
+                        <ul>
+                          <li><strong>Paperflix:</strong> plataforma EdTech gamificada en <strong>3.200+ escuelas</strong> en Chile; integración IA con Groq redujo la generación de contenido en un <strong>60%</strong>. Stack: Next.js 14, NestJS, Prisma, Supabase, Vercel, Cloudflare Workers.</li>
+                          <li><strong>Onboarding post-compra:</strong> sistema con recorridos modulares, quizzes, trazabilidad en tiempo real, correos transaccionales y certificados PDF.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-              <div class="resume-item">
-                <h4>Analista Funcional Ssr / Desarrollador Full Stack</h4>
-                <p class="company"><i class="bi bi-building"></i> Proyectos Independientes (Freelance)</p>
-                <span class="date">Jun 2023 – Presente</span>
-                <ul>
-                  <li>Desarrollo de más de <strong>15 proyectos web</strong> utilizando Angular, Laravel y JavaScript.
-                  </li>
-                  <li>Relevamiento de requerimientos mediante entrevistas y comunicación directa con clientes.</li>
-                  <li>Diseño de soluciones orientadas al usuario aplicando prototipos y mejoras iterativas.</li>
-                  <li>Creación de interfaces responsivas, componentes reutilizables y consumo de APIs REST.</li>
-                  <li>Optimización de rendimiento logrando mejoras de hasta un <strong>30%</strong>.</li>
-                </ul>
-              </div>
+                <div class="timeline-item">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-card">
+                    <div class="row">
+                      <div class="col-md-4 timeline-header">
+                        <h4>Profesor de Robótica e Informática</h4>
+                        <p class="company"><i class="bi bi-building"></i> Instituto Tecnológico Itec</p>
+                        <span class="badge date-badge">Mar 2026 – Presente</span>
+                      </div>
+                      <div class="col-md-8 timeline-body mt-3 mt-md-0">
+                        <ul>
+                          <li>Diseño e impartición de clases de robótica y programación.</li>
+                          <li>Desarrollo de material didáctico y proyectos prácticos para estudiantes.</li>
+                          <li>Formación en tecnologías emergentes y metodologías de desarrollo.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-              <div class="resume-item">
-                <h4>Pasantía en Soporte IT</h4>
-                <p class="company"><i class="bi bi-building"></i> Hotel Gran Iguazú – H.C.I. S.A.</p>
-                <span class="date">Sep 2025 – Nov 2025</span>
-                <ul>
-                  <li>Soporte técnico remoto y presencial a usuarios internos.</li>
-                  <li>Diagnóstico de incidencias de conectividad, hardware y software.</li>
-                  <li>Instalación, configuración y mantenimiento preventivo de equipos informáticos.</li>
-                </ul>
-              </div>
-            </div>
+                <div class="timeline-item">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-card">
+                    <div class="row">
+                      <div class="col-md-4 timeline-header">
+                        <h4>Profesor Tec. Sup. Ciencia de Datos e IA</h4>
+                        <p class="company"><i class="bi bi-building"></i> Instituto Crecer</p>
+                        <span class="badge date-badge">Mar 2026 – Presente</span>
+                      </div>
+                      <div class="col-md-8 timeline-body mt-3 mt-md-0">
+                        <ul>
+                          <li>Diseño e impartición de clases de ciencia de datos e inteligencia artificial.</li>
+                          <li>Desarrollo de material didáctico y proyectos prácticos para estudiantes de nivel superior.</li>
+                          <li>Formación en IA generativa y automatización.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-            <!-- EDUCATION -->
-            <div class="resume-section" data-aos="fade-up" data-aos-delay="100">
-              <h3><i class="bi bi-mortarboard me-2"></i>Educación</h3>
+                <div class="timeline-item">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-card">
+                    <div class="row">
+                      <div class="col-md-4 timeline-header">
+                        <h4>Analista Funcional Ssr / Desarrollador Full Stack</h4>
+                        <p class="company"><i class="bi bi-building"></i> Proyectos Freelance</p>
+                        <span class="badge date-badge">Jun 2023 – Presente</span>
+                      </div>
+                      <div class="col-md-8 timeline-body mt-3 mt-md-0">
+                        <ul>
+                          <li>Desarrollo de más de <strong>15 proyectos web</strong> utilizando Angular, Laravel y JavaScript.</li>
+                          <li>Relevamiento de requerimientos mediante entrevistas y comunicación directa con clientes.</li>
+                          <li>Diseño de soluciones orientadas al usuario aplicando prototipos y mejoras iterativas.</li>
+                          <li>Optimización de rendimiento web logrando mejoras de hasta un 30% en tiempo de carga en proyectos con tráfico real.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-              <div class="resume-item">
-                <h4>Técnico Superior en Análisis de Sistemas de Computación</h4>
-                <p class="company"><i class="bi bi-building"></i> I.A.E.S – Instituto Argentino de Estudios Superiores
-                </p>
-                <span class="date">2023 – 2025</span>
-              </div>
-            </div>
+                <div class="timeline-item">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-card">
+                    <div class="row">
+                      <div class="col-md-4 timeline-header">
+                        <h4>Pasantía en Soporte IT</h4>
+                        <p class="company"><i class="bi bi-building"></i> Hotel Gran Iguazú – H.C.I.</p>
+                        <span class="badge date-badge">Sep 2025 – Nov 2025</span>
+                      </div>
+                      <div class="col-md-8 timeline-body mt-3 mt-md-0">
+                        <ul>
+                          <li>Soporte técnico remoto y presencial a usuarios internos.</li>
+                          <li>Diagnóstico de incidencias de conectividad, hardware y software.</li>
+                          <li>Instalación, configuración y mantenimiento preventivo de equipos informáticos.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-            <!-- CERTIFICATIONS -->
-            <div class="resume-section" data-aos="fade-up" data-aos-delay="200">
-              <h3><i class="bi bi-award me-2"></i>Certificaciones</h3>
+                <div class="timeline-item">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-card">
+                    <div class="row">
+                      <div class="col-md-4 timeline-header">
+                        <h4>Técnico Superior en Análisis de Sistemas</h4>
+                        <p class="company"><i class="bi bi-mortarboard"></i> I.A.E.S</p>
+                        <span class="badge date-badge">2023 – 2025</span>
+                      </div>
+                      <div class="col-md-8 timeline-body mt-3 mt-md-0">
+                        <ul>
+                          <li>Carrera terciaria finalizada con enfoque en el desarrollo de software, modelado de sistemas y bases de datos.</li>
+                          <li>Instituto Argentino de Estudios Superiores.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-              <div class="resume-item">
-                <h4>UX/UI + Figma – Diseño de Experiencia de Usuario</h4>
-                <p>Google</p>
-              </div>
-
-              <div class="resume-item">
-                <h4>Máster Ciencia de Datos con Python</h4>
-                <p>Udemy</p>
-              </div>
-
-              <div class="resume-item">
-                <h4>n8n + MCP: Automatización con IA</h4>
-                <p>Udemy</p>
-              </div>
-
-              <div class="resume-item">
-                <h4>IA en Producción: IA Generativa</h4>
-                <p>Udemy</p>
-              </div>
-
-              <div class="resume-item">
-                <h4>Desarrollo Web Full Stack</h4>
-                <p>Udemy</p>
-              </div>
-
-              <div class="resume-item">
-                <h4>Frontend Web Developer</h4>
-                <p>Udemy</p>
-              </div>
-
-              <div class="resume-item">
-                <h4>Maquetación Profesional CSS3 y HTML5</h4>
-                <p>Udemy</p>
               </div>
             </div>
 
@@ -1058,7 +1057,9 @@
               <div class="filters-wrapper" data-aos="fade-right" data-aos-delay="150">
                 <ul class="portfolio-filters isotope-filters">
                   <li data-filter="*" class="filter-active">Todos los Proyectos</li>
-                  <li data-filter=".filter-landing">Proyectos de clientes</li>
+                  <li data-filter=".filter-landing">Landing Page</li>
+                  <li data-filter=".filter-sistemas">Sistemas Web</li>
+                  <li data-filter=".filter-clientes">Clientes</li>
                   <li data-filter=".filter-personal">Proyectos Personales</li>
                 </ul>
               </div>
@@ -1067,31 +1068,249 @@
             <div class="col-lg-9">
               <div class="row gy-4 portfolio-container isotope-container" data-aos="fade-up" data-aos-delay="200">
 
+                <!-- Proyectos más recientes -->
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-sistemas filter-clientes">
+                  <div class="portfolio-wrap position-relative">
+                    <div class="portfolio-img-wrapper overflow-hidden rounded">
+                      <img src="assets/img/portfolio/pettyjoyas/1.jpg" class="img-fluid portfolio-img"
+                        style="aspect-ratio: 16/9; object-fit: cover;" alt="Petty Joyas — Tienda online de joyería"
+                        loading="lazy">
+                    </div>
+                    <div class="portfolio-content mt-2 p-3 rounded" style="background-color: var(--surface-color);">
+                      <span class="category d-block mb-1" style="color: var(--accent-color);">E-commerce Full
+                        Stack</span>
+                      <h4 class="mb-2" style="color: var(--heading-color);">Petty Joyas</h4>
+                      <p class="mb-2" style="color: var(--default-color);">
+                        Tienda online de joyería con catálogo dinámico, panel propio para gestión de productos e
+                        imágenes, sistema POS con lectura por código QR y pistola lectora para venta en local,
+                        chatbot de atención al cliente vía WhatsApp Business, carrito de compras online y checkout
+                        con MercadoPago. Desarrollo full stack de punta a punta.
+                      </p>
+                      <div class="tech-tags mb-2">
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Next.js</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">React</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">TypeScript</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Laravel</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">MySQL</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">MercadoPago</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">REST API</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">WhatsApp Business API</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Docker</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">GitHub Actions</span>
+                      </div>
+                      <div class="portfolio-links">
+                        <a href="assets/img/portfolio/pettyjoyas/1.jpg"
+                          class="glightbox btn btn-sm btn-outline-light me-1"><i class="bi bi-plus-lg"></i> Imagen</a>
+                        <a href="https://pettyjoyas.com.ar" target="_blank" class="btn btn-sm btn-light"
+                          title="Detalles">Ver Web <i class="bi bi-arrow-right"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-sistemas filter-clientes">
+                  <div class="portfolio-wrap position-relative">
+                    <div class="portfolio-img-wrapper overflow-hidden rounded">
+                      <img src="assets/img/portfolio/gvstore/1.jpg" class="img-fluid portfolio-img"
+                        style="aspect-ratio: 16/9; object-fit: cover;"
+                        alt="GV Store — Tienda online de camisetas de fútbol" loading="lazy">
+                    </div>
+                    <div class="portfolio-content mt-2 p-3 rounded" style="background-color: var(--surface-color);">
+                      <span class="category d-block mb-1" style="color: var(--accent-color);">E-commerce Full
+                        Stack</span>
+                      <h4 class="mb-2" style="color: var(--heading-color);">GV Store</h4>
+                      <p class="mb-2" style="color: var(--default-color);">
+                        E-commerce de camisetas de fútbol e indumentaria deportiva con catálogo por categorías,
+                        carrito de compras, checkout con MercadoPago y atención al cliente integrada por WhatsApp.
+                        Desarrollo full stack de punta a punta.
+                      </p>
+                      <div class="tech-tags mb-2">
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Next.js</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">React</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">TypeScript</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Prisma</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Supabase</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">MercadoPago</span>
+                      </div>
+                      <div class="portfolio-links">
+                        <a href="assets/img/portfolio/gvstore/1.jpg"
+                          class="glightbox btn btn-sm btn-outline-light me-1"><i class="bi bi-plus-lg"></i> Imagen</a>
+                        <a href="https://gvstore.com.ar" target="_blank" class="btn btn-sm btn-light"
+                          title="Detalles">Ver Web <i class="bi bi-arrow-right"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-sistemas filter-clientes">
+                  <div class="portfolio-wrap position-relative">
+                    <div class="portfolio-img-wrapper overflow-hidden rounded">
+                      <img src="assets/img/portfolio/gabygor/1.png" class="img-fluid portfolio-img"
+                        style="aspect-ratio: 16/9; object-fit: cover;" alt="GabyGor — Sistema de reserva de turnos"
+                        loading="lazy">
+                    </div>
+                    <div class="portfolio-content mt-2 p-3 rounded" style="background-color: var(--surface-color);">
+                      <span class="category d-block mb-1" style="color: var(--accent-color);">Sistema de Turnos
+                        Online</span>
+                      <h4 class="mb-2" style="color: var(--heading-color);">GabyGor</h4>
+                      <p class="mb-2" style="color: var(--default-color);">
+                        Sistema de reserva de turnos online con selección de múltiples servicios combinables, agenda
+                        en tiempo real por ubicación, sistema de notificaciones automáticas y panel de "Mis Turnos"
+                        para el cliente. Desarrollo full stack de punta a punta.
+                      </p>
+                      <div class="tech-tags mb-2">
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Next.js</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">React</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">TypeScript</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Prisma</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Supabase</span>
+                      </div>
+                      <div class="portfolio-links">
+                        <a href="assets/img/portfolio/gabygor/1.png"
+                          class="glightbox btn btn-sm btn-outline-light me-1"><i class="bi bi-plus-lg"></i> Imagen</a>
+                        <a href="https://gabygor.com.ar" target="_blank" class="btn btn-sm btn-light"
+                          title="Detalles">Ver Web <i class="bi bi-arrow-right"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-sistemas filter-clientes">
+                  <div class="portfolio-wrap position-relative">
+                    <div class="portfolio-img-wrapper overflow-hidden rounded">
+                      <img src="assets/img/portfolio/mipaperlux/1.png" class="img-fluid portfolio-img"
+                        style="aspect-ratio: 16/9; object-fit: cover;"
+                        alt="MiPaperlux — Onboarding gamificado para docentes" loading="lazy">
+                    </div>
+                    <div class="portfolio-content mt-2 p-3 rounded" style="background-color: var(--surface-color);">
+                      <span class="category d-block mb-1" style="color: var(--accent-color);">Plataforma EdTech —
+                        Onboarding</span>
+                      <h4 class="mb-2" style="color: var(--heading-color);">MiPaperlux</h4>
+                      <p class="mb-3" style="color: var(--default-color);">
+                        Plataforma de onboarding post-compra para docentes de Paperlux: recorridos modulares
+                        gamificados, seguimiento de progreso en tiempo real, contenido en video y certificación al
+                        finalizar la capacitación.
+                      </p>
+                      <div class="tech-tags mb-3">
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Next.js</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">NestJS</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Prisma</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Supabase</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Vercel</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Cloudflare</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Docker</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">GitHub Actions</span>
+                      </div>
+                      <button class="btn btn-outline-light w-100" data-bs-toggle="modal"
+                        data-bs-target="#mipaperluxModal">Ver enfoque y galería</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-sistemas filter-clientes">
+                  <div class="portfolio-wrap position-relative">
+                    <div class="portfolio-img-wrapper overflow-hidden rounded">
+                      <img src="assets/img/portfolio/taccu/1.png" class="img-fluid portfolio-img"
+                        style="aspect-ratio: 16/9; object-fit: cover;"
+                        alt="Taccu — Sistema de puntos y recompensas para barberías" loading="lazy">
+                    </div>
+                    <div class="portfolio-content mt-2 p-3 rounded" style="background-color: var(--surface-color);">
+                      <span class="category d-block mb-1" style="color: var(--accent-color);">Sistema de
+                        Fidelización</span>
+                      <h4 class="mb-2" style="color: var(--heading-color);">Taccu</h4>
+                      <p class="mb-2" style="color: var(--default-color);">
+                        Sistema de puntos y recompensas para barberías: los clientes suman puntos en cada corte
+                        iniciando sesión con Google o con su número de teléfono, y los canjean por descuentos,
+                        productos o cortes gratis, sin turnos. Panel de administración para el barbero.
+                        Desarrollo full stack de punta a punta.
+                      </p>
+                      <div class="tech-tags mb-2">
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Next.js</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">React</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">TypeScript</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Supabase</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Google OAuth</span>
+                        <span class="badge me-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Vercel</span>
+                      </div>
+                      <div class="portfolio-links">
+                        <a href="assets/img/portfolio/taccu/1.png"
+                          class="glightbox btn btn-sm btn-outline-light me-1"><i class="bi bi-plus-lg"></i> Imagen</a>
+                        <a href="https://taccu.vercel.app/" target="_blank" class="btn btn-sm btn-light"
+                          title="Detalles">Ver Web <i class="bi bi-arrow-right"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- Landing Pages -->
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-sistemas filter-clientes">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/paperflix/2.png" class="img-fluid portfolio-img w-100"
-                        style="aspect-ratio: 16/9; object-fit: cover;" alt="Paperflix" loading="lazy">
+                        style="aspect-ratio: 16/9; object-fit: cover;"
+                        alt="Dashboard de Paperflix, plataforma EdTech con IA integrada" loading="lazy">
                     </div>
                     <div class="portfolio-content mt-2 p-3 rounded" style="background-color: var(--surface-color);">
                       <span class="category d-block mb-1" style="color: var(--accent-color);"> Plataforma EdTech a Gran
                         Escala</span>
                       <h4 class="mb-2" style="color: var(--heading-color);">Paperflix</h4>
                       <p class="mb-3" style="color: var(--default-color);">
-                        Plataforma educativa tipo Netflix implementada en más de 3200 escuelas en Chile. Arquitectura
-                        escalable y herramientas de IA integradas para la generación rápida y masiva de recursos
-                        educativos.
+                        Plataforma EdTech implementada en más de 3200 escuelas en Chile, con soporte para alta
+                        concurrencia y reducción del tiempo de carga de contenido educativo en un 60% gracias a
+                        integración de IA con Groq.
                       </p>
                       <div class="tech-tags mb-3">
-                        <span class="badge me-1 mb-1" style="background-color: var(--accent-color); color: var(--contrast-color);">Next.js</span>
-                        <span class="badge me-1 mb-1" style="background-color: var(--accent-color); color: var(--contrast-color);">NestJS</span>
-                        <span class="badge me-1 mb-1" style="background-color: var(--accent-color); color: var(--contrast-color);">React</span>
-                        <span class="badge me-1 mb-1" style="background-color: var(--accent-color); color: var(--contrast-color);">Prisma</span>
-                        <span class="badge me-1 mb-1" style="background-color: var(--accent-color); color: var(--contrast-color);">Supabase</span>
-                        <span class="badge me-1 mb-1" style="background-color: var(--accent-color); color: var(--contrast-color);">Vercel</span>
-                        <span class="badge me-1 mb-1" style="background-color: var(--accent-color); color: var(--contrast-color);">Cloudflare</span>
-                        <span class="badge me-1 mb-1" style="background-color: var(--accent-color); color: var(--contrast-color);">IA (Groq)</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Next.js</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">NestJS</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">React</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Prisma</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Supabase</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Vercel</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">Cloudflare</span>
+                        <span class="badge me-1 mb-1"
+                          style="background-color: var(--accent-color); color: var(--contrast-color);">IA (Groq)</span>
                       </div>
                       <button class="btn btn-outline-light w-100" data-bs-toggle="modal"
                         data-bs-target="#paperflixModal">Ver enfoque y galería</button>
@@ -1099,11 +1318,11 @@
                   </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-sistemas filter-clientes">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
-                      <img src="assets/img/portfolio/image.png" class="img-fluid portfolio-img" alt="SITI"
-                        loading="lazy">
+                      <img src="assets/img/portfolio/image.png" class="img-fluid portfolio-img"
+                        alt="Panel de administración de SITI — Sistema Integral de Tiendas" loading="lazy">
                     </div>
                     <div class="portfolio-content mt-2 p-3 rounded" style="background-color: var(--surface-color);">
                       <span class="category d-block mb-1" style="color: var(--accent-color);"> Proyecto Estrella —
@@ -1111,10 +1330,9 @@
                       <h4 class="mb-2" style="color: var(--heading-color);">S.I.T.I — Sistema Integral de Tiendas
                         Independientes</h4>
                       <p class="mb-2" style="color: var(--default-color);">
-                        Plataforma completa de gestión para tiendas multimarca: eCommerce, inventario, usuarios, ventas
-                        en tiempo real y <strong>asistente de IA integrado</strong> que ayuda a vendedores con
-                        recomendaciones de productos y análisis de ventas. Arquitectura REST API con autenticación JWT,
-                        dashboard administrativo y roles de usuario.
+                        Sistema activo en producción con autenticación JWT, 5 roles de usuario y asistente de IA que
+                        redujo el tiempo de búsqueda de productos en un 40%. Plataforma completa de gestión para tiendas
+                        multimarca: eCommerce, inventario, ventas en tiempo real y recomendaciones inteligentes.
                       </p>
                       <div class="tech-tags mb-2">
                         <span class="badge me-1"
@@ -1144,7 +1362,7 @@
                   </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-sistemas filter-clientes">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/tfc.webp" class="img-fluid portfolio-img" alt="TravelOnlineAgency"
@@ -1180,7 +1398,7 @@
                 </div>
 
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing filter-clientes">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/estudiojuridico.webp" class="img-fluid portfolio-img"
@@ -1214,7 +1432,7 @@
                 </div>
 
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing filter-clientes">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/TravelAgency.webp" class="img-fluid portfolio-img"
@@ -1249,7 +1467,7 @@
                   </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing filter-clientes">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/DanyTours.webp" class="img-fluid portfolio-img"
@@ -1282,7 +1500,7 @@
                   </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing filter-clientes">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/EduRodriguez.webp" class="img-fluid portfolio-img"
@@ -1313,7 +1531,7 @@
                   </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing filter-clientes">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/TrasladosMarquez.webp" class="img-fluid portfolio-img"
@@ -1343,7 +1561,7 @@
                   </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing filter-clientes">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/TrasladosLGK.webp" class="img-fluid portfolio-img"
@@ -1374,7 +1592,7 @@
                   </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing filter-clientes">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/MaxiTraslados.webp" class="img-fluid portfolio-img"
@@ -1405,7 +1623,7 @@
                   </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing filter-clientes">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/TrasladosTresFronteras.webp" class="img-fluid portfolio-img"
@@ -1437,7 +1655,7 @@
                 </div>
 
                 <!-- Proyectos Personales -->
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-personal">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-landing filter-personal">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/PresenciaWeb.webp" class="img-fluid portfolio-img"
@@ -1475,7 +1693,7 @@
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/SITBarber.webp" class="img-fluid portfolio-img"
-                        alt="Turnos Barbería" loading="lazy">
+                        alt="Sistema de gestión de turnos para barbería con JWT y Docker" loading="lazy">
                     </div>
                     <div class="portfolio-content mt-2 p-3 rounded" style="background-color: var(--surface-color);">
                       <span class="category d-block mb-1" style="color: var(--accent-color);">Proyecto Personal</span>
@@ -1557,11 +1775,11 @@
                   </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-personal">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-personal filter-sistemas">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
-                      <img src="assets/img/portfolio/HealthTrack.webp" class="img-fluid portfolio-img" alt="HealthTrack"
-                        loading="lazy">
+                      <img src="assets/img/portfolio/HealthTrack.webp" class="img-fluid portfolio-img"
+                        alt="Vista de agenda médica en HealthTrack" loading="lazy">
                     </div>
                     <div class="portfolio-content mt-2 p-3 rounded" style="background-color: var(--surface-color);">
                       <span class="category d-block mb-1" style="color: var(--accent-color);">Proyecto Personal</span>
@@ -1647,7 +1865,7 @@
                   </div>
                 </div>
 
-                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-personal">
+                <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-personal filter-sistemas">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
                       <img src="assets/img/portfolio/bienesraices.webp" class="img-fluid portfolio-img"
@@ -1689,7 +1907,7 @@
                     </div>
                   </div>
                 </div>
-                <!-- 
+                <!--
                 <div class="col-lg-6 col-md-6 portfolio-item isotope-item filter-personal">
                   <div class="portfolio-wrap position-relative">
                     <div class="portfolio-img-wrapper overflow-hidden rounded">
@@ -1791,49 +2009,173 @@
                     Implementé un panel administrativo avanzado con <strong>integración de IA</strong> para generar
                   </p>
                   <ul style="color: var(--default-color); line-height: 1.8;" class="mt-3">
-                    <li><strong>Stack Moderno:</strong> Construido con Next.js (React), NestJS, Prisma, Supabase y Vercel.</li>
-                    <li><strong>Escalabilidad Global:</strong> Uso intensivo de Cloudflare (Workers, Pages) y bases de datos sincronizadas en el borde para soportar los picos de concurrencia.</li>
-                    <li><strong>Generación con IA (Groq):</strong> Reducción drástica en el tiempo de carga gracias al auto-completado súper rápido con modelos de lenguaje.</li>
+                    <li><strong>Stack Moderno:</strong> Construido con Next.js (React), NestJS, Prisma, Supabase y
+                      Vercel.</li>
+                    <li><strong>Escalabilidad Global:</strong> Uso intensivo de Cloudflare (Workers, Pages) y bases de
+                      datos sincronizadas en el borde para soportar los picos de concurrencia.</li>
+                    <li><strong>Generación con IA (Groq):</strong> Reducción drástica en el tiempo de carga gracias al
+                      auto-completado súper rápido con modelos de lenguaje.</li>
                     <li><strong>Importación Masiva:</strong> Carga y validación en lote por Excel (.xlsx).</li>
                   </ul>
                 </div>
                 <div class="col-lg-7">
-                  <h5 class="fw-bold mb-3" style="color: var(--accent-color);">Galería del Proyecto <span style="font-size: 0.8rem; font-weight: normal; color: var(--default-color);">(Click para ampliar)</span></h5>
-                  
+                  <h5 class="fw-bold mb-3" style="color: var(--accent-color);">Galería del Proyecto <span
+                      style="font-size: 0.8rem; font-weight: normal; color: var(--default-color);">(Click para
+                      ampliar)</span></h5>
+
                   <!-- CSS Grid para la Galería -->
                   <div class="row g-2">
                     <div class="col-12">
                       <a href="assets/img/portfolio/paperflix/2.png" class="glightbox" data-gallery="paperflix-gallery">
-                        <img src="assets/img/portfolio/paperflix/2.png" class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover" style="height: 300px; cursor: zoom-in;" alt="Dashboard Principal" loading="lazy">
+                        <img src="assets/img/portfolio/paperflix/2.png"
+                          class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover"
+                          style="height: 300px; cursor: zoom-in;" alt="Dashboard Principal" loading="lazy">
                       </a>
                     </div>
                     <div class="col-6">
                       <a href="assets/img/portfolio/paperflix/3.png" class="glightbox" data-gallery="paperflix-gallery">
-                        <img src="assets/img/portfolio/paperflix/3.png" class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover" style="height: 150px; cursor: zoom-in;" alt="Panel Admin" loading="lazy">
+                        <img src="assets/img/portfolio/paperflix/3.png"
+                          class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover"
+                          style="height: 150px; cursor: zoom-in;" alt="Panel Admin" loading="lazy">
                       </a>
                     </div>
                     <div class="col-6">
                       <a href="assets/img/portfolio/paperflix/4.png" class="glightbox" data-gallery="paperflix-gallery">
-                        <img src="assets/img/portfolio/paperflix/4.png" class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover" style="height: 150px; cursor: zoom-in;" alt="Actividad" loading="lazy">
+                        <img src="assets/img/portfolio/paperflix/4.png"
+                          class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover"
+                          style="height: 150px; cursor: zoom-in;" alt="Actividad" loading="lazy">
                       </a>
                     </div>
                     <div class="col-4">
                       <a href="assets/img/portfolio/paperflix/5.png" class="glightbox" data-gallery="paperflix-gallery">
-                        <img src="assets/img/portfolio/paperflix/5.png" class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover" style="height: 120px; cursor: zoom-in;" alt="Carga Masiva" loading="lazy">
+                        <img src="assets/img/portfolio/paperflix/5.png"
+                          class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover"
+                          style="height: 120px; cursor: zoom-in;" alt="Carga Masiva" loading="lazy">
                       </a>
                     </div>
                     <div class="col-4">
                       <a href="assets/img/portfolio/paperflix/6.png" class="glightbox" data-gallery="paperflix-gallery">
-                        <img src="assets/img/portfolio/paperflix/6.png" class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover" style="height: 120px; cursor: zoom-in;" alt="Generación IA" loading="lazy">
+                        <img src="assets/img/portfolio/paperflix/6.png"
+                          class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover"
+                          style="height: 120px; cursor: zoom-in;" alt="Generación IA" loading="lazy">
                       </a>
                     </div>
                     <div class="col-4">
                       <a href="assets/img/portfolio/paperflix/1.png" class="glightbox" data-gallery="paperflix-gallery">
-                        <img src="assets/img/portfolio/paperflix/1.png" class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover" style="height: 120px; cursor: zoom-in;" alt="Preview Extra" loading="lazy">
+                        <img src="assets/img/portfolio/paperflix/1.png"
+                          class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover"
+                          style="height: 120px; cursor: zoom-in;" alt="Preview Extra" loading="lazy">
                       </a>
                     </div>
                   </div>
 
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer border-secondary">
+              <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal MiPaperlux -->
+      <div class="modal fade" id="mipaperluxModal" tabindex="-1" aria-labelledby="mipaperluxModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
+          <div class="modal-content"
+            style="background-color: var(--background-color); border: 1px solid color-mix(in srgb, var(--accent-color), transparent 80%);">
+            <div class="modal-header border-secondary">
+              <h4 class="modal-title fw-bold" id="mipaperluxModalLabel" style="color: var(--heading-color);">
+                MiPaperlux — Onboarding Gamificado para Docentes</h4>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body p-4">
+              <div class="row g-4">
+                <div class="col-lg-5">
+                  <div class="mb-4 p-3 rounded"
+                    style="background-color: color-mix(in srgb, var(--accent-color), transparent 90%); border-left: 4px solid var(--accent-color);">
+                    <p class="mb-0" style="color: var(--heading-color); font-size: 0.95rem;">
+                      🏢 Proyecto desarrollado para <strong>Paperlux</strong>, empresa de tecnología educativa en
+                      Chile.<br>
+                      <a href="https://paperlux.cl/" target="_blank" rel="noopener" class="fw-bold text-decoration-none"
+                        style="color: var(--accent-color);">
+                        Ver sitio institucional de Paperlux <i class="bi bi-box-arrow-up-right ms-1"
+                          style="font-size: 0.8rem;"></i>
+                      </a>
+                    </p>
+                  </div>
+
+                  <h5 class="fw-bold mb-3" style="color: var(--accent-color);">El Desafío</h5>
+                  <p style="color: var(--default-color); line-height: 1.6;">
+                    Cuando un docente compra un dispositivo Paperlux, el onboarding tradicional (manuales, capacitaciones
+                    presenciales) es lento y poco medible. Se necesitaba un recorrido de capacitación autónomo que el
+                    docente pudiera completar por su cuenta, con datos reales de avance para el equipo de Paperlux.
+                  </p>
+
+                  <h5 class="fw-bold mb-3 mt-4" style="color: var(--accent-color);">Enfoque y Solución</h5>
+                  <p style="color: var(--default-color); line-height: 1.6;">
+                    Diseñé y desarrollé una plataforma de capacitación gamificada con recorridos modulares por
+                    producto (Tank, Portable), pensada para completarse en menos de 30 minutos.
+                  </p>
+                  <ul style="color: var(--default-color); line-height: 1.8;" class="mt-3">
+                    <li><strong>Recorridos modulares:</strong> módulos en video con seguimiento de progreso y
+                      porcentaje de avance en tiempo real.</li>
+                    <li><strong>Quizzes y certificación:</strong> validación de conocimientos y generación de
+                      certificados PDF al completar la capacitación.</li>
+                    <li><strong>Multi-rol:</strong> vistas diferenciadas para Admin Paperlux, Admin Institución, KAM
+                      y Docente.</li>
+                    <li><strong>Trazabilidad:</strong> correos transaccionales y registro de avance por docente e
+                      institución.</li>
+                    <li><strong>Stack:</strong> Next.js 14, NestJS, Prisma, Supabase, Vercel y Cloudflare Workers.</li>
+                    <li><strong>DevOps:</strong> contenedores con Docker y pipelines de CI/CD con GitHub Actions
+                      para build, test y despliegue automático.</li>
+                  </ul>
+                </div>
+                <div class="col-lg-7">
+                  <h5 class="fw-bold mb-3" style="color: var(--accent-color);">Galería del Proyecto <span
+                      style="font-size: 0.8rem; font-weight: normal; color: var(--default-color);">(Click para
+                      ampliar)</span></h5>
+
+                  <div class="row g-2">
+                    <div class="col-12">
+                      <a href="assets/img/portfolio/mipaperlux/2.png" class="glightbox"
+                        data-gallery="mipaperlux-gallery">
+                        <img src="assets/img/portfolio/mipaperlux/2.png"
+                          class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover"
+                          style="height: 300px; cursor: zoom-in;" alt="Recorrido del docente — Mi recorrido"
+                          loading="lazy">
+                      </a>
+                    </div>
+                    <div class="col-6">
+                      <a href="assets/img/portfolio/mipaperlux/3.png" class="glightbox"
+                        data-gallery="mipaperlux-gallery">
+                        <img src="assets/img/portfolio/mipaperlux/3.png"
+                          class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover"
+                          style="height: 180px; cursor: zoom-in;" alt="Panel de control — Admin Paperlux"
+                          loading="lazy">
+                      </a>
+                    </div>
+                    <div class="col-6">
+                      <a href="assets/img/portfolio/mipaperlux/4.png" class="glightbox"
+                        data-gallery="mipaperlux-gallery">
+                        <img src="assets/img/portfolio/mipaperlux/4.png"
+                          class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover"
+                          style="height: 180px; cursor: zoom-in;" alt="Gestión de usuarios — vista KAM"
+                          loading="lazy">
+                      </a>
+                    </div>
+                    <div class="col-12">
+                      <a href="assets/img/portfolio/mipaperlux/1.png" class="glightbox"
+                        data-gallery="mipaperlux-gallery">
+                        <img src="assets/img/portfolio/mipaperlux/1.png"
+                          class="img-fluid rounded border border-secondary w-100 object-fit-cover portfolio-img-hover"
+                          style="height: 140px; cursor: zoom-in;" alt="Pantalla de bienvenida de MiPaperlux"
+                          loading="lazy">
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1865,7 +2207,8 @@
             <!-- ── BLOQUE ORIGINAL ── -->
             <div class="client-logo-item">
               <a href="https://paperlux.cl/" target="_blank" rel="noopener">
-                <img src="assets/img/clients/paperflix.png" alt="Paperflix" loading="lazy">
+                <img src="assets/img/clients/paperflix.png"
+                  alt="Dashboard de Paperflix, plataforma EdTech con IA integrada" loading="lazy">
               </a>
             </div>
             <div class="client-logo-item">
@@ -1915,7 +2258,8 @@
             </div>
             <div class="client-logo-item">
               <a href="https://siti.mateorojas.com.ar" target="_blank" rel="noopener">
-                <img src="assets/img/clients/siti.png" alt="SITI" loading="lazy">
+                <img src="assets/img/clients/siti.png"
+                  alt="Panel de administración de SITI — Sistema Integral de Tiendas" loading="lazy">
               </a>
             </div>
 
@@ -2533,7 +2877,9 @@
 
     <div class="container">
       <div class="copyright text-center ">
-        <p> © <strong class="px-1 sitename">Mateo Rojas</strong> <span> — Portfolio Personal</span>
+        <p> © <span id="year"></span> <strong class="px-1 sitename">Mateo Rojas</strong> <span>— Portfolio
+            Personal</span>
+          <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
         </p>
       </div>
       <div class="credits">
@@ -2551,9 +2897,6 @@
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Preloader -->
-  <div id="preloader"></div>
-
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
@@ -2569,20 +2912,19 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
+  <!-- Mundo 3D, tema día/noche y carga -->
+  <script type="module" src="assets/js/studio/app.js"></script>
+
   <!-- Blog Swiper Init -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       new Swiper('.blog-swiper', {
-        slidesPerView: 1,
-        spaceBetween: 24,
+        slidesPerView: 'auto',
+        spaceBetween: 16,
         loop: true,
         autoplay: { delay: 5000, disableOnInteraction: false },
         pagination: { el: '.swiper-pagination', clickable: true },
-        navigation: { nextEl: '.blog-swiper-next', prevEl: '.blog-swiper-prev' },
-        breakpoints: {
-          768: { slidesPerView: 2 },
-          1200: { slidesPerView: 3 }
-        }
+        navigation: { nextEl: '.blog-swiper-next', prevEl: '.blog-swiper-prev' }
       });
     });
   </script>
@@ -2706,7 +3048,8 @@
   </script>
 
 
-  <script>
+  <!-- Avatar y lámpara 2D: respaldo sin WebGL. No se ejecutan solos; los activa app.js si el 3D no arranca -->
+  <script type="text/plain" data-legacy-hero>
     gsap.registerPlugin(CustomEase, CustomWiggle);
 
     // ======== ANIMACIONES INICIALES ========
@@ -2897,7 +3240,7 @@
 
 
 
-  <script>
+  <script type="text/plain" data-legacy-hero>
     $(document).ready(function () {
       var speed, swing, rotation = 0,
         time, gravity = 1,
@@ -3040,53 +3383,7 @@
       }
     });
   </script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: 'AIzaSyCIZoy4fl0mW73MFx9cubLbJPcSJmaDD_c',
-      authDomain: 'remis-agustin.firebaseapp.com',
-      projectId: 'remis-agustin',
-      storageBucket: 'remis-agustin.firebasestorage.app',
-      messagingSenderId: '945721930153',
-      appId: '1:945721930153:web:84dcff9c699357c7d994b8',
-      measurementId: 'G-KPHS9G2FK4',
-    };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const testimoniosList = document.getElementById('testimoniosList');
-
-    async function loadTestimonios() {
-      testimoniosList.innerHTML = '<div class="swiper-slide"><p style="text-align:center; color:#555;">Cargando testimonios...</p></div>';
-      try {
-        const snapshot = await db.collection('testimonios').orderBy('timestamp', 'desc').get();
-        if (snapshot.empty) {
-          testimoniosList.innerHTML = '<div class="swiper-slide"><p style="text-align:center; color:#555;">No hay testimonios aún.</p></div>';
-          return;
-        }
-        testimoniosList.innerHTML = '';
-        snapshot.forEach(doc => {
-          const t = doc.data();
-          const divSlide = document.createElement('div');
-          divSlide.className = 'swiper-slide';
-          divSlide.innerHTML = `
-                <div class="testimonial-item" style="padding:1rem; border-radius:10px; background:#f9f9f9; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center;">
-                  <p style="font-style:italic;">"${t.remarks}"</p>
-                  <h4 style="margin-top:0.5rem; color:#00b894;">${t.name}</h4>
-                </div>
-              `;
-          testimoniosList.appendChild(divSlide);
-        });
-      } catch (error) {
-        testimoniosList.innerHTML = '<div class="swiper-slide"><p style="text-align:center; color:red;">Error al cargar testimonios.</p></div>';
-        console.error(error);
-      }
-    }
-
-    loadTestimonios();
-  </script>
 
 </body>
 

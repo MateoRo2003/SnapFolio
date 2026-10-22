@@ -226,9 +226,38 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
-
-
-
-
+  /**
+   * Timeline Scroll Animation (Focus Style)
+   */
+  const timelineItems = document.querySelectorAll('.timeline-item');
+  const timelineContainer = document.querySelector('.timeline-container');
   
+  if (timelineItems.length > 0 && timelineContainer) {
+    const timelineObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        } else {
+          entry.target.classList.remove('active');
+        }
+      });
+
+      // Si hay al menos un elemento activo, le ponemos la clase al contenedor para atenuar los demás
+      const hasActive = document.querySelector('.timeline-item.active');
+      if (hasActive) {
+        timelineContainer.classList.add('has-active');
+      } else {
+        timelineContainer.classList.remove('has-active');
+      }
+    }, {
+      root: null,
+      rootMargin: '-30% 0px -30% 0px',
+      threshold: 0
+    });
+
+    timelineItems.forEach(item => {
+      timelineObserver.observe(item);
+    });
+  }
+
 })();

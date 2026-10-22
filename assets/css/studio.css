@@ -1,0 +1,1280 @@
+/*--------------------------------------------------------------
+# Studio
+# Rediseño con el mundo 3D como centro. Se carga después de main.css y lo pisa:
+# tokens de los dos temas, tipografía, piel de los componentes y, cuando hay 3D
+# (.stage-on en <html>), el layout de paneles al costado de la escena.
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Tokens
+--------------------------------------------------------------*/
+:root {
+  --default-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --heading-font: "Sora", "Inter", system-ui, sans-serif;
+  --nav-font: "Inter", system-ui, sans-serif;
+
+  --amber: #f3b949; /* la luz de la lámpara: único color del sitio */
+  --panel-w: clamp(440px, 40vw, 600px);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* noche */
+  color-scheme: dark;
+  --background-color: #161617;
+  --default-color: #c8c8cc;
+  --heading-color: #f5f5f3;
+  --accent-color: #f2f1ee;
+  --contrast-color: #161617;
+  --surface-color: rgba(255, 255, 255, 0.045);
+  --muted: #8d8d93;
+  --line: rgba(255, 255, 255, 0.11);
+  --glass: rgba(22, 22, 24, 0.93);
+  --amber-ink: #f3b949;
+  --nav-color: #8d8d93;
+  --nav-hover-color: #f5f5f3;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --background-color: #f2efe9;
+  --default-color: #4b4a47;
+  --heading-color: #19191a;
+  --accent-color: #1c1c1d;
+  --contrast-color: #faf8f3;
+  --surface-color: rgba(255, 255, 255, 0.62);
+  --muted: #7c7a75;
+  --line: rgba(25, 25, 26, 0.13);
+  --glass: rgba(246, 243, 237, 0.94);
+  --amber-ink: #a56f08;
+  --nav-color: #7c7a75;
+  --nav-hover-color: #19191a;
+}
+
+/*--------------------------------------------------------------
+# Base
+--------------------------------------------------------------*/
+body {
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* El cambio de tema lo funde el navegador con una sola transición de pantalla completa (app.js):
+   animar el color de cada elemento por separado obligaba a repintar toda la página durante un segundo. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.7s;
+}
+
+/* el fondo son dos lavados de luz superpuestos, uno por tema */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  background: radial-gradient(110% 85% at 68% 6%, #29292d 0%, #161617 50%, #0b0b0c 100%);
+}
+
+body::after {
+  background: radial-gradient(110% 85% at 68% 6%, #fffdf8 0%, #f2efe9 50%, #e2ded4 100%);
+  opacity: 0;
+}
+
+[data-theme="light"] body::before {
+  opacity: 0;
+}
+
+[data-theme="light"] body::after {
+  opacity: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--heading-font);
+  letter-spacing: -0.02em;
+}
+
+a {
+  transition: color 0.25s;
+}
+
+a:hover {
+  color: var(--amber-ink);
+}
+
+::selection {
+  background: var(--amber);
+  color: #161617;
+}
+
+main,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
+.section,
+#github-contributions,
+.footer {
+  background-color: transparent !important;
+  scroll-margin-top: 24px;
+}
+
+.background-elements {
+  display: none !important;
+}
+
+/* utilidades de Bootstrap que la plantilla usaba fijas en oscuro */
+body .text-white,
+body .text-light {
+  color: var(--heading-color) !important;
+}
+
+body .text-muted {
+  color: var(--muted) !important;
+}
+
+body .text-success {
+  color: var(--default-color) !important;
+}
+
+body .bg-secondary {
+  background-color: var(--surface-color) !important;
+}
+
+body .border-secondary {
+  border-color: var(--line) !important;
+}
+
+[data-theme="light"] .btn-close-white {
+  filter: none;
+}
+
+[data-theme="light"] .skill-item img {
+  filter: none !important;
+}
+
+/*--------------------------------------------------------------
+# Mundo 3D, pistas y globo de texto
+--------------------------------------------------------------*/
+#stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.8s var(--ease);
+}
+
+.is-ready #stage {
+  opacity: 1;
+}
+
+#stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  touch-action: pan-y;
+}
+
+.stage-on main {
+  pointer-events: none;
+}
+
+.stage-on main section {
+  pointer-events: auto;
+  /* las entradas de AOS (fade-left/right) desplazan columnas hacia afuera antes de animarlas: en el
+     celular eso ensanchaba toda la página. "clip" recorta sin volver al panel un contenedor de scroll */
+  overflow-x: clip;
+}
+
+.stage-tip,
+.stage-hint {
+  position: fixed;
+  z-index: 70;
+  pointer-events: none;
+  font: 500 13px/1 var(--default-font);
+  color: var(--contrast-color);
+  background: var(--accent-color);
+  border-radius: 999px;
+  padding: 8px 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+/* sigue al cursor con transform (world.js): no obliga a recalcular el layout */
+.stage-tip {
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+
+.stage-tip.is-on {
+  opacity: 1;
+}
+
+.stage-hint {
+  bottom: 28px;
+  transform: translateX(-50%);
+  color: var(--muted);
+  background: var(--glass);
+  border: 1px solid var(--line);
+  transition: opacity 0.5s var(--ease);
+}
+
+.stage-hint.is-on {
+  opacity: 1;
+}
+
+.stage-hint i {
+  color: var(--amber-ink);
+  margin-right: 6px;
+}
+
+/*--------------------------------------------------------------
+# Carga: la terminal
+# Una ventana de terminal donde se tipea "npm run portfolio" y cada paso se tilda cuando de
+# verdad terminó (app.js escribe las líneas). Al final la ventana vuela hacia la laptop del
+# escritorio 3D y se mete en ella mientras aparece el sitio. Solo se animan transform y opacity.
+--------------------------------------------------------------*/
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  grid-template-columns: minmax(0, 720px); /* sin esto, una línea larga ensancha la ventana en el celular */
+  place-content: center;
+  padding: 16px;
+  background: #0d0d0e;
+  transition: background-color 0.7s ease 0.15s;
+}
+
+/* de día el fondo es claro; la terminal sigue oscura, como cualquier terminal */
+[data-theme="light"] #loader {
+  background: #f2efe9;
+}
+
+#loader.is-out {
+  background-color: transparent;
+  pointer-events: none;
+}
+
+#loader.is-gone {
+  display: none;
+}
+
+.term {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #161618;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.7);
+  /* entra con "backwards": al terminar queda el estilo normal, así la salida puede ser una transición */
+  animation: term-in 0.6s var(--ease) 0.1s backwards;
+}
+
+[data-theme="light"] .term {
+  border-color: rgba(0, 0, 0, 0.06);
+  box-shadow: 0 40px 80px -40px rgba(60, 40, 20, 0.45);
+}
+
+.term-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  background: #1c1c1f;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.term-bar i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #3a3a3f;
+}
+
+.term-bar i:first-child {
+  background: #f3b949; /* el único color de la barra: el ámbar de la lámpara */
+}
+
+.term-bar span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font: 500 12px/1 var(--default-font);
+  color: #6f6f75;
+  pointer-events: none;
+}
+
+.term-body {
+  /* alto fijo para las 14 líneas que llega a tener: así la ventana no salta mientras se escribe */
+  height: calc(14 * 1.85em + 48px);
+  margin: 0;
+  padding: 22px 26px 26px;
+  overflow: hidden;
+  font: 15px/1.85 "JetBrains Mono", "Cascadia Code", ui-monospace, "SF Mono", Consolas, monospace;
+  color: #c8c8cc;
+  white-space: pre-wrap;
+}
+
+.term-body .u { color: #f3b949; }   /* usuario del prompt */
+.term-body .m { color: #6f6f75; }   /* texto apagado */
+.term-body .w { color: #f5f5f3; }   /* lo que se tipea */
+.term-body .ok { color: #9cc79a; }  /* tilde */
+.term-body .a { color: #f3b949; }   /* barra de avance */
+
+/* el cursor de bloque titila al final de la última línea */
+.term-body .cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.15em;
+  margin-left: 1px;
+  vertical-align: -0.2em;
+  background: #f5f5f3;
+  animation: term-blink 1s steps(1) infinite;
+}
+
+/* la salida: la ventana vuela hasta la laptop (--tx, --ty los calcula app.js) y se achica adentro */
+#loader.is-out .term {
+  opacity: 0;
+  transform: translate(var(--tx, 0), var(--ty, 0)) scale(var(--ts, 1.06));
+  transition: transform 0.95s cubic-bezier(0.65, 0, 0.25, 1), opacity 0.45s ease 0.55s;
+}
+
+@keyframes term-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+
+@keyframes term-blink {
+  50% { opacity: 0; }
+}
+
+@media (max-width: 600px) {
+  .term-body {
+    padding: 16px;
+    font-size: 11.5px;
+  }
+}
+
+/*--------------------------------------------------------------
+# Navegación: un dock de íconos
+--------------------------------------------------------------*/
+body #header {
+  --background-color: inherit;
+  --default-color: inherit;
+  --heading-color: inherit;
+  --surface-color: inherit;
+  --contrast-color: inherit;
+  display: block !important;
+  position: fixed;
+  top: 50%;
+  left: 22px;
+  bottom: auto;
+  width: auto;
+  padding: 0;
+  overflow: visible;
+  transform: translateY(-50%);
+  z-index: 60;
+}
+
+.header .header-toggle,
+.header .social-links {
+  display: none !important;
+}
+
+.header .header-container {
+  width: fit-content;
+  padding: 8px;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--line);
+}
+
+.header .navmenu ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0;
+}
+
+.header .navmenu li.mt-4 {
+  margin-top: 8px !important;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.header .navmenu a,
+.header .navmenu a:focus,
+.header .navmenu .theme-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--nav-color);
+  font-size: 0;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s, transform 0.25s var(--ease);
+}
+
+.header .navmenu a .navicon,
+.header .navmenu a:focus .navicon,
+.header .navmenu .theme-toggle i {
+  font-size: 18px;
+  margin: 0;
+  color: inherit;
+}
+
+.header .navmenu a:hover,
+.header .navmenu .theme-toggle:hover {
+  color: var(--nav-hover-color);
+  background: var(--surface-color);
+}
+
+.header .navmenu a.active,
+.header .navmenu a.active:focus {
+  color: var(--contrast-color);
+  background: var(--accent-color);
+}
+
+.header .navmenu a.active .navicon,
+.header .navmenu a:hover .navicon {
+  color: inherit;
+}
+
+.header .navmenu .theme-toggle {
+  color: var(--amber-ink);
+}
+
+/* la etiqueta del ítem aparece al lado, como globo */
+.header .navmenu [data-label]::after {
+  content: attr(data-label);
+  position: absolute;
+  left: calc(100% + 16px);
+  top: 50%;
+  transform: translate(-6px, -50%);
+  font: 500 13px/1 var(--default-font);
+  color: var(--contrast-color);
+  background: var(--accent-color);
+  border-radius: 999px;
+  padding: 8px 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s var(--ease);
+}
+
+.header .navmenu [data-label]:hover::after,
+.header .navmenu [data-label]:focus-visible::after {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+@media (min-width: 1200px) {
+  .header ~ main,
+  .header ~ #footer {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 1199px) {
+  body #header {
+    top: auto;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+  }
+
+  .header .header-container {
+    padding: 6px;
+  }
+
+  .header .navmenu ul {
+    flex-direction: row;
+  }
+
+  .header .navmenu li.mt-4 {
+    margin: 0 0 0 6px !important;
+    padding: 0 0 0 6px;
+    border-top: 0;
+    border-left: 1px solid var(--line);
+  }
+
+  .header .navmenu a,
+  .header .navmenu a:focus,
+  .header .navmenu .theme-toggle {
+    width: clamp(32px, 9.4vw, 44px);
+    height: clamp(32px, 9.4vw, 44px);
+  }
+
+  .header .navmenu [data-label]::after {
+    display: none;
+  }
+
+  main {
+    padding-bottom: 88px;
+  }
+}
+
+.scroll-top {
+  display: none !important;
+}
+
+/*--------------------------------------------------------------
+# Hero
+--------------------------------------------------------------*/
+.hero .hero-text h1 {
+  font-size: clamp(52px, 6.6vw, 108px);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  margin-bottom: 22px;
+}
+
+.hero .hero-text h1 .accent-text {
+  color: inherit;
+  font-weight: 300;
+}
+
+.hero .hero-text h1 .accent-text::after {
+  display: none;
+}
+
+.hero .hero-text h2 {
+  font-family: var(--default-font);
+  font-size: clamp(17px, 1.5vw, 21px);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.hero .hero-text .lead {
+  font-size: 17px;
+  margin-bottom: 14px;
+}
+
+.hero .hero-text .lead span {
+  color: var(--heading-color);
+  border-bottom: 2px solid var(--amber);
+}
+
+.hero .hero-text .description {
+  font-size: 16px;
+  max-width: 460px;
+  color: var(--default-color);
+  margin-bottom: 32px;
+}
+
+/* cada línea del hero entra cuando termina la carga */
+.hero .hero-text > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+
+.is-ready .hero .hero-text > * {
+  opacity: 1;
+  transform: none;
+}
+
+.is-ready .hero .hero-text > :nth-child(2) { transition-delay: 0.08s; }
+.is-ready .hero .hero-text > :nth-child(3) { transition-delay: 0.16s; }
+.is-ready .hero .hero-text > :nth-child(4) { transition-delay: 0.24s; }
+.is-ready .hero .hero-text > :nth-child(5) { transition-delay: 0.32s; }
+
+/*--------------------------------------------------------------
+# Botones, chips y tarjetas
+--------------------------------------------------------------*/
+body .btn {
+  border-radius: 999px !important;
+  font-family: var(--default-font);
+  font-weight: 600;
+  transition: transform 0.25s var(--ease), background-color 0.25s, color 0.25s, border-color 0.25s;
+}
+
+body .btn:hover {
+  transform: translateY(-2px);
+}
+
+body .btn-primary,
+body .btn-light,
+body .contact .contact-form .btn {
+  background: var(--accent-color) !important;
+  color: var(--contrast-color) !important;
+  border: 1px solid var(--accent-color) !important;
+  box-shadow: none !important;
+}
+
+body .btn-outline,
+body .btn-outline-light {
+  background: transparent !important;
+  color: var(--heading-color) !important;
+  border: 1px solid var(--line) !important;
+}
+
+body .btn-outline:hover,
+body .btn-outline-light:hover {
+  border-color: var(--amber-ink) !important;
+  color: var(--amber-ink) !important;
+}
+
+body .tech-tags .badge,
+body .blog .badge {
+  background: transparent !important;
+  color: var(--default-color) !important;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-weight: 500;
+  padding: 5px 10px;
+  margin-bottom: 4px;
+}
+
+body .profile-card,
+body .stats-item,
+body .skill-category-card,
+body .timeline-card,
+body .portfolio-content,
+body .blog .card,
+body .contact .contact-form,
+body .about .stat-item,
+body .about .detail-item {
+  background: var(--surface-color) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 20px !important;
+  box-shadow: none !important;
+  transition: border-color 0.3s, opacity 0.3s, transform 0.3s var(--ease);
+}
+
+/*--------------------------------------------------------------
+# Secciones
+--------------------------------------------------------------*/
+main {
+  counter-reset: panel;
+}
+
+/* número de panel arriba de cada sección */
+main section:not(.hero)::before {
+  counter-increment: panel;
+  content: counter(panel, decimal-leading-zero);
+  display: block;
+  font: 600 12px/1 var(--heading-font);
+  letter-spacing: 0.18em;
+  color: var(--amber-ink);
+  margin-bottom: 18px;
+}
+
+.section-title,
+.stats .section-header,
+#github-contributions .container {
+  text-align: left !important;
+}
+
+.section-title {
+  padding-bottom: 28px;
+}
+
+.section-title h2,
+.about .section-header h2,
+.stats .section-header h2,
+#github-contributions h2 {
+  font-size: clamp(28px, 2.6vw, 38px);
+  font-weight: 600;
+  line-height: 1.1;
+  margin-top: 0 !important;
+  color: var(--heading-color);
+}
+
+.section-title h2::before,
+.section-title h2::after {
+  display: none;
+}
+
+.section-title p,
+.skills .section-title .lead {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--default-color) !important;
+  margin: 14px 0 0 !important;
+}
+
+.about .badge-text {
+  display: none;
+}
+
+.about .stat-item .stat-number {
+  font-family: var(--heading-font);
+  color: var(--heading-color);
+}
+
+.skills .skill-category-card h3 {
+  font-size: 15px;
+  letter-spacing: 0;
+  color: var(--heading-color);
+}
+
+.skills .skill-category-card h3::after {
+  background: var(--amber);
+}
+
+.skill-item.is-hot {
+  transform: translateY(-5px);
+}
+
+.skill-item.is-hot p {
+  color: var(--heading-color);
+}
+
+.github-chart {
+  width: 100%;
+  height: auto;
+  filter: grayscale(1);
+}
+
+:root:not([data-theme="light"]) .github-chart {
+  filter: grayscale(1) invert(1) brightness(1.4);
+}
+
+.timeline-item.active .timeline-card {
+  border-color: var(--amber-ink) !important;
+}
+
+.date-badge {
+  border-radius: 999px;
+}
+
+.portfolio .filters-wrapper {
+  position: static;
+  padding: 0;
+  background: none !important;
+  border: 0 !important;
+}
+
+.portfolio .portfolio-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 0 0 24px;
+  list-style: none;
+}
+
+.portfolio .portfolio-filters li {
+  flex: 0 0 auto;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 8px 14px;
+  font: 500 13px/1 var(--default-font);
+  color: var(--default-color);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+}
+
+.portfolio .portfolio-filters li::before,
+.portfolio .portfolio-filters li::after {
+  display: none;
+}
+
+.portfolio .portfolio-filters li:hover {
+  color: var(--heading-color);
+  border-color: var(--heading-color);
+}
+
+.portfolio .portfolio-filters li.filter-active {
+  color: var(--contrast-color);
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.portfolio .portfolio-content .category {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber-ink) !important;
+}
+
+.portfolio .portfolio-content h4 {
+  font-size: 22px;
+}
+
+.portfolio .portfolio-img-wrapper {
+  border-radius: 20px !important;
+  border: 1px solid var(--line);
+}
+
+.blog .blog-swiper .swiper-slide {
+  width: min(320px, 84%);
+  height: auto;
+}
+
+.contact .form-control {
+  background: transparent !important;
+  color: var(--heading-color) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 14px !important;
+}
+
+.contact .form-control::placeholder {
+  color: var(--muted);
+}
+
+.contact .form-control:focus {
+  border-color: var(--amber-ink) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 22%, transparent) !important;
+}
+
+.contact .info-box {
+  border-radius: 20px;
+}
+
+.footer .copyright {
+  border-top-color: var(--line);
+  color: var(--muted);
+}
+
+/*--------------------------------------------------------------
+# Con 3D: el contenido son paneles de vidrio al costado de la escena
+--------------------------------------------------------------*/
+.stage-on .hero .hero-visual {
+  display: none;
+}
+
+/* Sin backdrop-filter a propósito: desenfocar el lienzo 3D detrás de paneles tan grandes, 60 veces
+   por segundo, era lo más caro de toda la página. El panel es casi opaco y se lee igual. */
+.stage-on main section {
+  background: var(--glass) !important;
+  border: 1px solid var(--line);
+  box-shadow: 0 24px 50px -36px rgba(0, 0, 0, 0.5);
+}
+
+.stage-on main section > .container,
+.stage-on .hero .container {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+.stage-on main .hero {
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: none !important;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.stage-on .footer {
+  pointer-events: none;
+}
+
+@media (min-width: 1200px) {
+  .stage-on main section {
+    width: var(--panel-w);
+    margin: 0 auto 48vh 108px;
+    padding: 44px 40px !important;
+    border-radius: 28px;
+  }
+
+  /* estos paneles van a la derecha: la escena pasa al otro lado */
+  .stage-on main :is(#about, #stats, #resume, #clientes, #blog) {
+    margin-left: auto;
+    margin-right: 40px;
+  }
+
+  .stage-on main .hero {
+    width: min(50vw, 720px);
+    margin-bottom: 30vh;
+    padding: 0 !important;
+  }
+
+  .stage-on main #contact {
+    margin-bottom: 14vh;
+  }
+
+  /* un panel corto queda fijo en el medio mientras la cámara mira su estación (world.js arma el tramo) */
+  .stage-on .panel-track {
+    margin-bottom: 48vh;
+  }
+
+  /* el tramo extra tiene que ser contenido (no padding): un sticky solo se mueve dentro del contenido */
+  .stage-on .panel-track::after {
+    content: "";
+    display: block;
+    height: var(--dwell, 0px);
+  }
+
+  .stage-on .panel-track > section {
+    margin-bottom: 0 !important;
+  }
+
+  .stage-on .panel-track.is-pinned > section {
+    position: sticky !important; /* algunas secciones de la plantilla se declaran relative */
+    top: var(--pin, 20vh);
+  }
+
+  .stage-on main > .panel-track:last-child {
+    margin-bottom: 14vh;
+  }
+
+  /* dentro de un panel angosto todo va en una sola columna */
+  .stage-on main section > .container .row > :is([class*="col-lg-"], [class*="col-xl-"]),
+  .stage-on .hero .row > [class*="col-lg-"],
+  .stage-on .timeline-card .row > [class*="col-md-"] {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .stage-on .skills .col-lg-6.p-3 {
+    padding: 0 0 16px !important;
+  }
+
+  /* la captura de cada proyecto se ve en la laptop 3D: en la lista queda el texto */
+  .stage-on .portfolio .portfolio-img-wrapper {
+    display: none;
+  }
+
+  .stage-on .portfolio .portfolio-content {
+    margin-top: 0 !important;
+    padding: 4px 0 4px 20px !important;
+    background: none !important;
+    border: 0 !important;
+    border-left: 2px solid var(--line) !important;
+    border-radius: 0 !important;
+    opacity: 0.45;
+  }
+
+  .stage-on .portfolio .portfolio-item:hover .portfolio-content,
+  .stage-on .portfolio .portfolio-item.is-current .portfolio-content {
+    opacity: 1;
+  }
+
+  .stage-on .portfolio .portfolio-item.is-current .portfolio-content {
+    border-left-color: var(--amber) !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  .stage-on main section {
+    margin: 0 12px 56vh;
+    padding: 30px 20px !important;
+    border-radius: 24px;
+  }
+
+  .stage-on main .hero {
+    align-items: flex-start;
+    margin: 0 0 34vh;
+    padding: 132px 22px 0 !important; /* arriba cuelga la lámpara */
+  }
+
+  .stage-hint {
+    bottom: 84px;
+  }
+
+  .stage-on .hero .hero-text {
+    text-align: left;
+  }
+
+  .stage-on main #contact {
+    margin-bottom: 6vh;
+  }
+}
+
+/*--------------------------------------------------------------
+# Certificados: con 3D, una lista con todos (la arma stations.js)
+--------------------------------------------------------------*/
+.cert-list {
+  display: none;
+}
+
+.stage-on #stats .carousel {
+  display: none !important;
+}
+
+.stage-on #stats .section-header {
+  margin-bottom: 24px !important;
+}
+
+.stage-on .cert-list {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.cert-row {
+  display: grid;
+  grid-template-columns: 38px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.cert-row.is-hot {
+  border-color: var(--amber-ink);
+  background: var(--surface-color);
+}
+
+.cert-row-logo {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--surface-color);
+  border: 1px solid var(--line);
+}
+
+.cert-row-logo img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.cert-row-text strong {
+  display: block;
+  font: 600 14px/1.3 var(--heading-font);
+  letter-spacing: -0.01em;
+  color: var(--heading-color);
+}
+
+.cert-row-text small {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.cert-row-link {
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font: 600 13px/1 var(--default-font);
+  color: var(--heading-color);
+  white-space: nowrap;
+}
+
+.cert-row-link:hover {
+  border-color: var(--amber-ink);
+  color: var(--amber-ink);
+}
+
+.cert-row-none {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/*--------------------------------------------------------------
+# Portfolio con 3D: un proyecto por vez, con anterior / siguiente
+--------------------------------------------------------------*/
+.project-nav,
+.project-index {
+  display: none;
+}
+
+.stage-on .portfolio .portfolio-filters {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.stage-on .portfolio .portfolio-filters {
+  gap: 6px;
+  margin-bottom: 22px;
+}
+
+.stage-on .portfolio .portfolio-filters li {
+  padding: 7px 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  font-size: 12.5px;
+}
+
+.stage-on .portfolio .portfolio-filters li.filter-active {
+  border-color: var(--accent-color) !important;
+}
+
+.stage-on .portfolio.is-picker .isotope-container {
+  height: auto !important;
+}
+
+/* la plantilla les ponía sombra a estas cajas: sobre el panel claro se notaban como recuadros */
+.stage-on .portfolio .filters-wrapper,
+.stage-on .portfolio.is-picker .portfolio-wrap {
+  background: none !important;
+  box-shadow: none !important;
+  overflow: visible;
+}
+
+.stage-on .portfolio.is-picker .portfolio-item {
+  display: none;
+}
+
+.stage-on .portfolio.is-picker .portfolio-item.is-current {
+  display: block;
+  flex: 0 0 100%;
+  width: 100%;
+  max-width: 100%;
+  position: static !important;
+  transform: none !important;
+  animation: project-in 0.45s var(--ease);
+}
+
+@keyframes project-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.stage-on .portfolio.is-picker .portfolio-content {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  opacity: 1 !important;
+}
+
+.stage-on .portfolio.is-picker .portfolio-content p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.stage-on .portfolio.is-picker .tech-tags .badge:nth-child(n + 7) {
+  display: none;
+}
+
+.stage-on .portfolio.is-picker .portfolio-links {
+  display: flex;
+  gap: 8px;
+}
+
+.stage-on .portfolio.is-picker .portfolio-links .btn,
+.stage-on .portfolio.is-picker .portfolio-content > .btn {
+  padding: 9px 16px;
+  font-size: 14px;
+}
+
+.stage-on .project-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.project-step {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--heading-color);
+  font-size: 16px;
+  transition: border-color 0.25s, color 0.25s, transform 0.25s var(--ease);
+}
+
+.project-step:hover {
+  border-color: var(--amber-ink);
+  color: var(--amber-ink);
+}
+
+.project-step:active {
+  transform: scale(0.94);
+}
+
+.project-count {
+  font: 600 13px/1 var(--heading-font);
+  letter-spacing: 0.14em;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.stage-on .project-index {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
+  /* la tira es de una sola línea: se desliza de costado y se desvanece en los bordes */
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
+}
+
+.project-index::-webkit-scrollbar {
+  display: none;
+}
+
+.project-pill {
+  flex: 0 0 auto;
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  font: 500 12.5px/1 var(--default-font);
+  color: var(--default-color);
+  cursor: pointer;
+  transition: background-color 0.25s, border-color 0.25s, color 0.25s;
+}
+
+.project-pill:hover {
+  border-color: var(--heading-color);
+  color: var(--heading-color);
+}
+
+.project-pill.is-current {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #161617;
+}
+
+.project-pill[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01s;
+  }
+
+  .term {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+  }
+
+  .hero .hero-text > * {
+    transition: none;
+  }
+}

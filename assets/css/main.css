@@ -27,38 +27,206 @@
 }
 
 
-/* Frontend */
-.html:hover { color: #e44f26; }        /* Naranja HTML */
-.css:hover { color: #264de4; }         /* Azul CSS */
-.javascript:hover { color: #f0db4f; }   /* Amarillo JS */
-.bootstrap:hover { color: #563d7c; }    /* Morado Bootstrap */
-.sass:hover { color: #cd6799; }         /* Rosado Sass */
-.angular:hover { color: #dd1b16; }      /* Rojo Angular */
-.gulp:hover { color: #cf4647; }         /* Rojo Gulp */
-.sharp:hover { color: #15875a; }       /* Morado C# */
+/* Skills Section Minimalist */
+.skill-category-card {
+  background-color: var(--surface-color);
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  border-radius: 1rem;
+  padding: 2.5rem 2rem;
+  height: 100%;
+  transition: border-color 0.3s ease;
+}
 
-/* Backend */
-.php:hover { color: #777bb3; }          /* Azul PHP */
-.laravel:hover { color: #ff2d20; }      /* Rojo Laravel */
-.typescript:hover { color: #007acc; }   /* Azul TypeScript */
-.mysql:hover { color: #00758f; }        /* Azul MySQL */
-.sqlserver:hover { color: #cc2927; }    /* Rojo SQL Server */
-.java:hover { color: #f89820; }         /* Naranja Java */
-.cpp:hover { color: #00599c; }          /* Azul C++ */
-.csharp:hover { color: #68217a; }       /* Morado C# */
+.skill-category-card:hover {
+  border-color: color-mix(in srgb, var(--accent-color), transparent 80%);
+}
 
-/* Herramientas */
-.figma:hover { color: #f24e1e; }        /* Rojo Figma */
-.vscode:hover { color: #0078d7; }     
-.vs:hover{color: #b565ce;}  /* Azul VS Code */
-.chatgpt:hover { color: #10a37f; }      /* Verde ChatGPT */
-.gemini:hover { color: #b980ee; }       /* Púrpura Gemini */
-.canva:hover { color: #00c4cc; }        /* Turquesa Canva */
-.github:hover { color: #10d7de; }          /* Negro GitHub */
-.docker:hover { color: #0db7ed; }       /* Azul Docker */
-.postman:hover { color: #ff6c37; }      /* Naranja Postman */
-.insomnia:hover { color: #678cb2; }     /* Azul oscuro Insomnia */
+.skill-category-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: var(--heading-color);
+  text-align: center;
+  position: relative;
+  padding-bottom: 1rem;
+}
 
+.skill-category-card h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 2px;
+  background: color-mix(in srgb, var(--default-color), transparent 80%);
+  border-radius: 2px;
+}
+
+.skill-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0.5rem;
+  background: transparent;
+  cursor: pointer;
+}
+
+.skill-item img, .skill-item i {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.skill-item p {
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--default-color);
+  transition: color 0.3s ease;
+}
+
+.skill-item:hover img, .skill-item:hover i {
+  transform: translateY(-3px);
+}
+
+.skill-item:hover p {
+  color: var(--skill-color, var(--accent-color));
+}
+
+
+/* Modern Experience Timeline */
+.timeline-container {
+  position: relative;
+  padding-left: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 2px;
+  background: color-mix(in srgb, var(--default-color), transparent 85%);
+  border-radius: 2px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -2.35rem;
+  top: 1.5rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--surface-color);
+  border: 2px solid color-mix(in srgb, var(--default-color), transparent 50%);
+  z-index: 1;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Interacción: Focus por Experiencia (Scroll) */
+.timeline-container.has-active .timeline-item:not(.active) {
+  opacity: 0.4;
+  filter: grayscale(100%);
+  transform: scale(0.98);
+}
+
+.timeline-item {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timeline-item.active .timeline-dot {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  transform: scale(1.3);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent-color), transparent 60%);
+}
+
+.timeline-card {
+  background: color-mix(in srgb, var(--surface-color), transparent 20%);
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timeline-item.active .timeline-card {
+  border-color: color-mix(in srgb, var(--accent-color), transparent 50%);
+  background: color-mix(in srgb, var(--surface-color), transparent 5%);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.timeline-header h4 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--heading-color);
+  margin-bottom: 0.25rem;
+  transition: color 0.3s ease;
+}
+
+.timeline-item.active .timeline-header h4 {
+  color: var(--accent-color);
+}
+
+.timeline-header .company {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--default-color);
+  opacity: 0.8;
+  margin-bottom: 1rem;
+}
+
+.date-badge {
+  background: color-mix(in srgb, var(--default-color), transparent 90%);
+  color: var(--default-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.4rem 0.75rem;
+  border-radius: 50rem;
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 85%);
+  display: inline-block;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.timeline-item.active .date-badge {
+  color: var(--background-color);
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.timeline-body ul {
+  padding-left: 1rem;
+  margin-bottom: 0;
+  list-style-type: disc;
+}
+
+.timeline-body li {
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  margin-bottom: 0.6rem;
+  line-height: 1.6;
+}
+
+.timeline-body li::marker {
+  color: color-mix(in srgb, var(--default-color), transparent 50%);
+}
+
+.timeline-body li:last-child {
+  margin-bottom: 0;
+}
 
 /* body {
   margin: 0px;

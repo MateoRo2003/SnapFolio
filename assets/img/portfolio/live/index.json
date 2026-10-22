@@ -1,0 +1,158 @@
+{
+ "pettyjoyas.com.ar": {
+  "desk": [
+   "assets/img/portfolio/live/pettyjoyas-desk.webp",
+   768,
+   3072
+  ],
+  "mob": [
+   "assets/img/portfolio/live/pettyjoyas-mob.webp",
+   360,
+   2048
+  ]
+ },
+ "gvstore.com.ar": {
+  "desk": [
+   "assets/img/portfolio/live/gvstore-desk.webp",
+   768,
+   1479
+  ],
+  "mob": [
+   "assets/img/portfolio/live/gvstore-mob.webp",
+   360,
+   2048
+  ]
+ },
+ "gabygor.com.ar": {
+  "desk": [
+   "assets/img/portfolio/live/gabygor-desk.webp",
+   768,
+   694
+  ],
+  "mob": [
+   "assets/img/portfolio/live/gabygor-mob.webp",
+   360,
+   1703
+  ]
+ },
+ "taccu.vercel.app": {
+  "desk": [
+   "assets/img/portfolio/live/taccu-desk.webp",
+   768,
+   480
+  ],
+  "mob": [
+   "assets/img/portfolio/live/taccu-mob.webp",
+   360,
+   779
+  ]
+ },
+ "siti.mateorojas.com.ar": {
+  "desk": [
+   "assets/img/portfolio/live/siti-desk.webp",
+   768,
+   3072
+  ],
+  "mob": [
+   "assets/img/portfolio/live/siti-mob.webp",
+   360,
+   2048
+  ]
+ },
+ "tefaltacalleok.com": {
+  "desk": [
+   "assets/img/portfolio/live/tefaltacalleok-desk.webp",
+   768,
+   1132
+  ],
+  "mob": [
+   "assets/img/portfolio/live/tefaltacalleok-mob.webp",
+   360,
+   2048
+  ]
+ },
+ "mjhdjuridica.com.ar": {
+  "desk": [
+   "assets/img/portfolio/live/mjhdjuridica-desk.webp",
+   768,
+   3072
+  ],
+  "mob": [
+   "assets/img/portfolio/live/mjhdjuridica-mob.webp",
+   360,
+   2048
+  ]
+ },
+ "travelonlineagency.com.ar": {
+  "desk": [
+   "assets/img/portfolio/live/travelonlineagency-desk.webp",
+   768,
+   3072
+  ],
+  "mob": [
+   "assets/img/portfolio/live/travelonlineagency-mob.webp",
+   360,
+   2048
+  ]
+ },
+ "danytours.com.ar": {
+  "desk": [
+   "assets/img/portfolio/live/danytours-desk.webp",
+   768,
+   3047
+  ],
+  "mob": [
+   "assets/img/portfolio/live/danytours-mob.webp",
+   360,
+   2048
+  ]
+ },
+ "trasladosmarquez.com.ar": {
+  "desk": [
+   "assets/img/portfolio/live/trasladosmarquez-desk.webp",
+   768,
+   3072
+  ],
+  "mob": [
+   "assets/img/portfolio/live/trasladosmarquez-mob.webp",
+   360,
+   2048
+  ]
+ },
+ "trasladoslgk.com.ar": {
+  "desk": [
+   "assets/img/portfolio/live/trasladoslgk-desk.webp",
+   768,
+   3072
+  ],
+  "mob": [
+   "assets/img/portfolio/live/trasladoslgk-mob.webp",
+   360,
+   2048
+  ]
+ },
+ "presencia-web.vercel.app": {
+  "desk": [
+   "assets/img/portfolio/live/presencia-web-desk.webp",
+   768,
+   3072
+  ],
+  "mob": [
+   "assets/img/portfolio/live/presencia-web-mob.webp",
+   360,
+   2048
+  ]
+ },
+ "amortizacion-fronted.vercel.app": {
+  "desk": [
+   "assets/img/portfolio/live/amortizacion-fronted-desk.webp",
+   768,
+   480
+  ],
+  "mob": [
+   "assets/img/portfolio/live/amortizacion-fronted-mob.webp",
+   360,
+   2048
+  ]
+ }
+}

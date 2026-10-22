@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "snapfolio",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "-e",
+        "const h=require('http'),f=require('fs'),p=require('path');const t={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.svg':'image/svg+xml','.woff2':'font/woff2','.woff':'font/woff','.ico':'image/x-icon','.txt':'text/plain','.xml':'application/xml'};h.createServer((q,s)=>{let u=decodeURIComponent(q.url.split('?')[0]);if(u.endsWith('/'))u+='index.html';const file=p.join(process.cwd(),u);if(!file.startsWith(process.cwd())){s.writeHead(403);return s.end()}f.readFile(file,(e,d)=>{if(e){s.writeHead(404);return s.end('404')}s.writeHead(200,{'content-type':t[p.extname(file).toLowerCase()]||'application/octet-stream','cache-control':'no-store'});s.end(d)})}).listen(4173)"
+      ],
+      "port": 4173
+    }
+  ]
+}

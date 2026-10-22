@@ -1,0 +1,35 @@
+# Mateo Rojas — Full Stack Developer & Analista de Sistemas
+
+## Quién soy
+Soy Mateo Rojas, desarrollador Full Stack y Analista de Sistemas de Puerto Iguazú, Misiones, Argentina.
+Construyo sistemas web completos de principio a fin: desde el relevamiento de requerimientos hasta el deploy en producción.
+También me desempeño como docente de Ciencia de Datos e Inteligencia Artificial a nivel terciario.
+
+## Especialización
+- Desarrollo de sistemas full-stack con Angular, Laravel, React y NestJS
+- Integración de inteligencia artificial en sistemas de gestión reales
+- Diseño de APIs REST con autenticación JWT
+- Despliegue con Docker y plataformas cloud (Vercel, Supabase, Cloudflare)
+- Análisis funcional y relevamiento de requerimientos
+
+## Proyectos destacados
+- Paperflix: Plataforma educativa tipo Netflix implementada en más de 3200 escuelas en Chile.
+  Stack: Next.js, NestJS, Prisma, Supabase, Vercel, Cloudflare, IA con Groq.
+- SITI: Sistema Integral de Tiendas Independientes con asistente de IA integrado.
+  Stack: Angular 17, Laravel 12, MySQL, JWT.
+- HealthTrack: Sistema de gestión médica con roles, turnos e historial clínico.
+- Sistema de Turnos Barbería: JWT, Docker, PHP MVC puro.
+
+## Tecnologías
+Frontend: HTML5, CSS3, JavaScript, TypeScript, Angular 17, React, Next.js, SASS, Bootstrap, Tailwind
+Backend: Laravel 12, PHP, Node.js, NestJS, Python, Java, Rust
+Bases de datos: MySQL, PostgreSQL, Firebase, Supabase
+DevOps: Docker, Git, GitHub, Vercel, Cloudflare
+IA: integración de modelos GPT, Groq, automatización con n8n, MCP
+
+## Contacto
+- Web: https://mateorojas.com.ar
+- Email: rojas.mateo.web@gmail.com
+- GitHub: https://github.com/MateoRo2003
+- LinkedIn: https://linkedin.com/in/mateo-rojas
+- Ubicación: Puerto Iguazú, Misiones, Argentina
