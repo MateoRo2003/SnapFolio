@@ -102,81 +102,10 @@
         </h1>
       </div>
 
-      <!-- Backlit Monochrome Silhouette Portrait (Identical aesthetic to 00:02 in reference video) -->
-      <div class="hero-portrait-stage" aria-hidden="true">
-        <div class="hero-portrait-glow"></div>
-        <svg class="hero-portrait-img" id="heroSilhouette" viewBox="0 0 500 580" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id="rimGlow" cx="50%" cy="38%" r="52%">
-              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
-              <stop offset="65%" stop-color="#ffffff" stop-opacity="0.2" />
-              <stop offset="100%" stop-color="#f3f2ee" stop-opacity="0" />
-            </radialGradient>
-            <linearGradient id="silhouetteGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#111114" />
-              <stop offset="68%" stop-color="#1a1a1f" />
-              <stop offset="90%" stop-color="#5a5a62" stop-opacity="0.78" />
-              <stop offset="100%" stop-color="#f3f2ee" stop-opacity="0" />
-            </linearGradient>
-            <linearGradient id="rimStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
-              <stop offset="45%" stop-color="#d4d4d8" stop-opacity="0.45" />
-              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.85" />
-            </linearGradient>
-            <linearGradient id="shirtRim" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#dcdce0" stop-opacity="0.55" />
-              <stop offset="75%" stop-color="#707078" stop-opacity="0.25" />
-              <stop offset="100%" stop-color="#f3f2ee" stop-opacity="0" />
-            </linearGradient>
-          </defs>
-
-          <!-- Ambient Backlight Halo -->
-          <circle cx="250" cy="235" r="195" fill="url(#rimGlow)" />
-
-          <!-- Shoulders & Collage Jacket Silhouette -->
-          <path d="M58 575 C64 475, 102 442, 165 422 L196 392 L205 338 L295 338 L304 392 L335 422 C398 442, 436 475, 442 575 Z"
-                fill="url(#silhouetteGrad)" stroke="url(#rimStroke)" stroke-width="2.2" />
-
-          <!-- Subtle Collar & Lapel Highlights (like f_025.png) -->
-          <path d="M192 394 L165 446 L216 436 L236 472 L202 382 Z" fill="url(#shirtRim)" />
-          <path d="M308 394 L335 446 L284 436 L264 472 L298 382 Z" fill="url(#shirtRim)" />
-          <path d="M72 560 C82 486, 112 454, 166 432" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="2.4" stroke-linecap="round" />
-          <path d="M428 560 C418 486, 388 454, 334 432" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="2.4" stroke-linecap="round" />
-
-          <!-- Neck & Jawline Rim Light -->
-          <path d="M198 310 L202 396 C225 422, 275 422, 298 396 L302 310 Z" fill="#101013" />
-          <path d="M200 326 C199 358, 202 384, 212 402" fill="none" stroke="#ffffff" stroke-opacity="0.7" stroke-width="2.2" stroke-linecap="round" />
-          <path d="M300 326 C301 358, 298 384, 288 402" fill="none" stroke="#ffffff" stroke-opacity="0.7" stroke-width="2.2" stroke-linecap="round" />
-
-          <!-- Head & TexturedTousled Hair Silhouette -->
-          <path d="M174 222
-                   C162 224, 158 248, 166 268
-                   C172 282, 180 286, 184 294
-                   C192 332, 216 364, 250 366
-                   C284 364, 308 332, 316 294
-                   C320 286, 328 282, 334 268
-                   C342 248, 338 224, 326 222
-                   C336 196, 348 176, 334 152
-                   C346 146, 356 132, 338 124
-                   C332 100, 308 82, 282 78
-                   C268 68, 238 66, 216 76
-                   C188 80, 166 102, 160 128
-                   C144 134, 150 150, 162 156
-                   C148 176, 162 200, 174 222 Z"
-                fill="#0e0e11" stroke="url(#rimStroke)" stroke-width="2" />
-
-          <!-- Expressive Loose Hair Strands with Backlight Rim -->
-          <path d="M160 148 Q134 158 142 176 M156 174 Q132 188 148 202 M176 96 Q156 84 168 110 M336 144 Q364 154 352 174 M342 172 Q368 184 348 200 M312 88 Q334 78 324 104 M236 70 Q248 52 266 70"
-                fill="none" stroke="#222228" stroke-width="4.5" stroke-linecap="round" />
-          <path d="M160 148 Q134 158 142 176 M336 144 Q364 154 352 174 M186 292 C196 334, 220 362, 250 365 C280 362, 304 334, 314 292"
-                fill="none" stroke="#ffffff" stroke-opacity="0.72" stroke-width="1.8" stroke-linecap="round" />
-
-          <!-- Subtle Facial Rim Highlights (Cheekbones, Nose bridge, Brow) -->
-          <path d="M188 236 C184 264, 194 296, 208 318" fill="none" stroke="#ffffff" stroke-opacity="0.38" stroke-width="3.2" stroke-linecap="round" />
-          <path d="M312 236 C316 264, 306 296, 292 318" fill="none" stroke="#ffffff" stroke-opacity="0.42" stroke-width="3.2" stroke-linecap="round" />
-          <path d="M250 226 L247 266 C246 273, 254 275, 258 270" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="2.2" stroke-linecap="round" />
-          <path d="M234 302 Q250 309 266 302" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="2" stroke-linecap="round" />
-        </svg>
+      <!-- Cutout Monochrome Studio Portrait of Mateo -->
+      <div class="hero-portrait-stage">
+        <div class="hero-portrait-glow" aria-hidden="true"></div>
+        <img class="hero-portrait-img" id="heroSilhouette" src="assets/img/profile/mateo-echo-hero.webp" alt="Mateo Rojas" width="590" height="515" fetchpriority="high">
       </div>
 
       <div class="hero-bottom-grid">

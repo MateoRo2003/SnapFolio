@@ -384,8 +384,8 @@ img {
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: min(470px, 78vw);
-  height: min(62vh, 540px);
+  width: min(560px, 84vw);
+  height: min(64vh, 560px);
   z-index: 3;
   display: flex;
   align-items: flex-end;
