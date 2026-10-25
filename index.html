@@ -4,25 +4,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mateo Rojas — Full Stack Developer & Analista de Sistemas | Argentina</title>
-  <meta name="description" content="Mateo Rojas — Full Stack Developer y Analista de Sistemas de Puerto Iguazú, Argentina. Sistemas web con IA integrada, de la arquitectura al deploy.">
+  <title>Mateo Rojas — Full Stack Developer &amp; Analista de Sistemas | Portfolio</title>
+  <meta name="description" content="Mateo Rojas — Full Stack Developer y Analista de Sistemas de Puerto Iguazú, Argentina. Sistemas web escalables con IA integrada, de la arquitectura al deploy.">
   <meta name="author" content="Mateo Rojas">
-  <meta name="theme-color" content="#f5f1e8">
+  <meta name="theme-color" content="#09090b">
   <link rel="canonical" href="https://mateorojas.com.ar/">
-  <meta property="og:title" content="Mateo Rojas — Full Stack Developer & Analista de Sistemas">
+  <meta property="og:title" content="Mateo Rojas — Full Stack Developer &amp; Analista de Sistemas">
   <meta property="og:description" content="Sistemas web con IA integrada, de la arquitectura al deploy.">
   <meta property="og:url" content="https://mateorojas.com.ar">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://mateorojas.com.ar/assets/img/profile/mateo.webp">
   <meta name="twitter:card" content="summary_large_image">
   <link href="assets/img/favicon.svg" rel="icon" type="image/svg+xml">
   <link href="assets/img/favicon-32.png" rel="icon" type="image/png" sizes="32x32">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Silkscreen&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Space+Grotesk:wght@400;500;600;700;800&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/css/editorial.css" rel="stylesheet">
+  <link href="assets/css/echo.css" rel="stylesheet">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -32,649 +31,872 @@
     "url": "https://mateorojas.com.ar",
     "email": "rojas.mateo.web@gmail.com",
     "address": "Puerto Iguazú, Misiones, Argentina",
-    "sameAs": ["https://github.com/MateoRo2003", "https://www.linkedin.com/in/mateo-rojas-ba696926b/"]
+    "sameAs": [
+      "https://github.com/MateoRo2003",
+      "https://www.linkedin.com/in/mateo-rojas-ba696926b/"
+    ]
   }
   </script>
 </head>
 
 <body>
-  <header class="mast wrap">
-    <div class="mast-row">
-      <div class="mast-side">
-        <span class="status"><i class="dot"></i><span data-status="Programando: Paperflix|Enseñando: robótica en Itec|Enseñando: ciencia de datos en Crecer|Desde: Puerto Iguazú">Programando: Paperflix</span></span>
-        <span class="line"></span>
-      </div>
-      <p class="mast-name">Mateo Rojas</p>
-      <div class="mast-side">
-        <span class="line"></span>
-        <nav class="mast-links" aria-label="Redes">
-          <a href="https://github.com/MateoRo2003" target="_blank" rel="noopener">GitHub</a> —
-          <a href="https://www.linkedin.com/in/mateo-rojas-ba696926b/" target="_blank" rel="noopener">LinkedIn</a> —
-          <a href="mailto:rojas.mateo.web@gmail.com">Email</a>
-        </nav>
+  <!-- ====================================================================
+       1. PRELOADER (00:00 - 00:01 WAVY LOOP + COMET)
+       ==================================================================== -->
+  <div class="preloader" id="preloader" aria-label="Cargando portfolio">
+    <div class="preloader-stage">
+      <svg class="preloader-svg" viewBox="0 0 380 380" aria-hidden="true">
+        <path class="preloader-wave-bg" id="preloaderWaveBg" d=""></path>
+        <path class="preloader-wave-path" id="preloaderWavePath" d="" pathLength="1000"></path>
+        <circle class="preloader-comet" id="preloaderComet" cx="316" cy="190" r="4.5"></circle>
+      </svg>
+      <div class="preloader-word">
+        <span>MATEO</span>
+        <span class="preloader-dot"></span>
       </div>
     </div>
-    <div class="handle"><span>Full Stack Developer · Analista de Sistemas</span></div>
+    <button class="preloader-skip" id="preloaderSkip" type="button">Saltar intro</button>
+  </div>
+
+  <!-- ====================================================================
+       2. STICKY NAVBAR
+       ==================================================================== -->
+  <header class="echo-header" id="echoHeader">
+    <a class="brand-logo" href="#home" aria-label="Mateo Rojas Inicio">
+      <span>MATEO</span>
+      <span class="dot"></span>
+    </a>
+
+    <nav class="nav-pills" aria-label="Navegación principal">
+      <a class="nav-pill is-active" href="#home" data-es="INICIO" data-en="HOME">INICIO</a>
+      <a class="nav-pill" href="#about" data-es="SOBRE MÍ" data-en="ABOUT ME">SOBRE MÍ</a>
+      <a class="nav-pill" href="#experience" data-es="EXPERIENCIA" data-en="EXPERIENCE">EXPERIENCIA</a>
+      <a class="nav-pill" href="#landings" data-es="LANDINGS" data-en="LANDING PAGES">LANDINGS</a>
+      <a class="nav-pill" href="#works" data-es="PROYECTOS" data-en="PROJECTS">PROYECTOS</a>
+      <a class="nav-pill" href="#services" data-es="SERVICIOS" data-en="SERVICES">SERVICIOS</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="lang-switch" id="langSwitchBtn" type="button" title="Cambiar idioma ES / EN">EN</button>
+      <a class="social-icon-link" href="https://github.com/MateoRo2003" target="_blank" rel="noopener" aria-label="GitHub">
+        <i class="bi bi-github"></i>
+      </a>
+      <a class="social-icon-link" href="https://www.linkedin.com/in/mateo-rojas-ba696926b/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <i class="bi bi-linkedin"></i>
+      </a>
+      <button class="social-icon-link" type="button" data-open-modal="contactModal" aria-label="Contacto">
+        <i class="bi bi-envelope"></i>
+      </button>
+    </div>
   </header>
 
-  <nav class="nav" aria-label="Secciones">
-    <div>
-      <a href="#trabajo">Trabajo</a>
-      <a href="#experiencia">Experiencia</a>
-      <a href="#stack">Stack</a>
-      <a href="#escritos">Escritos</a>
-      <a href="#contacto">Contacto</a>
-    </div>
-  </nav>
-
   <main>
-    <section class="hero wrap" id="inicio">
-      <div class="mac" tabindex="0" role="img" aria-label="Una Macintosh retro con Mateo ilustrado en la pantalla. Tocala y te saluda.">
-        <svg viewBox="0 0 420 480" aria-hidden="true">
-          <defs>
-            <clipPath id="crt"><rect x="94" y="68" width="212" height="172" rx="10" /></clipPath>
-            <pattern id="scan" width="4" height="3" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#151515" opacity="0.07" /></pattern>
-          </defs>
-          <ellipse cx="205" cy="462" rx="172" ry="11" fill="#151515" opacity="0.1" />
-          <rect x="40" y="16" width="320" height="410" rx="28" fill="#ece5d6" stroke="#151515" stroke-width="3" />
-          <path d="M42 360 H358" stroke="#151515" stroke-width="2" />
-          <rect x="76" y="52" width="248" height="208" rx="16" fill="#ddd5c4" stroke="#151515" stroke-width="2.5" />
-          <g clip-path="url(#crt)">
-            <rect x="94" y="68" width="212" height="172" fill="#e8ebdd" />
-            <rect x="94" y="68" width="212" height="14" fill="#fafaf3" />
-            <path d="M94 82.5 H306" stroke="#151515" />
-            <text x="101" y="78.6" font-family="Silkscreen, monospace" font-size="7.4" fill="#151515">MR&#160;&#160;Archivo&#160;&#160;Editar&#160;&#160;Ver</text>
-            <g class="boot" fill="none" stroke="#151515" stroke-width="2.4">
-              <rect x="186" y="134" width="28" height="36" rx="3" fill="#fafaf3" />
-              <rect x="190" y="138" width="20" height="16" />
-              <path d="M195 143 v2 M205 143 v2 M196 149 q4 3 8 0" />
-              <path d="M190 162 h8" />
-            </g>
-            <svg class="face" x="94" y="83" width="212" height="157" viewBox="22 40 168 150" preserveAspectRatio="xMidYMax slice">
-<defs>
-<clippath id="background-clip">
-<path d="M39 153.73s31.57 19.71 77.26 15.21 90.18-37.23 90.36-72.33-8.82-80.28-33.59-86.29C136.84-6.57 114.13-5.82 88-2.82S34.73 11.45 16.71 48.24C-1.5 66.64-4.88 125.2 39 153.73z" fill="none"></path>
-</clippath>
-<g class="hair-back"></g>
-<g class="glasses"></g>
-<g class="dizzy"></g>
-<g class="oh"></g>
-<g class="dizzy-1"></g>
-<g class="dizzy-2"></g>
-<lineargradient gradientunits="userSpaceOnUse" id="linear-gradient" x1="102.94" x2="102.94" y1="154.47" y2="36.93">
-<stop offset="0" stop-color="#fff5cc"></stop>
-<stop offset="0.01" stop-color="#faf0c8"></stop>
-<stop offset="0.19" stop-color="#c2b599"></stop>
-<stop offset="0.35" stop-color="#998977"></stop>
-<stop offset="0.47" stop-color="#806f62"></stop>
-<stop offset="0.54" stop-color="#77655a"></stop>
-<stop offset="0.6" stop-color="#77655a"></stop>
-<stop offset="1" stop-color="#77655a"></stop>
-</lineargradient>
-</defs>
-<path class="bg" d="M39 153.73s31.57 19.71 77.26 15.21 90.18-37.23 90.36-72.33-10.51-57-35.28-63-50.22 17-76.31 20-60.12-15.88-78.32 2.51S-4.88 125.2 39 153.73z" fill="#232323"></path>
-<g clip-path="url(#background-clip)">
-<g class="me" opacity="0">
-<g class="body">
-<!-- Cuello -->
-<path class="neck" d="M114.26 143.16v-14a9.22 9.22 0 10-18.43 0v14c-15.27 2.84-24.74 15.08-24.74 27.33H139c0-12.24-9.5-24.49-24.74-27.33z" fill="#ede3d1"></path>
-<!-- Ropa / Torso -->
-<path class="top" d="M105.61 167c-30.17 0-25.36-40-25.36 15.84h25.35l25-2.14c-.05-55.79 5.17-13.7-24.99-13.7z" fill="#fff" stroke="#404040" stroke-width=".5"></path>
-<!-- Hombros -->
-<path class="shoulder" d="M95.82 142.87c-16 1.84-29.37 19.5-29.37 40h29.37z" fill="#404040"></path>
-<path class="shoulder" d="M114.23 142.67c15.76 1.85 29 19.6 29 40.2h-29z" fill="#404040"></path>
-</g>
-<path class="shadow" d="M95.82 122.36h18.41v14.31s-10.5 5.54-18.41 0z" fill="#efceb9"></path>
-<g class="head-male">
-<g class="ear-left ear">
-<path d="M63.52 100.5A8.21 8.21 0 0072 108.5a8.36 8.36 0 008.51-8.1 8.21 8.21 0 00-8.51-8.06 8.36 8.36 0 00-8.48 8.16z" fill="#ede3d1"></path>
-<path d="M68.54 99.8a17 17 0 014.14.41c1.07.31 1.94 1 3 1.31a.39.39 0 00.43-.57c-1.15-2.38-5.49-1.86-7.58-1.67a.26.26 0 000 .52z" fill="#b5aa9a"></path>
-</g>
-<g class="ear-right ear">
-<path d="M144.37 100.5a8.2 8.2 0 01-8.37 8.06 8.35 8.35 0 01-8.51-8.1 8.21 8.21 0 018.42-8.06 8.35 8.35 0 018.46 8.1z" fill="#ede3d1"></path>
-<path d="M139.6 99.8c-2.1-.19-6.43-.72-7.59 1.67a.39.39 0 00.44.57c1.07-.26 1.92-1 3-1.31a17.51 17.51 0 014.15-.41.26.26 0 000-.52z" fill="#b5aa9a"></path>
-</g>
-<g class="face">
-<rect fill="#ede3d1" height="80.49" rx="24" transform="rotate(180 104.76 88.5)" width="61.54" x="73.99" y="48.26"></rect>
-<g class="inner-face">
-<path class="eyebrow-right" d="M120.73 79h-6" fill="none" stroke="#b5aa9a" stroke-width="1.5"></path>
-<path class="eyebrow-left" d="M97.12 79h-6" fill="none" stroke="#b5aa9a" stroke-width="1.5"></path>
-<path class="mouth" d="M95 107 C100 108, 110 108, 115 107" fill="none" stroke="#b5aa9a" stroke-width="1.2"></path>
-<g class="eyes">
-<path class="eye-left eye" d="M89.48 87.37c-.07 1.2 1.25 2.2 2.94 2.2s3.1-1.1 3.16-2.1-1.25-2.2-2.94-2.2-3.1 1.1-3.16 2.1z" fill="#2b343b"></path>
-<path class="eye-right eye" d="M113.67 87.37c-.07 1.2 1.25 2.2 2.94 2.2s3.1-1.1 3.16-2.1-1.25-2.2-2.94-2.2-3.1 1.1-3.16 2.1z" fill="#2b343b"></path>
-</g>
-<path class="nose" d="M102.39 98.13s3.5 1.8 6 0" fill="none" stroke="#e0d5c1"></path>
-</g>
-<path class="hair-front" d="M130,50
-                              c-12,-6 -10,-8 -33,-8
-                              s-22,8 -25,18
-                              s2,20 6,22
-                              s14,-6 27,-6
-                              s22,2 30,-10
-                              s6,-18 2,-16
-                              z" fill="#77655a"></path>
-</g>
-</g>
-</g>
-</g>
-</svg>
-            <g class="alert">
-              <rect x="190" y="92" width="108" height="44" fill="#fafaf3" stroke="#151515" stroke-width="2" />
-              <rect x="193" y="95" width="102" height="38" fill="none" stroke="#151515" stroke-width="0.8" />
-              <text x="201" y="111" font-family="Silkscreen, monospace" font-size="10" fill="#151515">¡HOLA!</text>
-              <text x="201" y="124" font-family="IBM Plex Mono, monospace" font-size="7.2" fill="#151515">Gracias por pasar</text>
-            </g>
-            <rect x="94" y="68" width="212" height="172" fill="url(#scan)" />
-          </g>
-          <rect x="94" y="68" width="212" height="172" rx="10" fill="none" stroke="#151515" stroke-width="2" />
-          <g transform="translate(84 292)">
-            <rect width="30" height="5" fill="#e3dcff" stroke="#151515" stroke-width="1" />
-            <rect y="5" width="30" height="5" fill="#ffd5e9" stroke="#151515" stroke-width="1" />
-            <rect y="10" width="30" height="5" fill="#d2efde" stroke="#151515" stroke-width="1" />
-            <rect y="15" width="30" height="5" fill="#fff09d" stroke="#151515" stroke-width="1" />
-            <text x="38" y="15" font-family="Silkscreen, monospace" font-size="11" fill="#151515">MR-128K</text>
-          </g>
-          <rect x="226" y="296" width="100" height="10" rx="5" fill="#151515" />
-          <path d="M70 380 h44 M70 390 h44 M70 400 h44 M70 410 h44" stroke="#151515" stroke-width="2" stroke-linecap="round" />
-          <path d="M356 404 C 376 404, 392 412, 388 430" stroke="#151515" stroke-width="2.5" fill="none" />
-          <rect x="368" y="428" width="42" height="34" rx="14" fill="#ece5d6" stroke="#151515" stroke-width="3" />
-          <path d="M368 442 H410" stroke="#151515" stroke-width="2" />
-        </svg>
-      </div>
-      <div>
-        <h1 class="headline">
-          <span class="tag lilac">Sistemas</span>
-          <span class="tag">web</span>
-          <span class="tag pink">con IA,</span>
-          <span class="tag">de la</span>
-          <span class="tag butter">arquitectura</span>
-          <span class="tag">al</span>
-          <span class="tag mint">deploy®</span>
+    <!-- ====================================================================
+         3. HERO SECTION (00:02 - 00:03 EXPLORE MY PORTFOLIO)
+         ==================================================================== -->
+    <section class="hero-section" id="home">
+      <div class="hero-typography-wrap">
+        <h1 aria-label="Explore My Portfolio">
+          <span class="hero-title-line1" data-es="EXPLORE MY" data-en="EXPLORE MY">EXPLORE MY</span>
+          <span class="hero-title-line2" data-es="PORTFOLIO" data-en="PORTFOLIO">PORTFOLIO</span>
         </h1>
-        <p class="intro">Soy Mateo, desarrollador full stack y analista de sistemas en Puerto Iguazú. Hoy construyo <a href="#trabajo">Paperflix</a>, una plataforma educativa que usan más de 3.200 escuelas en Chile, y doy clases de robótica y de ciencia de datos.</p>
-        <div class="facts">
-          <span class="hl">Disponible</span>
-          <span>Remoto · híbrido · presencial</span>
-          <span>Laravel · Angular · Next.js · IA</span>
-        </div>
-        <div class="ctas">
-          <a class="btn solid" href="#trabajo">Ver mi trabajo <i class="bi bi-arrow-down"></i></a>
-          <a class="btn" href="#contacto">Escribime</a>
-          <button class="btn" type="button" data-palette>Apretá <kbd>/</kbd> para navegar</button>
-        </div>
       </div>
-    </section>
 
-    <section class="wrap sec" id="conoceme">
-      <hr class="double">
-      <p class="label"><i class="bi bi-person"></i>Conóceme</p>
-      <div class="about">
-        <figure class="reveal">
-          <img src="assets/img/profile/mateo.webp" alt="Mateo Rojas" loading="lazy">
-          <figcaption>Mateo Rojas, Puerto Iguazú, Misiones.</figcaption>
-        </figure>
-        <div class="reveal">
-          <h2>Construyendo software con impacto real</h2>
-          <div class="cols"><p>Desarrollo sistemas full-stack de principio a fin: desde el relevamiento de requerimientos y el diseño de arquitectura, hasta la implementación de APIs REST, bases de datos relacionales y despliegue con Docker.</p><p>Integro inteligencia artificial en soluciones reales — como asistentes de IA en sistemas de gestión — y combino mi experiencia como docente de Ciencia de Datos e IA con el desarrollo de software para construir soluciones que resuelven problemas concretos.</p></div>
-        </div>
-        <div class="reveal">
-          <div class="numbers"><div><b>+15</b><span>Proyectos entregados</span></div><div><b>4</b><span>Años de experiencia</span></div><div><b>+10</b><span>Clientes activos</span></div></div>
-          <dl class="specs"><div><dt>Especialización</dt><dd>Sistemas Full Stack &amp; IA</dd></div><div><dt>Nivel de Experiencia</dt><dd>Ssr Developer</dd></div><div><dt>Educación</dt><dd>Analista de Sistemas, IAES</dd></div><div><dt>Modalidad</dt><dd>Presencial / Remoto / Híbrido</dd></div></dl>
-        </div>
+      <!-- Cutout Monochrome Studio Portrait of Mateo -->
+      <div class="hero-portrait-stage">
+        <div class="hero-portrait-glow" aria-hidden="true"></div>
+        <img class="hero-portrait-img" id="heroSilhouette" src="assets/img/profile/mateo-echo-hero.webp" alt="Mateo Rojas" width="590" height="515" fetchpriority="high">
       </div>
-    </section>
 
-    <section class="wrap sec" id="trabajo">
-      <hr class="double">
-      <p class="label"><i class="bi bi-grid-3x3-gap"></i>Trabajo seleccionado</p>
-      <div class="sec-head">
-        <div>
-          <h2 class="sec-title">Proyectos <em>en producción</em></h2>
-          <p class="sec-lead">Sistemas full-stack, plataformas de gestión con IA, y soluciones web para clientes reales.</p>
+      <div class="hero-bottom-grid">
+        <div class="hero-meta-left">
+          <span class="hero-est" data-es="DEVELOPER EST. 2023 · ARGENTINA" data-en="DEVELOPER EST. 2023 · ARGENTINA">DEVELOPER EST. 2023 · ARGENTINA</span>
+          <a class="hero-scroll-btn" href="#about" aria-label="Bajar a Sobre Mí">
+            <i class="bi bi-arrow-down-right"></i>
+          </a>
         </div>
-        <div class="filters" role="group" aria-label="Filtrar proyectos">
-          <button type="button" data-filter="*" class=is-on>Todos</button>
-          <button type="button" data-filter="clientes">Clientes</button>
-          <button type="button" data-filter="sistemas">Sistemas</button>
-          <button type="button" data-filter="landing">Landings</button>
-          <button type="button" data-filter="personal">Personales</button>
-        </div>
-      </div>
-      <div class="ruled work">
-        <div>
-          <article class="card reveal" data-filters="sistemas clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/petty-joyas.webp" alt="Petty Joyas" loading="lazy" width="720" height="450"></div>
-            <span class="kind">E-commerce Full Stack</span>
-            <h3>Petty Joyas</h3>
-            <p>Tienda online de joyería con catálogo dinámico, panel propio para gestión de productos e imágenes, sistema POS con lectura por código QR y pistola lectora para venta en local, chatbot de atención al cliente vía WhatsApp Business, carrito de compras online y checkout con MercadoPago. Desarrollo full stack de punta a punta.</p>
-            <div class="chips"><span class="chip">Next.js</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Laravel</span><span class="chip">MySQL</span></div>
-            <div class="go"><a href="https://pettyjoyas.com.ar" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="sistemas clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/gv-store.webp" alt="GV Store" loading="lazy" width="720" height="450"></div>
-            <span class="kind">E-commerce Full Stack</span>
-            <h3>GV Store</h3>
-            <p>E-commerce de camisetas de fútbol e indumentaria deportiva con catálogo por categorías, carrito de compras, checkout con MercadoPago y atención al cliente integrada por WhatsApp. Desarrollo full stack de punta a punta.</p>
-            <div class="chips"><span class="chip">Next.js</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Prisma</span><span class="chip">Supabase</span></div>
-            <div class="go"><a href="https://gvstore.com.ar" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="sistemas clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/gabygor.webp" alt="GabyGor" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Sistema de Turnos Online</span>
-            <h3>GabyGor</h3>
-            <p>Sistema de reserva de turnos online con selección de múltiples servicios combinables, agenda en tiempo real por ubicación, sistema de notificaciones automáticas y panel de &quot;Mis Turnos&quot; para el cliente. Desarrollo full stack de punta a punta.</p>
-            <div class="chips"><span class="chip">Next.js</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Prisma</span><span class="chip">Supabase</span></div>
-            <div class="go"><a href="https://gabygor.com.ar" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="sistemas clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/mipaperlux.webp" alt="MiPaperlux" loading="lazy" width="720" height="450"><span class="flag">Privado · Chile</span></div>
-            <span class="kind">Plataforma EdTech — Onboarding</span>
-            <h3>MiPaperlux</h3>
-            <p>Plataforma de onboarding post-compra para docentes de Paperlux: recorridos modulares gamificados, seguimiento de progreso en tiempo real, contenido en video y certificación al finalizar la capacitación.</p>
-            <div class="chips"><span class="chip">Next.js</span><span class="chip">NestJS</span><span class="chip">Prisma</span><span class="chip">Supabase</span><span class="chip">Vercel</span></div>
-            <div class="go"><button type="button" data-gallery="[&quot;assets/img/portfolio/mipaperlux/2.png&quot;, &quot;assets/img/portfolio/mipaperlux/3.png&quot;, &quot;assets/img/portfolio/mipaperlux/4.png&quot;, &quot;assets/img/portfolio/mipaperlux/1.png&quot;]" data-title="MiPaperlux"><i class="bi bi-images"></i>Galería</button></div>
-          </article>
-          <article class="card reveal" data-filters="sistemas clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/taccu.webp" alt="Taccu" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Sistema de Fidelización</span>
-            <h3>Taccu</h3>
-            <p>Sistema de puntos y recompensas para barberías: los clientes suman puntos en cada corte iniciando sesión con Google o con su número de teléfono, y los canjean por descuentos, productos o cortes gratis, sin turnos. Panel de administración para el barbero. Desarrollo full stack de punta a punta.</p>
-            <div class="chips"><span class="chip">Next.js</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Supabase</span><span class="chip">Google OAuth</span></div>
-            <div class="go"><a href="https://taccu.vercel.app/" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="sistemas clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/paperflix.webp" alt="Paperflix" loading="lazy" width="720" height="450"><span class="flag">Privado · Chile</span></div>
-            <span class="kind">Plataforma EdTech a Gran Escala</span>
-            <h3>Paperflix</h3>
-            <p>Plataforma EdTech implementada en más de 3200 escuelas en Chile, con soporte para alta concurrencia y reducción del tiempo de carga de contenido educativo en un 60% gracias a integración de IA con Groq.</p>
-            <div class="chips"><span class="chip">Next.js</span><span class="chip">NestJS</span><span class="chip">React</span><span class="chip">Prisma</span><span class="chip">Supabase</span></div>
-            <div class="go"><button type="button" data-gallery="[&quot;assets/img/portfolio/paperflix/2.png&quot;, &quot;assets/img/portfolio/paperflix/3.png&quot;, &quot;assets/img/portfolio/paperflix/4.png&quot;, &quot;assets/img/portfolio/paperflix/5.png&quot;, &quot;assets/img/portfolio/paperflix/6.png&quot;, &quot;assets/img/portfolio/paperflix/1.png&quot;]" data-title="Paperflix"><i class="bi bi-images"></i>Galería</button></div>
-          </article>
-          <article class="card reveal" data-filters="sistemas clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/s-i-t-i-sistema-integral-de-tiendas-inde.webp" alt="S.I.T.I" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Proyecto Estrella — Sistema Full Stack</span>
-            <h3>S.I.T.I</h3>
-            <p>Sistema activo en producción con autenticación JWT, 5 roles de usuario y asistente de IA que redujo el tiempo de búsqueda de productos en un 40%. Plataforma completa de gestión para tiendas multimarca: eCommerce, inventario, ventas en tiempo real y recomendaciones inteligentes.</p>
-            <div class="chips"><span class="chip">Angular 17</span><span class="chip">Laravel 12</span><span class="chip">TypeScript</span><span class="chip">MySQL</span><span class="chip">REST API</span></div>
-            <div class="go"><a href="https://siti.mateorojas.com.ar" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="sistemas clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/tefaltacalleok.webp" alt="TeFaltaCalleOK" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Sistema Web Full Stack</span>
-            <h3>TeFaltaCalleOK</h3>
-            <p>E-commerce de ropa urbana con catálogo dinámico, carrito de compras, panel administrativo y gestión de pedidos. Backend con Laravel y base de datos MySQL.</p>
-            <div class="chips"><span class="chip">Taiwind</span><span class="chip">Laravel</span><span class="chip">JavaScript</span><span class="chip">PHP</span><span class="chip">MySQL</span></div>
-            <div class="go"><a href="https://www.tefaltacalleok.com" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="landing clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/estudio-juridico-mjhd.webp" alt="Estudio Jurídico MJHD" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Sitio Web Profesional</span>
-            <h3>Estudio Jurídico MJHD</h3>
-            <p>Sitio web institucional para estudio jurídico con formulario de contacto, SEO optimizado y diseño responsive que incrementó las consultas online del cliente.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">Bootstrap</span></div>
-            <div class="go"><a href="https://www.mjhdjuridica.com.ar" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="landing clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/travelonlineagency.webp" alt="TravelOnlineAgency" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Landing page</span>
-            <h3>TravelOnlineAgency</h3>
-            <p>Servicio de traslados turísticos en Misiones.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">Firebase</span><span class="chip">Bootstrap</span></div>
-            <div class="go"><a href="https://www.travelonlineagency.com.ar" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="landing clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/danytours.webp" alt="DanyTours" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Landing page</span>
-            <h3>DanyTours</h3>
-            <p>Servicio de traslados turísticos en Misiones.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">Firebase</span><span class="chip">Bootstrap</span></div>
-            <div class="go"><a href="https://www.danytours.com.ar" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="landing clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/edurodrigueztraslados.webp" alt="EduRodriguezTraslados" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Landing page</span>
-            <h3>EduRodriguezTraslados</h3>
-            <p>Servicio de traslados turísticos en Misiones.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">Firebase</span></div>
-            <div class="go"><span class="off">Sitio fuera de línea</span></div>
-          </article>
-          <article class="card reveal" data-filters="landing clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/traslados-marquez.webp" alt="Traslados Márquez" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Landing page</span>
-            <h3>Traslados Márquez</h3>
-            <p>Remises turísticos en Puerto Iguazú.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">Firebase</span></div>
-            <div class="go"><a href="https://www.trasladosmarquez.com.ar" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="landing clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/lgk-traslados.webp" alt="LGK Traslados" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Landing page</span>
-            <h3>LGK Traslados</h3>
-            <p>Traslados a toda la provincia de Misiones.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">Bootstrap</span></div>
-            <div class="go"><a href="https://www.trasladoslgk.com.ar" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="landing clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/maxi-traslados.webp" alt="Maxi Traslados" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Landing page</span>
-            <h3>Maxi Traslados</h3>
-            <p>Servicio de traslados en la región de Misiones.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">GulpFile</span></div>
-            <div class="go"><span class="off">Sitio fuera de línea</span></div>
-          </article>
-          <article class="card reveal" data-filters="landing clientes">
-            <div class="thumb"><img src="assets/img/portfolio/cards/traslados-tres-fronteras.webp" alt="Traslados Tres Fronteras" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Landing page</span>
-            <h3>Traslados Tres Fronteras</h3>
-            <p>Traslados en la zona de la triple frontera.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">Firebase</span><span class="chip">JavaScript</span></div>
-            <div class="go"><span class="off">Sitio fuera de línea</span></div>
-          </article>
-          <article class="card reveal" data-filters="landing personal">
-            <div class="thumb"><img src="assets/img/portfolio/cards/presenciaweb.webp" alt="PresenciaWeb" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Landing page</span>
-            <h3>PresenciaWeb</h3>
-            <p>Maquetación web para una agencia de diseño personal.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">Figma</span><span class="chip">GulpFile</span></div>
-            <div class="go"><a href="https://presencia-web.vercel.app/" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="personal">
-            <div class="thumb"><img src="assets/img/portfolio/cards/sistema-de-turnos-barberia.webp" alt="Sistema de Turnos Barbería" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Proyecto Personal</span>
-            <h3>Sistema de Turnos Barbería</h3>
-            <p>Sistema de gestión de turnos con autenticación JWT, panel admin, agenda dinámica por barbero, recordatorios automáticos por email y arquitectura MVC. Backend en PHP puro con MySQL y Docker.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">PHP</span><span class="chip">Figma</span></div>
-            <div class="go"><a href="https://github.com/MateoRo2003/AppSalon_PHP_MVC_JS_SASS_FIN" target="_blank" rel="noopener"><i class="bi bi-github"></i>Código</a></div>
-          </article>
-          <article class="card reveal" data-filters="personal">
-            <div class="thumb"><img src="assets/img/portfolio/cards/simulador-de-amortizacion.webp" alt="Simulador de Amortización" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Proyecto Personal</span>
-            <h3>Simulador de Amortización</h3>
-            <p>Plataforma web para simular el proceso de amortización de préstamos.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">GitHub</span><span class="chip">Python</span></div>
-            <div class="go"><a href="https://amortizacion-fronted.vercel.app/" target="_blank" rel="noopener"><i class="bi bi-arrow-up-right"></i>Ver web</a></div>
-          </article>
-          <article class="card reveal" data-filters="personal sistemas">
-            <div class="thumb"><img src="assets/img/portfolio/cards/healthtrack.webp" alt="HealthTrack" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Proyecto Personal</span>
-            <h3>HealthTrack</h3>
-            <p>Sistema de gestión médica con CRUD de pacientes, agenda de turnos, historial clínico, roles (médico/admin) y notificaciones. Arquitectura Angular + Laravel con API REST y JWT.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">Figma</span><span class="chip">MySQL</span></div>
-            <div class="go"><a href="https://github.com/MateoRo2003/PROYECTO-healthtrack" target="_blank" rel="noopener"><i class="bi bi-github"></i>Código</a></div>
-          </article>
-          <article class="card reveal" data-filters="personal">
-            <div class="thumb"><img src="assets/img/portfolio/cards/devwebcamp.webp" alt="DevWebCamp" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Proyecto Personal</span>
-            <h3>DevWebCamp</h3>
-            <p>Plataforma para eventos online con tickets y transmisión en vivo.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">MySQL</span><span class="chip">PHP</span></div>
-            <div class="go"><a href="https://github.com/MateoRo2003/DevWebCamp" target="_blank" rel="noopener"><i class="bi bi-github"></i>Código</a></div>
-          </article>
-          <article class="card reveal" data-filters="personal sistemas">
-            <div class="thumb"><img src="assets/img/portfolio/cards/sistema-de-bienes-raices.webp" alt="Sistema de Bienes Raíces" loading="lazy" width="720" height="450"></div>
-            <span class="kind">Proyecto Personal</span>
-            <h3>Sistema de Bienes Raíces</h3>
-            <p>Registro y compra de propiedades con dashboard para administradores.</p>
-            <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">Figma</span><span class="chip">MySQL</span></div>
-            <div class="go"><a href="https://github.com/MateoRo2003/bienesRaicesMVC" target="_blank" rel="noopener"><i class="bi bi-github"></i>Código</a></div>
-          </article>
-        </div>
-      </div>
-      <div class="more"><button class="btn" type="button" data-more="Ver los {n} proyectos" data-less="Ver menos"><span>Ver todos</span></button></div>
-    </section>
 
-    <section class="invert sec" id="experiencia">
-      <div class="wrap">
-        <hr class="double">
-        <p class="label"><i class="bi bi-briefcase"></i>Experiencia</p>
-        <div class="exp">
-          <div class="exp-side">
-            <h2 class="sec-title">Del código <em>al aula</em></h2>
-            <p class="sec-lead">Trayectoria en desarrollo Full Stack, integración de IA, análisis de sistemas y docencia tecnológica.</p>
-          </div>
-          <div class="jobs">
-            <div class="job now">
-              <time>Ene 2026 – Actualidad</time>
-              <div>
-                <h3>Desarrollador Full Stack</h3>
-                <p class="co">Paperlux · Chile</p>
-                <ul><li><strong>Paperflix:</strong> plataforma EdTech gamificada en <strong>3.200+ escuelas</strong> en Chile; integración IA con Groq redujo la generación de contenido en un <strong>60%</strong>. Stack: Next.js 14, NestJS, Prisma, Supabase, Vercel, Cloudflare Workers.</li><li><strong>Onboarding post-compra:</strong> sistema con recorridos modulares, quizzes, trazabilidad en tiempo real, correos transaccionales y certificados PDF.</li></ul>
-              </div>
-            </div>
-            <div class="job now">
-              <time>Mar 2026 – Presente</time>
-              <div>
-                <h3>Profesor de Robótica e Informática</h3>
-                <p class="co">Instituto Tecnológico Itec</p>
-                <ul><li>Diseño e impartición de clases de robótica y programación.</li><li>Desarrollo de material didáctico y proyectos prácticos para estudiantes.</li><li>Formación en tecnologías emergentes y metodologías de desarrollo.</li></ul>
-              </div>
-            </div>
-            <div class="job now">
-              <time>Mar 2026 – Presente</time>
-              <div>
-                <h3>Profesor Tec. Sup. Ciencia de Datos e IA</h3>
-                <p class="co">Instituto Crecer</p>
-                <ul><li>Diseño e impartición de clases de ciencia de datos e inteligencia artificial.</li><li>Desarrollo de material didáctico y proyectos prácticos para estudiantes de nivel superior.</li><li>Formación en IA generativa y automatización.</li></ul>
-              </div>
-            </div>
-            <div class="job now">
-              <time>Jun 2023 – Presente</time>
-              <div>
-                <h3>Analista Funcional Ssr / Desarrollador Full Stack</h3>
-                <p class="co">Proyectos Freelance</p>
-                <ul><li>Desarrollo de más de <strong>15 proyectos web</strong> utilizando Angular, Laravel y JavaScript.</li><li>Relevamiento de requerimientos mediante entrevistas y comunicación directa con clientes.</li><li>Diseño de soluciones orientadas al usuario aplicando prototipos y mejoras iterativas.</li><li>Optimización de rendimiento web logrando mejoras de hasta un 30% en tiempo de carga en proyectos con tráfico real.</li></ul>
-              </div>
-            </div>
-            <div class="job">
-              <time>Sep 2025 – Nov 2025</time>
-              <div>
-                <h3>Pasantía en Soporte IT</h3>
-                <p class="co">Hotel Gran Iguazú – H.C.I.</p>
-                <ul><li>Soporte técnico remoto y presencial a usuarios internos.</li><li>Diagnóstico de incidencias de conectividad, hardware y software.</li><li>Instalación, configuración y mantenimiento preventivo de equipos informáticos.</li></ul>
-              </div>
-            </div>
-            <div class="job">
-              <time>2023 – 2025</time>
-              <div>
-                <h3>Técnico Superior en Análisis de Sistemas</h3>
-                <p class="co">I.A.E.S</p>
-                <ul><li>Carrera terciaria finalizada con enfoque en el desarrollo de software, modelado de sistemas y bases de datos.</li><li>Instituto Argentino de Estudios Superiores.</li></ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="wrap sec" id="stack">
-      <hr class="double">
-      <p class="label"><i class="bi bi-cpu"></i>Stack</p>
-      <div class="sec-head">
-        <div>
-          <h2 class="sec-title">Las herramientas <em>de todos los días</em></h2>
-          <p class="sec-lead">Me especializo en sistemas web con inteligencia artificial integrada. Mi stack principal es Laravel y Angular.</p>
-        </div>
-      </div>
-      <div class="ruled stack">
-        <div>
-          <div class="stack-col"><h3>Frontend</h3><ul><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" alt="" loading="lazy" width="20" height="20">Angular<span class=main>principal</span></li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="" loading="lazy" width="20" height="20">React</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" alt="" loading="lazy" width="20" height="20">Next.js</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" alt="" loading="lazy" width="20" height="20">TypeScript</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="" loading="lazy" width="20" height="20">JavaScript</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="" loading="lazy" width="20" height="20">HTML5</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="" loading="lazy" width="20" height="20">CSS3</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" alt="" loading="lazy" width="20" height="20">Tailwind</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg" alt="" loading="lazy" width="20" height="20">Bootstrap</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sass/sass-original.svg" alt="" loading="lazy" width="20" height="20">SASS</li></ul></div>
-          <div class="stack-col"><h3>Backend</h3><ul><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg" alt="" loading="lazy" width="20" height="20">Laravel<span class=main>principal</span></li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nestjs/nestjs-original.svg" alt="" loading="lazy" width="20" height="20">NestJS</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" alt="" loading="lazy" width="20" height="20">Node.js</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg" alt="" loading="lazy" width="20" height="20">PHP</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="" loading="lazy" width="20" height="20">Python</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/prisma/prisma-original.svg" alt="" loading="lazy" width="20" height="20">Prisma</li></ul></div>
-          <div class="stack-col"><h3>Bases de Datos &amp; Cloud</h3><ul><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="" loading="lazy" width="20" height="20">MySQL</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="" loading="lazy" width="20" height="20">PostgreSQL</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg" alt="" loading="lazy" width="20" height="20">Supabase</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" alt="" loading="lazy" width="20" height="20">Firebase</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" alt="" loading="lazy" width="20" height="20">Vercel</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cloudflare/cloudflare-original.svg" alt="" loading="lazy" width="20" height="20">Cloudflare</li></ul></div>
-          <div class="stack-col"><h3>Herramientas, DevOps &amp; IA</h3><ul><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="" loading="lazy" width="20" height="20">Git</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="" loading="lazy" width="20" height="20">Docker</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/githubactions/githubactions-original.svg" alt="" loading="lazy" width="20" height="20">GitHub Actions</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/gulp/gulp-plain.svg" alt="" loading="lazy" width="20" height="20">Gulp</li><li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" alt="" loading="lazy" width="20" height="20">Figma</li><li><img src="assets/img/tech/icons8-chatear-48.webp" alt="" loading="lazy" width="20" height="20">OpenAI</li><li><img src="assets/img/tech/gemini.webp" alt="" loading="lazy" width="20" height="20">Gemini</li><li><img src="https://cdn.simpleicons.org/claude" alt="" loading="lazy" width="20" height="20">Claude</li><li><img src="https://docs.openclaw.ai/assets/openclaw.svg" alt="" loading="lazy" width="20" height="20">OpenClaw</li></ul></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="wrap sec" id="certificados">
-      <hr class="double">
-      <div class="pair">
-        <div>
-          <p class="label"><i class="bi bi-patch-check"></i>Cursos y certificados</p>
-          <ul class="certs">
-            <li class="cert"><img src="assets/img/certificates/Symbol.svg" alt="Udemy" loading="lazy"><div><h3>Diseño UX: Experiencia de usuario UX/UI + Figma</h3><small>Udemy · 2025</small></div><a href="https://www.udemy.com/certificate/UC-2c16138c-2902-4873-9b1f-97365353bda8/" target="_blank" rel="noopener">Ver ↗</a></li>
-            <li class="cert"><img src="assets/img/certificates/idKtTL1LnC_1756097241268.svg" alt="Coursera" loading="lazy"><div><h3>Diseño de Experiencia del Usuario (UX) de Google</h3><small>Coursera · 2023</small></div><a href="https://www.coursera.org/account/accomplishments/specialization/RJJRBTKLN529" target="_blank" rel="noopener">Ver ↗</a></li>
-            <li class="cert"><img src="assets/img/certificates/Symbol.svg" alt="Udemy" loading="lazy"><div><h3>Curso Desarrollo Web Full Stack</h3><small>Udemy · 2024</small></div><a href="https://www.udemy.com/certificate/UC-5835edc7-0858-467a-b24b-e449d4d7c374/" target="_blank" rel="noopener">Ver ↗</a></li>
-            <li class="cert"><img src="assets/img/certificates/Symbol.svg" alt="Udemy" loading="lazy"><div><h3>Maquetación Professional CSS3 y HTML5</h3><small>Udemy · 2023</small></div><a href="https://www.udemy.com/certificate/UC-d79597ec-dc6a-4670-a90f-7b86b45ac4ea/" target="_blank" rel="noopener">Ver ↗</a></li>
-            <li class="cert"><img src="assets/img/certificates/Symbol.svg" alt="Udemy" loading="lazy"><div><h3>Desarrollo Web FrontEnd Web Developer</h3><small>Udemy · 2025</small></div><span class="off">Sin enlace</span></li>
-            <li class="cert"><img src="assets/img/certificates/Symbol.svg" alt="Udemy" loading="lazy"><div><h3>Curso de Java desde cero</h3><small>Udemy · 2025</small></div><a href="https://www.udemy.com/certificate/UC-da863533-a507-48bf-a300-46ba39ffa0ff/" target="_blank" rel="noopener">Ver ↗</a></li>
+        <div class="hero-meta-right">
+          <p class="hero-bio-snippet"
+             data-es="APASIONADO POR CREAR SISTEMAS WEB CON IA INTEGRADA Y EXPERIENCIAS DIGITALES QUE DESTACAN ENTRE LA MULTITUD."
+             data-en="I AM PASSIONATE ABOUT CREATING AI-POWERED WEB SYSTEMS AND DIGITAL EXPERIENCES THAT STAND OUT FROM THE CROWD.">
+            APASIONADO POR CREAR SISTEMAS WEB CON IA INTEGRADA Y EXPERIENCIAS DIGITALES QUE DESTACAN ENTRE LA MULTITUD.
+          </p>
+          <ul class="hero-Vertical-roles">
+            <li data-es="FULL STACK &amp; IA" data-en="FULL STACK &amp; AI">FULL STACK &amp; IA</li>
+            <li data-es="DISEÑO WEB &amp; UI/UX" data-en="WEB DESIGN &amp; UI/UX">DISEÑO WEB &amp; UI/UX</li>
+            <li data-es="LANDING PAGES" data-en="LANDING PAGES">LANDING PAGES</li>
           </ul>
         </div>
-        <div>
-          <p class="label"><i class="bi bi-people"></i>Clientes</p>
-          <div class="clients">
-            <a href="https://paperlux.cl/" target="_blank" rel="noopener"><b>Paperflix</b><small>paperlux.cl</small></a>
-            <a href="https://www.tefaltacalleok.com" target="_blank" rel="noopener"><b>TeFaltaCalleOK</b><small>tefaltacalleok.com</small></a>
-            <a href="https://www.mjhdjuridica.com.ar" target="_blank" rel="noopener"><b>Estudio Jurídico MJHD</b><small>mjhdjuridica.com.ar</small></a>
-            <a href="https://www.travelonlineagency.com.ar" target="_blank" rel="noopener"><b>Travel Online Agency</b><small>travelonlineagency.com.ar</small></a>
-            <a href="https://www.danytours.com.ar" target="_blank" rel="noopener"><b>DanyTours</b><small>danytours.com.ar</small></a>
-            <a href="https://www.trasladosmarquez.com.ar" target="_blank" rel="noopener"><b>Traslados Márquez</b><small>trasladosmarquez.com.ar</small></a>
-            <a href="https://www.trasladoslgk.com.ar" target="_blank" rel="noopener"><b>TrasladosLGK</b><small>trasladoslgk.com.ar</small></a>
-            <a href="https://siti.mateorojas.com.ar" target="_blank" rel="noopener"><b>SITI</b><small>siti.mateorojas.com.ar</small></a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         4. ABOUT ME — STARRY NIGHT PORTAL & DARK STUDIO (00:04 - 00:07)
+         ==================================================================== -->
+    <section class="about-portal-wrapper" id="about">
+      <!-- Monochrome Van Gogh Starry Night + Gothic Castle Spires Banner (00:04 - 00:05) -->
+      <div class="about-starry-banner" id="aboutBanner">
+        <canvas id="starryCanvas" aria-hidden="true"></canvas>
+
+        <!-- Gothic Spires & Village Silhouette (left & right bottom framing like f_045.png) -->
+        <svg class="gothic-spires-svg" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+          <path fill="#09090b" d="
+            M0,320 L0,250 L28,250 L34,195 L40,250 L58,250 L68,140 L78,250 L95,250
+            L108,165 L118,240 L142,240 L158,110 L166,185 L176,185 L194,28 L212,185
+            L222,185 L230,118 L244,240 L268,240 L278,175 L290,255 L320,275 L360,305
+            L1020,305 L1090,275 L1160,245 L1240,210 L1320,175 L1390,150 L1440,135 L1440,320 Z" />
+          <!-- Illuminated Gothic Windows on the main spire -->
+          <g fill="#f3f2ee" opacity="0.88">
+            <rect x="190" y="195" width="3.5" height="14" rx="1.5" />
+            <rect x="196" y="195" width="3.5" height="14" rx="1.5" />
+            <rect x="187" y="218" width="4" height="18" rx="2" />
+            <rect x="193" y="218" width="4" height="18" rx="2" />
+            <rect x="199" y="218" width="4" height="18" rx="2" />
+            <rect x="155" y="225" width="3.5" height="12" rx="1.5" />
+            <rect x="228" y="225" width="3.5" height="12" rx="1.5" />
+          </g>
+        </svg>
+
+        <!-- Center Dark Portal Card with Split ABOUT / ME -->
+        <div class="about-portal-card" id="aboutPortalCard">
+          <span class="about-portal-word" id="aboutWordTop" data-es="ABOUT" data-en="ABOUT">ABOUT</span>
+          <span class="about-portal-word" id="aboutWordBottom" data-es="ME" data-en="ME">ME</span>
+        </div>
+      </div>
+
+      <!-- Expanded Dark Studio Stage (00:06 - 00:07) -->
+      <div class="about-dark-stage" id="aboutStage">
+        <div class="about-stage-topbar">
+          <span data-es="TRANSFORMANDO IDEAS VISIONARIAS EN SISTEMAS WEB RÁPIDOS, ESCALABLES Y CON IA"
+                data-en="TURNING VISIONARY IDEAS INTO FAST, IMMERSIVE DIGITAL EXPERIENCES">
+            TRANSFORMANDO IDEAS VISIONARIAS EN SISTEMAS WEB RÁPIDOS, ESCALABLES Y CON IA
+          </span>
+          <span class="status-badge">
+            <i class="pulse"></i>
+            <span data-es="PUERTO IGUAZÚ, ARGENTINA — DISPONIBLE" data-en="BASED IN ARGENTINA — AVAILABLE">PUERTO IGUAZÚ, ARGENTINA — DISPONIBLE</span>
+          </span>
+        </div>
+
+        <!-- Center Beam of Light Artwork Frame (f_070.png) -->
+        <div class="beam-artwork-frame" aria-hidden="true">
+          <div class="beam-light-cone"></div>
+          <svg class="beam-silhouette-svg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+            <!-- Floating backlit human silhouette ascending in the spotlight -->
+            <g fill="#ffffff">
+              <circle cx="82" cy="78" r="11.5" />
+              <path d="M92 72 C108 66, 126 78, 134 98 L144 136 C146 144, 152 146, 156 148 C150 152, 136 150, 132 142 L122 108 L112 112 L120 144 C122 150, 114 152, 110 146 L100 112 C94 98, 86 96, 82 104 L84 128 C84 134, 76 134, 76 126 L74 94 C74 82, 82 74, 92 72 Z" />
+            </g>
+          </svg>
+        </div>
+
+        <!-- Bottom Bio, Craft & CTAs -->
+        <div class="about-stage-bottom">
+          <div>
+            <div class="about-craft-meta">
+              <h2 class="about-craft-title" data-es="DEDICACIÓN Y ARQUITECTURA" data-en="DEDICATION &amp; CRAFT">DEDICACIÓN Y ARQUITECTURA</h2>
+              <span class="about-craft-tags">FULL-STACK • IA INTEGRADA • UI/UX • CLOUD &amp; DOCKER</span>
+            </div>
+            <p class="about-craft-desc"
+               data-es="SOY MATEO ROJAS, DESARROLLADOR FULL STACK Y ANALISTA DE SISTEMAS. CONSTRUYO PLATAFORMAS EN PRODUCCIÓN DE PUNTA A PUNTA — COMO PAPERFLIX (ACTIVA EN MÁS DE 3.200 ESCUELAS EN CHILE) Y S.I.T.I — COMBINANDO ARQUITECTURA SÓLIDA, INTEGRACIÓN DE INTELIGENCIA ARTIFICIAL Y DOCENCIA EN CIENCIA DE DATOS Y ROBÓTICA."
+               data-en="I AM MATEO ROJAS, A FULL-STACK DEVELOPER &amp; SYSTEMS ANALYST. I BUILD END-TO-END PRODUCTION PLATFORMS — INCLUDING PAPERFLIX (USED BY 3,200+ SCHOOLS IN CHILE) AND S.I.T.I — BLENDING CLEAN ARCHITECTURE, AI INTEGRATION, AND DATA SCIENCE TEACHING.">
+              SOY MATEO ROJAS, DESARROLLADOR FULL STACK Y ANALISTA DE SISTEMAS. CONSTRUYO PLATAFORMAS EN PRODUCCIÓN DE PUNTA A PUNTA — COMO PAPERFLIX (ACTIVA EN MÁS DE 3.200 ESCUELAS EN CHILE) Y S.I.T.I — COMBINANDO ARQUITECTURA SÓLIDA, INTEGRACIÓN DE INTELIGENCIA ARTIFICIAL Y DOCENCIA EN CIENCIA DE DATOS Y ROBÓTICA.
+            </p>
+            <div class="about-metrics-row">
+              <span class="metric-chip"><strong>+15</strong> PROYECTOS EN PRODUCCIÓN</span>
+              <span class="metric-chip"><strong>3.200+</strong> ESCUELAS (PAPERFLIX)</span>
+              <span class="metric-chip"><strong>4 AÑOS</strong> EXPERIENCIA</span>
+              <span class="metric-chip"><strong>IAES</strong> ANALISTA DE SISTEMAS</span>
+            </div>
+          </div>
+
+          <div class="about-stage-ctas">
+            <button class="pill-btn light" type="button" data-open-modal="contactModal" data-es="CONECTEMOS" data-en="LET'S CONNECT">CONECTEMOS</button>
+            <a class="pill-btn outline-dark" href="#experience" data-es="EXPERIENCIA" data-en="EXPERIENCE">EXPERIENCIA</a>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="wrap sec" id="escritos">
-      <hr class="double">
-      <p class="label"><i class="bi bi-journal-text"></i>Escritos</p>
-      <div class="sec-head">
-        <div>
-          <h2 class="sec-title">Lo que <em>aprendí</em> haciendo</h2>
-          <p class="sec-lead">Artículos técnicos sobre desarrollo, arquitectura de software e inteligencia artificial.</p>
+    <!-- ====================================================================
+         5. EXPERIENCE — "WHERE I'VE BEEN" HORIZONTAL TIMELINE (00:08 - 00:11)
+         ==================================================================== -->
+    <section class="experience-section" id="experience">
+      <div class="exp-topbar">
+        <span class="exp-chapter-label" id="expChapterLabel">01 · ORIGEN, ANÁLISIS DE SISTEMAS &amp; FUNDAMENTOS</span>
+        <div class="exp-progress-track" aria-hidden="true">
+          <div class="exp-progress-bar" id="expProgressBar"></div>
         </div>
       </div>
-      <div class="ruled posts">
-        <div>
-          <article class="post reveal">
-            <div class="art"><i class="bi bi-mortarboard"></i></div>
-            <span class="kind">Innovación EdTech</span>
-            <h3>Revolucionando la educación: IA en la creación de recursos</h3>
-            <div class="meta">Diciembre 2025 · 6 min de lectura</div>
-            <p>Cómo la integración de inteligencia artificial para la importación y categorización masiva de contenido permite a los educadores enfocarse en lo importante.</p>
-            <div class="go"><button type="button" data-article="12"><i class="bi bi-arrow-up-right"></i>Leer</button></div>
-          </article>
-          <article class="post reveal">
-            <div class="art"><i class="bi bi-stars"></i></div>
-            <span class="kind">Inteligencia Artificial</span>
-            <h3>Cómo desarrollé un modelo de IA manual y lo integré en SITI</h3>
-            <div class="meta">Abril 2026 · 7 min de lectura</div>
-            <p>El proceso completo de crear un modelo adaptado a un sistema de gestión real, sin depender de APIs preexistentes, logrando respuestas ultrarrápidas y personalizadas.</p>
-            <div class="go"><button type="button" data-article="9"><i class="bi bi-arrow-up-right"></i>Leer</button></div>
-          </article>
-          <article class="post reveal">
-            <div class="art"><i class="bi bi-stars"></i></div>
-            <span class="kind">Inteligencia Artificial</span>
-            <h3>IA generativa en tus proyectos web: más allá del ChatGPT</h3>
-            <div class="meta">Junio 2025 · 6 min de lectura</div>
-            <p>APIs en producción, RAG, generación de contenido y control de costos. Lo que aprendí integrando IA en proyectos reales.</p>
-            <div class="go"><button type="button" data-article="6"><i class="bi bi-arrow-up-right"></i>Leer</button></div>
-          </article>
-          <article class="post reveal">
-            <div class="art"><i class="bi bi-layers"></i></div>
-            <span class="kind">Full Stack</span>
-            <h3>Cómo conectar Angular 17 con Laravel 12 usando APIs REST</h3>
-            <div class="meta">Enero 2025 · 5 min de lectura</div>
-            <p>CORS, JWT, interceptores y estructura de carpetas para proyectos que escalan.</p>
-            <div class="go"><button type="button" data-article="1"><i class="bi bi-arrow-up-right"></i>Leer</button></div>
-          </article>
-          <article class="post reveal">
-            <div class="art"><i class="bi bi-box-seam"></i></div>
-            <span class="kind">DevOps</span>
-            <h3>Dockerizá tu app Laravel en 15 minutos</h3>
-            <div class="meta">Abril 2025 · 7 min de lectura</div>
-            <p>El stack Docker que uso en producción: PHP-FPM, Nginx, MySQL y deploy con CI/CD.</p>
-            <div class="go"><button type="button" data-article="4"><i class="bi bi-arrow-up-right"></i>Leer</button></div>
-          </article>
-          <article class="post reveal">
-            <div class="art"><i class="bi bi-braces"></i></div>
-            <span class="kind">Frontend</span>
-            <h3>TypeScript en serio: tipos avanzados que todo dev debería conocer</h3>
-            <div class="meta">Agosto 2025 · 5 min de lectura</div>
-            <p>Utility types, discriminated unions, generics con constraints y template literal types.</p>
-            <div class="go"><button type="button" data-article="8"><i class="bi bi-arrow-up-right"></i>Leer</button></div>
-          </article>
-          <article class="post reveal">
-            <div class="art"><i class="bi bi-cloud-arrow-up"></i></div>
-            <span class="kind">Backend</span>
-            <h3>De VPS tradicional a Vercel + Supabase: Escalabilidad inmediata</h3>
-            <div class="meta">Septiembre 2025 · 6 min de lectura</div>
-            <p>Por qué dejé de mantener servidores Linux manualmente y pasé a usar infraestructuras serverless para mis proyectos full-stack.</p>
-            <div class="go"><button type="button" data-article="10"><i class="bi bi-arrow-up-right"></i>Leer</button></div>
-          </article>
-          <article class="post reveal">
-            <div class="art"><i class="bi bi-plug"></i></div>
-            <span class="kind">Inteligencia Artificial</span>
-            <h3>Creando un servidor MCP para conectar IAs a bases de datos</h3>
-            <div class="meta">Noviembre 2025 · 8 min de lectura</div>
-            <p>Cómo utilizar el Model Context Protocol para dotar a los modelos de lenguaje de acceso directo y seguro a datos empresariales reales.</p>
-            <div class="go"><button type="button" data-article="11"><i class="bi bi-arrow-up-right"></i>Leer</button></div>
-          </article>
+
+      <div class="exp-stage">
+        <!-- Giant Background Kinetic Watermark Typography -->
+        <div class="exp-bg-watermark" aria-hidden="true">
+          <div class="watermark-line" id="watermarkTop">CREATIVE TECHNOLOGIST</div>
+          <div class="watermark-line" id="watermarkBottom">2023 SYSTEMS ANALYST</div>
+        </div>
+
+        <div class="exp-horizontal-viewport" id="expViewport">
+          <div class="exp-horizontal-track">
+            <!-- Left Intro Column -->
+            <div class="exp-intro-panel">
+              <span class="exp-eyebrow" data-es="EXPERIENCIA Y TRAYECTORIA" data-en="EXPERIENCE &amp; HISTORY">EXPERIENCIA Y TRAYECTORIA</span>
+              <h2 class="exp-main-heading" data-es="WHERE I'VE BEEN" data-en="WHERE I'VE BEEN">WHERE I'VE BEEN</h2>
+              <p class="exp-intro-sub"
+                 data-es="Explorando distintos roles desde el análisis funcional y desarrollo Full Stack hasta plataformas EdTech a gran escala y docencia superior."
+                 data-en="Exploring different roles across systems analysis, full-stack engineering, large-scale EdTech platforms, and university teaching.">
+                Explorando distintos roles desde el análisis funcional y desarrollo Full Stack hasta plataformas EdTech a gran escala y docencia superior.
+              </p>
+            </div>
+
+            <!-- Slide 01: Formación & Sistemas -->
+            <article class="exp-slide-card"
+                     data-chapter="01 · ORIGEN, ANÁLISIS DE SISTEMAS &amp; FUNDAMENTOS"
+                     data-wm-top="SYSTEMS ANALYST"
+                     data-wm-bottom="2023 — 2025 IAES">
+              <div>
+                <div class="exp-slide-meta">
+                  <span>2023 — 2025</span>
+                  <span class="line"></span>
+                  <span>I.A.E.S &amp; HOTEL GRAN IGUAZÚ</span>
+                </div>
+                <h3 class="exp-slide-role">SYSTEMS ANALYST &amp; CREATIVE TECH</h3>
+                <p class="exp-slide-summary">
+                  Carrera terciaria finalizada como Técnico Superior en Análisis de Sistemas (I.A.E.S), complementada con certificaciones internacionales de Google UX Design y pasantía IT corporativa.
+                </p>
+              </div>
+              <div class="exp-milestones-grid">
+                <div class="milestone-item">
+                  <span class="milestone-label">MILESTONE 01 · ARQUITECTURA</span>
+                  <p class="milestone-text">Modelado de sistemas, diseño de bases de datos SQL, APIs REST y patrones MVC escalables.</p>
+                </div>
+                <div class="milestone-item">
+                  <span class="milestone-label">MILESTONE 02 · UX &amp; FULL STACK</span>
+                  <p class="milestone-text">Certificaciones en Google UX Design (Coursera), UX/UI con Figma y Desarrollo Full Stack (Udemy).</p>
+                </div>
+                <div class="milestone-item">
+                  <span class="milestone-label">MILESTONE 03 · SOPORTE IT</span>
+                  <p class="milestone-text">Diagnóstico de redes, servidores e infraestructura crítica en Hotel Gran Iguazú (H.C.I.).</p>
+                </div>
+              </div>
+            </article>
+
+            <!-- Slide 02: Freelance / Full Stack Developer -->
+            <article class="exp-slide-card"
+                     data-chapter="02 · FREELANCE / DESARROLLO COMERCIAL INDEPENDIENTE"
+                     data-wm-top="FULL STACK DEVELOPER"
+                     data-wm-bottom="2023 — PRESENT">
+              <div>
+                <div class="exp-slide-meta">
+                  <span>2023 — PRESENTE</span>
+                  <span class="line"></span>
+                  <span>FREELANCE / INDEPENDIENTE</span>
+                </div>
+                <h3 class="exp-slide-role">FULL STACK DEVELOPER</h3>
+                <p class="exp-slide-summary">
+                  Desarrollo de experiencias web premium y sistemas de gestión a medida para clientes reales. Especializado en frontends interactivos, backends robustos y aplicaciones potenciadas con IA.
+                </p>
+              </div>
+              <div class="exp-milestones-grid">
+                <div class="milestone-item">
+                  <span class="milestone-label">DELIVERY</span>
+                  <p class="milestone-text">+15 proyectos entregados en producción (S.I.T.I, Petty Joyas, GV Store, GabyGor, Taccu, TeFaltaCalleOK).</p>
+                </div>
+                <div class="milestone-item">
+                  <span class="milestone-label">INFRAESTRUCTURA &amp; IA</span>
+                  <p class="milestone-text">Asistente de IA propio en S.I.T.I (-40% tiempo de búsqueda), POS con lector QR, MercadoPago y Docker.</p>
+                </div>
+                <div class="milestone-item">
+                  <span class="milestone-label">PERFORMANCE</span>
+                  <p class="milestone-text">Optimización de carga de hasta 30% en sitios con tráfico real usando Next.js, Angular 17 y Laravel 12.</p>
+                </div>
+              </div>
+            </article>
+
+            <!-- Slide 03: Paperlux Chile & Docencia Superior -->
+            <article class="exp-slide-card"
+                     data-chapter="03 · PAPERLUX CHILE &amp; DOCENCIA EN IA / ROBÓTICA"
+                     data-wm-top="EDTECH &amp; AI PROFESSOR"
+                     data-wm-bottom="2026 — PRESENT">
+              <div>
+                <div class="exp-slide-meta">
+                  <span>2026 — ACTUALIDAD</span>
+                  <span class="line"></span>
+                  <span>PAPERLUX (CHILE) · CRECER · ITEC</span>
+                </div>
+                <h3 class="exp-slide-role">EDTECH ENGINEER &amp; AI PROFESSOR</h3>
+                <p class="exp-slide-summary">
+                  Ingeniería de software para plataformas educativas de escala nacional en Chile y docencia de nivel superior en Ciencia de Datos, Inteligencia Artificial y Robótica.
+                </p>
+              </div>
+              <div class="exp-milestones-grid">
+                <div class="milestone-item">
+                  <span class="milestone-label">PAPERFLIX · CHILE</span>
+                  <p class="milestone-text">Plataforma EdTech activa en +3.200 escuelas; integración de IA con Groq redujo la carga de contenido en 60%.</p>
+                </div>
+                <div class="milestone-item">
+                  <span class="milestone-label">MIPAPERLUX ONBOARDING</span>
+                  <p class="milestone-text">Sistema gamificado post-compra con Next.js, NestJS, Prisma, Supabase y emisión de certificados PDF.</p>
+                </div>
+                <div class="milestone-item">
+                  <span class="milestone-label">DOCENCIA SUPERIOR</span>
+                  <p class="milestone-text">Profesor de Ciencia de Datos e IA (Instituto Crecer) y Profesor de Robótica e Informática (ITEC).</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-bottombar">
+        <div class="exp-tabs" role="tablist" aria-label="Etapas de experiencia">
+          <button class="exp-tab-btn is-active" type="button">01 · FORMACIÓN &amp; SISTEMAS</button>
+          <button class="exp-tab-btn" type="button">02 · FREELANCE</button>
+          <button class="exp-tab-btn" type="button">03 · PAPERLUX &amp; DOCENCIA IA</button>
+        </div>
+        <div class="exp-arrows">
+          <button class="exp-arrow-btn" id="expPrevBtn" type="button" aria-label="Etapa anterior">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <button class="exp-arrow-btn" id="expNextBtn" type="button" aria-label="Siguiente etapa">
+            <i class="bi bi-arrow-right"></i>
+          </button>
         </div>
       </div>
     </section>
 
-    <section class="wrap sec" id="contacto">
-      <hr class="double">
-      <p class="label"><i class="bi bi-envelope"></i>Contacto</p>
-      <div class="contact">
-        <div>
-          <h2 class="big">¿Tenés un proyecto <em>en mente?</em></h2>
-          <button class="mail" type="button" data-copy>rojas.mateo.web@gmail.com <small data-idle="Copiar" data-done="¡Copiado!">Copiar</small></button>
-          <div class="facts">
-            <span>Puerto Iguazú, Misiones, Argentina</span>
-            <a href="https://github.com/MateoRo2003" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://www.linkedin.com/in/mateo-rojas-ba696926b/" target="_blank" rel="noopener">LinkedIn</a>
-          </div>
+    <!-- ====================================================================
+         6. FEATURED PROJECT / LANDING PAGES — 3D WAVE RIBBON (00:12 - 00:17)
+         ==================================================================== -->
+    <section class="landings-section" id="landings">
+      <div class="landings-header-row">
+        <h2 class="section-huge-label" data-es="FEATURED PROJECT" data-en="FEATURED PROJECT">FEATURED PROJECT</h2>
+        <div class="ribbon-controls-hint">
+          <span data-es="ARRASTRÁ PARA EXPLORAR" data-en="DRAG TO EXPLORE">ARRASTRÁ PARA EXPLORAR</span>
+          <button class="ribbon-nav-btn" id="ribbonPrevBtn" type="button" aria-label="Proyecto anterior">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button class="ribbon-nav-btn" id="ribbonNextBtn" type="button" aria-label="Siguiente proyecto">
+            <i class="bi bi-chevron-right"></i>
+          </button>
         </div>
-        <form class="form" id="contactForm">
-          <label class="field">Nombre<input type="text" name="name" autocomplete="name" required></label>
-          <label class="field">Email<input type="email" name="email" autocomplete="email" required></label>
-          <label class="field">Asunto<input type="text" name="subject" required></label>
-          <label class="field">Mensaje<textarea name="message" rows="5" required></textarea></label>
-          <button class="btn solid" type="submit">Enviar mensaje <i class="bi bi-send"></i></button>
-          <p class="form-status" role="status" data-sending="Enviando…" data-sent="Mensaje enviado. Te respondo pronto." data-error="No se pudo enviar. Probá escribiéndome al email."></p>
-        </form>
+      </div>
+
+      <!-- 3D Sine-Wave Curved Ribbon Canvas (f_140.png) -->
+      <div class="wave-ribbon-stage">
+        <canvas id="waveRibbonCanvas" aria-label="Carrusel ondulado 3D de Landing Pages"></canvas>
+      </div>
+
+      <div class="wave-active-caption">
+        <h3 class="wave-project-title" id="waveProjectTitle">Estudio Jurídico MJHD</h3>
+        <p class="wave-project-sub" id="waveProjectSub">Sitio Web Institucional &amp; Consultoría Legal · SEO Optimizado</p>
+        <div class="wave-project-meta">
+          <span id="waveProjectCount">01 / 07</span>
+          <span>•</span>
+          <a class="wave-project-link" id="waveProjectLink" href="https://www.mjhdjuridica.com.ar" target="_blank" rel="noopener">
+            VISITAR WEB ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="landings-footer-row">
+        <span class="section-huge-label" data-es="LANDING PAGES" data-en="LANDING PAGES">LANDING PAGES</span>
       </div>
     </section>
+
+    <!-- ====================================================================
+         7. WORKS '26 — HEXAGON RING & 3D DRUM CAROUSEL (00:18 - 00:25)
+         ==================================================================== -->
+    <section class="works-section" id="works">
+      <div class="works-mode-bar">
+        <span class="hero-est">SISTEMAS EN PRODUCCIÓN · FULL STACK &amp; IA</span>
+        <div class="works-mode-toggle" role="group" aria-label="Modo de visualización 3D">
+          <button class="mode-btn is-active" id="modeRingBtn" type="button">ANILLO HEXAGONAL</button>
+          <button class="mode-btn" id="modeDrumBtn" type="button">TAMBOR 3D</button>
+        </div>
+      </div>
+
+      <div class="works-stage-grid">
+        <!-- Left Active Project Panel -->
+        <div class="works-active-info">
+          <span class="works-active-kind" id="worksActiveKind">Plataforma EdTech · +3.200 Escuelas en Chile</span>
+          <h2 class="works-active-title" id="worksActiveTitle">Paperflix</h2>
+          <p class="works-active-desc" id="worksActiveDesc">
+            Plataforma educativa a gran escala con alta concurrencia e integración de IA con Groq que redujo un 60% el tiempo de carga y catalogación de contenido.
+          </p>
+          <div class="works-active-chips" id="worksActiveChips"></div>
+          <div class="works-active-actions">
+            <a class="works-cta-btn" id="worksActiveCta" href="#works">
+              VER GALERÍA DEL SISTEMA <i class="bi bi-images"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Center 3D Hexagon Ring / Vertical Drum Stage -->
+        <div class="works-3d-viewport" id="works3dViewport">
+          <span class="works-center-label">WORKS ’26</span>
+          <div class="works-cards-rig" id="worksCardsRig"></div>
+        </div>
+
+        <!-- Right Sticky Index List -->
+        <ul class="works-index-list" id="worksIndexList" aria-label="Lista de sistemas destacados"></ul>
+      </div>
+
+      <div class="works-bottom-controls">
+        <span class="drum-hint-pill" data-es="↓ SCROLL O ARRASTRÁ EL TAMBOR PARA ROTAR" data-en="↓ SCROLL OR DRAG DRUM TO CYCLE">
+          ↓ SCROLL O ARRASTRÁ EL TAMBOR PARA ROTAR
+        </span>
+        <button class="all-projects-btn" type="button" data-open-modal="allProjectsModal">
+          VER ARCHIVO COMPLETO (22 PROYECTOS) ↗
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         8. THE SERVICES WE PROVIDE — ACCORDION CARDS (00:26)
+         ==================================================================== -->
+    <section class="services-section" id="services">
+      <div class="services-header">
+        <h2 class="services-heading" data-es="THE SERVICES WE PROVIDE" data-en="THE SERVICES WE PROVIDE">THE SERVICES WE PROVIDE</h2>
+        <p class="services-sub"
+           data-es="CREANDO SITIOS Y SISTEMAS WEB VISUALMENTE IMPACTANTES Y FUNCIONALES ADAPTADOS A LOS OBJETIVOS DE CADA CLIENTE."
+           data-en="CREATING VISUALLY APPEALING AND FUNCTIONAL WEBSITES TAILORED TO THE CLIENT'S NEEDS AND GOALS. PROVIDING A CONSISTENT USER EXPERIENCE ACROSS PLATFORMS.">
+          CREANDO SITIOS Y SISTEMAS WEB VISUALMENTE IMPACTANTES Y FUNCIONALES ADAPTADOS A LOS OBJETIVOS DE CADA CLIENTE.
+        </p>
+      </div>
+
+      <div class="services-accordion">
+        <!-- Service 01 -->
+        <article class="service-item">
+          <button class="service-trigger" type="button" aria-expanded="false">
+            <span class="service-num">1</span>
+            <span class="service-name" data-es="UI / UX &amp; PRODUCT DESIGN" data-en="UI / UX">UI / UX &amp; PRODUCT DESIGN</span>
+            <span class="service-chevron"><i class="bi bi-chevron-down"></i></span>
+          </button>
+          <div class="service-panel">
+            <div class="service-panel-inner">
+              <p class="service-desc">
+                Diseño de interfaces centradas en el usuario con sistemas de diseño consistentes, prototipado interactivo en Figma y arquitectura de información pensada para maximizar conversión y retención.
+              </p>
+              <div class="service-bottom-row">
+                <span class="service-deliverables">DELIVERABLES: WIREFRAMING, PROTOTIPOS FIGMA, DESIGN SYSTEMS, AUDITORÍA UX</span>
+                <button class="service-inquire-link" type="button" data-open-modal="contactModal">INQUIRE ↗</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Service 02 -->
+        <article class="service-item">
+          <button class="service-trigger" type="button" aria-expanded="false">
+            <span class="service-num">2</span>
+            <span class="service-name" data-es="FULL STACK WEB SYSTEMS &amp; IA" data-en="WEB DESIGN &amp; FULL STACK">FULL STACK WEB SYSTEMS &amp; IA</span>
+            <span class="service-chevron"><i class="bi bi-chevron-down"></i></span>
+          </button>
+          <div class="service-panel">
+            <div class="service-panel-inner">
+              <p class="service-desc">
+                Desarrollo de plataformas web completas, e-commerce con MercadoPago, sistemas POS con QR, turnos online e integración de asistentes de Inteligencia Artificial (OpenAI, Groq, Gemini, MCP) sobre arquitecturas escalables.
+              </p>
+              <div class="service-bottom-row">
+                <span class="service-deliverables">DELIVERABLES: NEXT.JS / ANGULAR, LARAVEL / NESTJS, SUPABASE / MYSQL, INTEGRACIÓN IA</span>
+                <button class="service-inquire-link" type="button" data-open-modal="contactModal">INQUIRE ↗</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Service 03 (Default Open like f_262.png) -->
+        <article class="service-item is-open">
+          <button class="service-trigger" type="button" aria-expanded="true">
+            <span class="service-num">3</span>
+            <span class="service-name" data-es="LANDING PAGE DESIGN" data-en="LANDING PAGE DESIGN">LANDING PAGE DESIGN</span>
+            <span class="service-chevron"><i class="bi bi-chevron-down"></i></span>
+          </button>
+          <div class="service-panel">
+            <div class="service-panel-inner">
+              <p class="service-desc">
+                Landing pages editoriales e interactivas de alta conversión para empresas, lanzamientos de productos y marcas profesionales. Diseñadas con animaciones fluidas, SEO técnico y máxima velocidad de carga.
+              </p>
+              <div class="service-bottom-row">
+                <span class="service-deliverables">DELIVERABLES: ESTRUCTURA PERSUASIVA, MOTION / 3D INTERACTIVO, SEO TÉCNICO, DEPLOY RÁPIDO</span>
+                <button class="service-inquire-link" type="button" data-open-modal="contactModal">INQUIRE ↗</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         9. TICKER STRIP & FOOTER ("LET'S TALK" 00:27 - 00:28)
+         ==================================================================== -->
+    <div class="ticker-strip">
+      <div class="ticker-marquee-wrap" aria-hidden="true">
+        <div class="ticker-track">
+          <span>FULL STACK DEVELOPMENT • AI INTEGRATION • ANGULAR 17 &amp; LARAVEL 12 • NEXT.JS &amp; SUPABASE • UI/UX DESIGN • DOCKER &amp; CLOUD •</span>
+          <span>FULL STACK DEVELOPMENT • AI INTEGRATION • ANGULAR 17 &amp; LARAVEL 12 • NEXT.JS &amp; SUPABASE • UI/UX DESIGN • DOCKER &amp; CLOUD •</span>
+        </div>
+      </div>
+      <button class="ticker-hire-btn" type="button" data-open-modal="contactModal">HIRE ME ↗</button>
+    </div>
   </main>
 
-  <footer class="wrap">
-    <hr class="double">
-    <div class="foot">
-      <span>© <span data-year>2026</span> Mateo Rojas — Hecho a mano en Puerto Iguazú</span>
-      <span>Apretá <kbd>/</kbd> para navegar · <a href="#inicio">Volver arriba ↑</a></span>
+  <footer class="echo-footer" id="contact">
+    <div class="footer-ambient-glow" aria-hidden="true"></div>
+
+    <div class="footer-center-stage">
+      <h2 class="lets-talk-heading" data-open-modal="contactModal" data-es="LET'S TALK" data-en="LET'S TALK">LET’S TALK</h2>
+
+      <div class="footer-pills-row">
+        <a class="footer-pill" href="https://github.com/MateoRo2003" target="_blank" rel="noopener">GITHUB</a>
+        <a class="footer-pill" href="https://www.linkedin.com/in/mateo-rojas-ba696926b/" target="_blank" rel="noopener">LINKEDIN</a>
+        <button class="footer-pill" type="button" data-copy-email>COPIAR EMAIL</button>
+        <button class="footer-pill" type="button" data-open-modal="articlesModal">ESCRITOS &amp; BLOG</button>
+        <button class="footer-pill primary" type="button" data-open-modal="contactModal" data-es="CONTACT ME" data-en="CONTACT ME">CONTACT ME</button>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <span>PORTFOLIO © 2026 MATEO ROJAS · ALL RIGHTS RESERVED</span>
+      <span>PUERTO IGUAZÚ, MISIONES, ARGENTINA</span>
     </div>
   </footer>
 
-  <dialog class="palette" id="palette" aria-label="Paleta de comandos">
-    <input type="text" placeholder="¿A dónde vamos?" aria-label="Buscar">
-    <ul>
-      <li data-cmd="#trabajo">Ver proyectos <small>#trabajo</small></li>
-      <li data-cmd="#experiencia">Experiencia <small>#experiencia</small></li>
-      <li data-cmd="#stack">Stack <small>#stack</small></li>
-      <li data-cmd="#certificados">Certificados y clientes <small>#certificados</small></li>
-      <li data-cmd="#escritos">Escritos <small>#escritos</small></li>
-      <li data-cmd="#contacto">Contacto <small>#contacto</small></li>
-      <li data-cmd="copy">Copiar email <small>rojas.mateo.web@gmail.com</small></li>
-      <li data-cmd="https://github.com/MateoRo2003">Abrir GitHub <small>↗</small></li>
-      <li data-cmd="https://www.linkedin.com/in/mateo-rojas-ba696926b/">Abrir LinkedIn <small>↗</small></li>
-    </ul>
-  </dialog>
+  <!-- ====================================================================
+       10. MODALS (ALL 22 PROJECTS, ARTICLES, GALLERY & CONTACT FORM)
+       ==================================================================== -->
 
-  <dialog id="article" aria-label="Artículo">
-    <div class="dlg-bar"><span class="article-cat"></span><button type="button" data-close>Cerrar</button></div>
-    <div class="article-body"></div>
-  </dialog>
+  <!-- Modal 1: Contact Form -->
+  <div class="echo-modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+    <div class="echo-modal-box">
+      <div class="echo-modal-head">
+        <span class="echo-modal-title" id="contactModalTitle">CONTACTO DIRECTO · MATEO ROJAS</span>
+        <button class="echo-modal-close" type="button" data-close-modal>CERRAR ✕</button>
+      </div>
+      <div class="echo-modal-body">
+        <div class="contact-modal-grid">
+          <div>
+            <h3 style="font-size:1.75rem;line-height:1.15;margin-bottom:1rem">¿Tenés un proyecto o propuesta en mente?</h3>
+            <p style="color:rgba(255,255,255,0.72);font-size:0.9rem;margin-bottom:1.5rem">
+              Disponible para proyectos Full Stack, integraciones de IA, consultoría técnica y oportunidades remotas, híbridas o presenciales.
+            </p>
+            <div style="display:flex;flex-direction:column;gap:0.85rem;font-family:var(--font-mono);font-size:0.78rem">
+              <div>
+                <span style="color:var(--text-muted-dark);display:block">EMAIL</span>
+                <button type="button" data-copy-email style="color:#fff;border-bottom:1px solid rgba(255,255,255,0.4);padding-bottom:2px">
+                  rojas.mateo.web@gmail.com (Click para copiar)
+                </button>
+              </div>
+              <div>
+                <span style="color:var(--text-muted-dark);display:block">UBICACIÓN</span>
+                <span>Puerto Iguazú, Misiones, Argentina</span>
+              </div>
+              <div style="display:flex;gap:1rem;margin-top:0.5rem">
+                <a href="https://github.com/MateoRo2003" target="_blank" rel="noopener" style="border-bottom:1px solid #fff">GitHub ↗</a>
+                <a href="https://www.linkedin.com/in/mateo-rojas-ba696926b/" target="_blank" rel="noopener" style="border-bottom:1px solid #fff">LinkedIn ↗</a>
+              </div>
+            </div>
+          </div>
 
-  <dialog id="gallery" aria-label="Galería">
-    <div class="dlg-bar"><span class="gallery-title"></span><button type="button" data-close>Cerrar</button></div>
-    <div class="gallery"></div>
-  </dialog>
+          <form class="contact-form" id="echoContactForm">
+            <label class="contact-field">
+              <span>NOMBRE</span>
+              <input type="text" name="name" required placeholder="Tu nombre o empresa">
+            </label>
+            <label class="contact-field">
+              <span>EMAIL</span>
+              <input type="email" name="email" required placeholder="tu@email.com">
+            </label>
+            <label class="contact-field">
+              <span>ASUNTO</span>
+              <input type="text" name="subject" required placeholder="Desarrollo Full Stack / Proyecto / Propuesta">
+            </label>
+            <label class="contact-field">
+              <span>MENSAJE</span>
+              <textarea name="message" rows="4" required placeholder="Contame sobre tu proyecto, plazos o necesidad..."></textarea>
+            </label>
+            <button class="pill-btn light" type="submit" style="align-self:flex-start;margin-top:0.4rem">
+              ENVIAR MENSAJE <i class="bi bi-send"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Complete 22-Project Archive -->
+  <div class="echo-modal" id="allProjectsModal" role="dialog" aria-modal="true" aria-labelledby="allProjectsTitle">
+    <div class="echo-modal-box">
+      <div class="echo-modal-head">
+        <span class="echo-modal-title" id="allProjectsTitle">ARCHIVO COMPLETO DE PROYECTOS (22)</span>
+        <button class="echo-modal-close" type="button" data-close-modal>CERRAR ✕</button>
+      </div>
+      <div class="echo-modal-body">
+        <div class="catalog-grid">
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/paperflix.webp" alt="Paperflix" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">EdTech · +3.200 Escuelas en Chile</span>
+              <h3 class="catalog-card-title">Paperflix</h3>
+              <p class="catalog-card-desc">Plataforma educativa gamificada con IA integrada (Groq). Next.js 14, NestJS, Prisma, Supabase.</p>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/s-i-t-i-sistema-integral-de-tiendas-inde.webp" alt="S.I.T.I" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Sistema Full Stack + IA</span>
+              <h3 class="catalog-card-title">S.I.T.I</h3>
+              <p class="catalog-card-desc">Gestión para tiendas multimarca con JWT, 5 roles y asistente de IA propio en Angular 17 + Laravel 12.</p>
+              <a class="catalog-card-link" href="https://siti.mateorojas.com.ar" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/petty-joyas.webp" alt="Petty Joyas" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">E-Commerce Full Stack + POS</span>
+              <h3 class="catalog-card-title">Petty Joyas</h3>
+              <p class="catalog-card-desc">Joyería online con POS lector QR, chatbot WhatsApp Business y checkout MercadoPago.</p>
+              <a class="catalog-card-link" href="https://pettyjoyas.com.ar" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/mipaperlux.webp" alt="MiPaperlux" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Plataforma EdTech · Chile</span>
+              <h3 class="catalog-card-title">MiPaperlux</h3>
+              <p class="catalog-card-desc">Onboarding gamificado para docentes con seguimiento de progreso y certificados PDF.</p>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/gv-store.webp" alt="GV Store" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">E-Commerce Full Stack</span>
+              <h3 class="catalog-card-title">GV Store</h3>
+              <p class="catalog-card-desc">Tienda de indumentaria deportiva en Next.js, TypeScript, Prisma, Supabase y MercadoPago.</p>
+              <a class="catalog-card-link" href="https://gvstore.com.ar" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/gabygor.webp" alt="GabyGor" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Sistema de Turnos Online</span>
+              <h3 class="catalog-card-title">GabyGor</h3>
+              <p class="catalog-card-desc">Reserva de turnos en tiempo real con múltiples servicios combinables y notificaciones.</p>
+              <a class="catalog-card-link" href="https://gabygor.com.ar" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/taccu.webp" alt="Taccu" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Sistema de Fidelización</span>
+              <h3 class="catalog-card-title">Taccu</h3>
+              <p class="catalog-card-desc">Sistema de puntos y recompensas con Google OAuth, login telefónico y panel administrativo.</p>
+              <a class="catalog-card-link" href="https://taccu.vercel.app/" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/tefaltacalleok.webp" alt="TeFaltaCalleOK" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">E-Commerce Laravel</span>
+              <h3 class="catalog-card-title">TeFaltaCalleOK</h3>
+              <p class="catalog-card-desc">Tienda online de ropa urbana con panel administrativo y base de datos MySQL.</p>
+              <a class="catalog-card-link" href="https://www.tefaltacalleok.com" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/estudio-juridico-mjhd.webp" alt="Estudio Jurídico MJHD" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Sitio Web Institucional</span>
+              <h3 class="catalog-card-title">Estudio Jurídico MJHD</h3>
+              <p class="catalog-card-desc">Presencia profesional y SEO local optimizado para estudio jurídico.</p>
+              <a class="catalog-card-link" href="https://www.mjhdjuridica.com.ar" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/travelonlineagency.webp" alt="TravelOnlineAgency" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Landing Page</span>
+              <h3 class="catalog-card-title">TravelOnlineAgency</h3>
+              <p class="catalog-card-desc">Servicio de traslados turísticos en Misiones.</p>
+              <a class="catalog-card-link" href="https://www.travelonlineagency.com.ar" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/danytours.webp" alt="DanyTours" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Landing Page</span>
+              <h3 class="catalog-card-title">DanyTours</h3>
+              <p class="catalog-card-desc">Traslados y excursiones turísticas en Puerto Iguazú.</p>
+              <a class="catalog-card-link" href="https://www.danytours.com.ar" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/traslados-marquez.webp" alt="Traslados Márquez" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Landing Page</span>
+              <h3 class="catalog-card-title">Traslados Márquez</h3>
+              <p class="catalog-card-desc">Remises y traslados turísticos en Puerto Iguazú.</p>
+              <a class="catalog-card-link" href="https://www.trasladosmarquez.com.ar" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/lgk-traslados.webp" alt="LGK Traslados" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Landing Page</span>
+              <h3 class="catalog-card-title">LGK Traslados</h3>
+              <p class="catalog-card-desc">Traslados a toda la provincia de Misiones.</p>
+              <a class="catalog-card-link" href="https://www.trasladoslgk.com.ar" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/presenciaweb.webp" alt="PresenciaWeb" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Landing Page</span>
+              <h3 class="catalog-card-title">PresenciaWeb</h3>
+              <p class="catalog-card-desc">Maquetación web para agencia de diseño digital.</p>
+              <a class="catalog-card-link" href="https://presencia-web.vercel.app/" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/healthtrack.webp" alt="HealthTrack" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Sistema Médico Angular + Laravel</span>
+              <h3 class="catalog-card-title">HealthTrack</h3>
+              <p class="catalog-card-desc">Gestión clínica con agenda, historial médico, roles y autenticación JWT.</p>
+              <a class="catalog-card-link" href="https://github.com/MateoRo2003/PROYECTO-healthtrack" target="_blank" rel="noopener">Código GitHub ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/sistema-de-turnos-barberia.webp" alt="Sistema Barbería" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Sistema PHP MVC + Docker</span>
+              <h3 class="catalog-card-title">Sistema de Turnos Barbería</h3>
+              <p class="catalog-card-desc">Agenda dinámica, recordatorios por email y arquitectura MVC en PHP + MySQL.</p>
+              <a class="catalog-card-link" href="https://github.com/MateoRo2003/AppSalon_PHP_MVC_JS_SASS_FIN" target="_blank" rel="noopener">Código GitHub ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/simulador-de-amortizacion.webp" alt="Simulador de Amortización" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Herramienta Financiera</span>
+              <h3 class="catalog-card-title">Simulador de Amortización</h3>
+              <p class="catalog-card-desc">Simulación interactiva de cuadros de amortización de préstamos.</p>
+              <a class="catalog-card-link" href="https://amortizacion-fronted.vercel.app/" target="_blank" rel="noopener">Ver web ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/devwebcamp.webp" alt="DevWebCamp" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Plataforma de Eventos</span>
+              <h3 class="catalog-card-title">DevWebCamp</h3>
+              <p class="catalog-card-desc">Plataforma para conferencias online con venta de tickets y pases.</p>
+              <a class="catalog-card-link" href="https://github.com/MateoRo2003/DevWebCamp" target="_blank" rel="noopener">Código GitHub ↗</a>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <img src="assets/img/portfolio/cards/sistema-de-bienes-raices.webp" alt="Bienes Raíces" loading="lazy">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Portal Inmobiliario MVC</span>
+              <h3 class="catalog-card-title">Sistema de Bienes Raíces</h3>
+              <p class="catalog-card-desc">Administración y catálogo de propiedades con panel de control.</p>
+              <a class="catalog-card-link" href="https://github.com/MateoRo2003/bienesRaicesMVC" target="_blank" rel="noopener">Código GitHub ↗</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Technical Articles / Blog -->
+  <div class="echo-modal" id="articlesModal" role="dialog" aria-modal="true" aria-labelledby="articlesModalTitle">
+    <div class="echo-modal-box">
+      <div class="echo-modal-head">
+        <span class="echo-modal-title" id="articlesModalTitle">ESCRITOS Y ARTÍCULOS TÉCNICOS</span>
+        <button class="echo-modal-close" type="button" data-close-modal>CERRAR ✕</button>
+      </div>
+      <div class="echo-modal-body">
+        <div class="catalog-grid">
+          <article class="catalog-card">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Innovación EdTech · Dic 2025</span>
+              <h3 class="catalog-card-title">Revolucionando la educación: IA en la creación de recursos</h3>
+              <p class="catalog-card-desc">Cómo la integración de IA para importación y categorización masiva permite a los educadores enfocarse en lo importante.</p>
+              <button class="catalog-card-link" type="button" data-read-article="12">Leer artículo ↗</button>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Inteligencia Artificial · Abr 2026</span>
+              <h3 class="catalog-card-title">Cómo desarrollé un modelo de IA manual y lo integré en SITI</h3>
+              <p class="catalog-card-desc">El proceso completo de crear un asistente adaptado a un sistema de gestión real con respuestas ultrarrápidas.</p>
+              <button class="catalog-card-link" type="button" data-read-article="9">Leer artículo ↗</button>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Inteligencia Artificial · Nov 2025</span>
+              <h3 class="catalog-card-title">Creando un servidor MCP para conectar IAs a bases de datos</h3>
+              <p class="catalog-card-desc">Cómo utilizar el Model Context Protocol para dotar a los LLMs de acceso seguro a datos reales.</p>
+              <button class="catalog-card-link" type="button" data-read-article="11">Leer artículo ↗</button>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Full Stack · Ene 2025</span>
+              <h3 class="catalog-card-title">Cómo conectar Angular 17 con Laravel 12 usando APIs REST</h3>
+              <p class="catalog-card-desc">CORS, JWT, interceptores y arquitectura de carpetas para proyectos que escalan.</p>
+              <button class="catalog-card-link" type="button" data-read-article="1">Leer artículo ↗</button>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">DevOps · Abr 2025</span>
+              <h3 class="catalog-card-title">Dockerizá tu app Laravel en 15 minutos</h3>
+              <p class="catalog-card-desc">El stack Docker que uso en producción: PHP-FPM, Nginx, MySQL y deploy con CI/CD.</p>
+              <button class="catalog-card-link" type="button" data-read-article="4">Leer artículo ↗</button>
+            </div>
+          </article>
+          <article class="catalog-card">
+            <div class="catalog-card-body">
+              <span class="catalog-card-kind">Cloud &amp; Serverless · Sep 2025</span>
+              <h3 class="catalog-card-title">De VPS tradicional a Vercel + Supabase: Escalabilidad inmediata</h3>
+              <p class="catalog-card-desc">Por qué pasé a usar arquitecturas serverless para mis proyectos full-stack de alta demanda.</p>
+              <button class="catalog-card-link" type="button" data-read-article="10">Leer artículo ↗</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Article Reader -->
+  <div class="echo-modal" id="articleReaderModal" role="dialog" aria-modal="true" aria-labelledby="articleReaderTitle">
+    <div class="echo-modal-box">
+      <div class="echo-modal-head">
+        <span class="echo-modal-title" id="articleReaderTitle">ARTÍCULO</span>
+        <button class="echo-modal-close" type="button" data-close-modal>CERRAR ✕</button>
+      </div>
+      <div class="echo-modal-body" id="articleReaderBody"></div>
+    </div>
+  </div>
+
+  <!-- Modal 5: System Screenshots Gallery (Paperflix / MiPaperlux) -->
+  <div class="echo-modal" id="galleryModal" role="dialog" aria-modal="true" aria-labelledby="galleryModalTitle">
+    <div class="echo-modal-box">
+      <div class="echo-modal-head">
+        <span class="echo-modal-title" id="galleryModalTitle">GALERÍA DEL SISTEMA</span>
+        <button class="echo-modal-close" type="button" data-close-modal>CERRAR ✕</button>
+      </div>
+      <div class="echo-modal-body" id="galleryModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notification" id="toastNotification" role="status" aria-live="polite"></div>
 
   <script src="assets/js/articles.js" defer></script>
-  <script src="assets/js/editorial.js" defer></script>
+  <script src="assets/js/echo.js" defer></script>
 </body>
 
 </html>
