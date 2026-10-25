@@ -175,10 +175,20 @@ button {
   z-index: 30;
   display: flex;
   justify-content: center;
-  gap: 6px;
   margin-top: 18px;
   padding: 0 var(--pad);
   pointer-events: none;
+}
+
+/* las pastillas van en una cápsula de papel: al bajar flotan sobre el contenido sin mezclarse */
+.nav > div {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  pointer-events: auto;
 }
 
 .nav a {
@@ -879,25 +889,29 @@ button {
 }
 
 .clients a {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 3 / 2;
-  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 92px;
+  padding: 14px 14px 12px;
   border-right: 1px solid var(--hair);
   border-bottom: 1px solid var(--hair);
+  text-decoration: none;
+  transition: background-color 0.25s;
 }
 
-.clients img {
-  max-height: 48px;
-  object-fit: contain;
-  filter: grayscale(1);
-  opacity: 0.75;
-  transition: filter 0.3s, opacity 0.3s;
+.clients b {
+  font: 400 24px/1.05 var(--serif);
 }
 
-.clients a:hover img {
-  filter: none;
-  opacity: 1;
+.clients small {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.clients a:hover {
+  background: var(--butter);
 }
 
 /*--------------------------------------------------------------
@@ -1294,8 +1308,8 @@ dialog[open] {
     order: 3;
   }
 
-  .nav {
-    justify-content: flex-start;
+  .nav > div {
+    max-width: 100%;
     overflow-x: auto;
     scrollbar-width: none;
   }
