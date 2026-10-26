@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="is-loading">
 
 <head>
   <meta charset="utf-8">
@@ -19,9 +19,10 @@
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Space+Grotesk:wght@400;500;600;700;800&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Outfit:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/css/echo.css" rel="stylesheet">
+  <link rel="preload" href="assets/img/echo/mateo-silhouette.webp" as="image">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -44,18 +45,12 @@
        1. PRELOADER (00:00 - 00:01 WAVY LOOP + COMET)
        ==================================================================== -->
   <div class="preloader" id="preloader" aria-label="Cargando portfolio">
-    <div class="preloader-stage">
-      <svg class="preloader-svg" viewBox="0 0 380 380" aria-hidden="true">
-        <path class="preloader-wave-bg" id="preloaderWaveBg" d=""></path>
-        <path class="preloader-wave-path" id="preloaderWavePath" d="" pathLength="1000"></path>
-        <circle class="preloader-comet" id="preloaderComet" cx="316" cy="190" r="4.5"></circle>
-      </svg>
-      <div class="preloader-word">
-        <span>MATEO</span>
-        <span class="preloader-dot"></span>
-      </div>
-    </div>
-    <button class="preloader-skip" id="preloaderSkip" type="button">Saltar intro</button>
+    <svg class="preloader-svg" id="preloaderSvg" aria-hidden="true">
+      <path class="preloader-ring" id="preloaderRing" pathLength="1"></path>
+      <circle class="preloader-tail" id="preloaderTail" r="2.2"></circle>
+      <circle class="preloader-head" id="preloaderHead" r="3.6"></circle>
+    </svg>
+    <div class="preloader-word" id="preloaderWord">MATEO<span class="preloader-dot" id="preloaderDot"></span></div>
   </div>
 
   <!-- ====================================================================
@@ -95,125 +90,80 @@
          3. HERO SECTION (00:02 - 00:03 EXPLORE MY PORTFOLIO)
          ==================================================================== -->
     <section class="hero-section" id="home">
-      <div class="hero-typography-wrap">
-        <h1 aria-label="Explore My Portfolio">
-          <span class="hero-title-line1" data-es="EXPLORE MY" data-en="EXPLORE MY">EXPLORE MY</span>
-          <span class="hero-title-line2" data-es="PORTFOLIO" data-en="PORTFOLIO">PORTFOLIO</span>
-        </h1>
+      <h1 class="hero-title" aria-label="Explore my portfolio">
+        <span class="hero-title-line1">EXPLORE MY</span>
+        <span class="hero-title-line2">PORTFOLIO</span>
+      </h1>
+
+      <!-- Mateo a contraluz, delante de "PORTFOLIO" -->
+      <img class="hero-portrait-img" id="heroSilhouette" src="assets/img/echo/mateo-silhouette.webp" alt="Mateo Rojas" width="1180" height="1030" fetchpriority="high" decoding="async">
+
+      <div class="hero-meta-left">
+        <span class="hero-est" data-es="DEVELOPER EST. 2023" data-en="DEVELOPER EST. 2023">DEVELOPER EST. 2023</span>
+        <a class="hero-scroll-btn" href="#about" aria-label="Bajar a Sobre mí">
+          <i class="bi bi-arrow-down-right"></i>
+        </a>
       </div>
 
-      <!-- Cutout Monochrome Studio Portrait of Mateo -->
-      <div class="hero-portrait-stage">
-        <div class="hero-portrait-glow" aria-hidden="true"></div>
-        <img class="hero-portrait-img" id="heroSilhouette" src="assets/img/profile/mateo-echo-hero.webp" alt="Mateo Rojas" width="590" height="515" fetchpriority="high">
-      </div>
-
-      <div class="hero-bottom-grid">
-        <div class="hero-meta-left">
-          <span class="hero-est" data-es="DEVELOPER EST. 2023 · ARGENTINA" data-en="DEVELOPER EST. 2023 · ARGENTINA">DEVELOPER EST. 2023 · ARGENTINA</span>
-          <a class="hero-scroll-btn" href="#about" aria-label="Bajar a Sobre Mí">
-            <i class="bi bi-arrow-down-right"></i>
-          </a>
-        </div>
-
-        <div class="hero-meta-right">
-          <p class="hero-bio-snippet"
-             data-es="APASIONADO POR CREAR SISTEMAS WEB CON IA INTEGRADA Y EXPERIENCIAS DIGITALES QUE DESTACAN ENTRE LA MULTITUD."
-             data-en="I AM PASSIONATE ABOUT CREATING AI-POWERED WEB SYSTEMS AND DIGITAL EXPERIENCES THAT STAND OUT FROM THE CROWD.">
-            APASIONADO POR CREAR SISTEMAS WEB CON IA INTEGRADA Y EXPERIENCIAS DIGITALES QUE DESTACAN ENTRE LA MULTITUD.
-          </p>
-          <ul class="hero-Vertical-roles">
-            <li data-es="FULL STACK &amp; IA" data-en="FULL STACK &amp; AI">FULL STACK &amp; IA</li>
-            <li data-es="DISEÑO WEB &amp; UI/UX" data-en="WEB DESIGN &amp; UI/UX">DISEÑO WEB &amp; UI/UX</li>
-            <li data-es="LANDING PAGES" data-en="LANDING PAGES">LANDING PAGES</li>
-          </ul>
-        </div>
+      <div class="hero-meta-right">
+        <p class="hero-bio-snippet"
+           data-es="ME APASIONA CREAR SISTEMAS WEB CON IA QUE SE DESTACAN ENTRE LA MULTITUD"
+           data-en="I AM PASSIONATE ABOUT CREATING AI-POWERED WEB SYSTEMS THAT STAND OUT FROM THE CROWD">
+          ME APASIONA CREAR SISTEMAS WEB CON IA QUE SE DESTACAN ENTRE LA MULTITUD
+        </p>
+        <ul class="hero-roles">
+          <li data-es="FULL STACK" data-en="FULL STACK">FULL STACK</li>
+          <li data-es="DISEÑO WEB" data-en="WEB DESIGN">DISEÑO WEB</li>
+          <li data-es="LANDING PAGE" data-en="LANDING PAGE">LANDING PAGE</li>
+        </ul>
       </div>
     </section>
 
     <!-- ====================================================================
          4. ABOUT ME — STARRY NIGHT PORTAL & DARK STUDIO (00:04 - 00:07)
          ==================================================================== -->
-    <section class="about-portal-wrapper" id="about">
-      <!-- Monochrome Van Gogh Starry Night + Gothic Castle Spires Banner (00:04 - 00:05) -->
-      <div class="about-starry-banner" id="aboutBanner">
-        <canvas id="starryCanvas" aria-hidden="true"></canvas>
+    <section class="about-portal" id="about">
+      <div class="about-pin">
+        <img class="about-sky" src="assets/img/echo/starry-night.webp" alt="" width="2000" height="1125" loading="lazy" decoding="async">
 
-        <!-- Gothic Spires & Village Silhouette (left & right bottom framing like f_045.png) -->
-        <svg class="gothic-spires-svg" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
-          <path fill="#09090b" d="
-            M0,320 L0,250 L28,250 L34,195 L40,250 L58,250 L68,140 L78,250 L95,250
-            L108,165 L118,240 L142,240 L158,110 L166,185 L176,185 L194,28 L212,185
-            L222,185 L230,118 L244,240 L268,240 L278,175 L290,255 L320,275 L360,305
-            L1020,305 L1090,275 L1160,245 L1240,210 L1320,175 L1390,150 L1440,135 L1440,320 Z" />
-          <!-- Illuminated Gothic Windows on the main spire -->
-          <g fill="#f3f2ee" opacity="0.88">
-            <rect x="190" y="195" width="3.5" height="14" rx="1.5" />
-            <rect x="196" y="195" width="3.5" height="14" rx="1.5" />
-            <rect x="187" y="218" width="4" height="18" rx="2" />
-            <rect x="193" y="218" width="4" height="18" rx="2" />
-            <rect x="199" y="218" width="4" height="18" rx="2" />
-            <rect x="155" y="225" width="3.5" height="12" rx="1.5" />
-            <rect x="228" y="225" width="3.5" height="12" rx="1.5" />
-          </g>
-        </svg>
+        <div class="about-card" id="aboutCard">
+          <img class="about-card-img" src="assets/img/echo/about-beam.webp" alt="" width="1600" height="978" loading="lazy" decoding="async">
+          <div class="about-card-shade"></div>
 
-        <!-- Center Dark Portal Card with Split ABOUT / ME -->
-        <div class="about-portal-card" id="aboutPortalCard">
-          <span class="about-portal-word" id="aboutWordTop" data-es="ABOUT" data-en="ABOUT">ABOUT</span>
-          <span class="about-portal-word" id="aboutWordBottom" data-es="ME" data-en="ME">ME</span>
-        </div>
-      </div>
-
-      <!-- Expanded Dark Studio Stage (00:06 - 00:07) -->
-      <div class="about-dark-stage" id="aboutStage">
-        <div class="about-stage-topbar">
-          <span data-es="TRANSFORMANDO IDEAS VISIONARIAS EN SISTEMAS WEB RÁPIDOS, ESCALABLES Y CON IA"
-                data-en="TURNING VISIONARY IDEAS INTO FAST, IMMERSIVE DIGITAL EXPERIENCES">
-            TRANSFORMANDO IDEAS VISIONARIAS EN SISTEMAS WEB RÁPIDOS, ESCALABLES Y CON IA
-          </span>
-          <span class="status-badge">
-            <i class="pulse"></i>
-            <span data-es="PUERTO IGUAZÚ, ARGENTINA — DISPONIBLE" data-en="BASED IN ARGENTINA — AVAILABLE">PUERTO IGUAZÚ, ARGENTINA — DISPONIBLE</span>
-          </span>
-        </div>
-
-        <!-- Center Beam of Light Artwork Frame (f_070.png) -->
-        <div class="beam-artwork-frame" aria-hidden="true">
-          <div class="beam-light-cone"></div>
-          <svg class="beam-silhouette-svg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
-            <!-- Floating backlit human silhouette ascending in the spotlight -->
-            <g fill="#ffffff">
-              <circle cx="82" cy="78" r="11.5" />
-              <path d="M92 72 C108 66, 126 78, 134 98 L144 136 C146 144, 152 146, 156 148 C150 152, 136 150, 132 142 L122 108 L112 112 L120 144 C122 150, 114 152, 110 146 L100 112 C94 98, 86 96, 82 104 L84 128 C84 134, 76 134, 76 126 L74 94 C74 82, 82 74, 92 72 Z" />
-            </g>
-          </svg>
-        </div>
-
-        <!-- Bottom Bio, Craft & CTAs -->
-        <div class="about-stage-bottom">
-          <div>
-            <div class="about-craft-meta">
-              <h2 class="about-craft-title" data-es="DEDICACIÓN Y ARQUITECTURA" data-en="DEDICATION &amp; CRAFT">DEDICACIÓN Y ARQUITECTURA</h2>
-              <span class="about-craft-tags">FULL-STACK • IA INTEGRADA • UI/UX • CLOUD &amp; DOCKER</span>
+          <div class="about-card-content">
+            <div class="about-top">
+              <h2 class="about-headline"
+                  data-es="TRANSFORMO IDEAS VISIONARIAS EN EXPERIENCIAS DIGITALES RÁPIDAS Y CON IA"
+                  data-en="TURNING VISIONARY IDEAS INTO FAST, DISTINCTIVE AI-POWERED EXPERIENCES">
+                TRANSFORMO IDEAS VISIONARIAS EN EXPERIENCIAS DIGITALES RÁPIDAS Y CON IA
+              </h2>
+              <span class="about-loc"><i></i><span data-es="PUERTO IGUAZÚ, ARGENTINA • REMOTO" data-en="BASED IN ARGENTINA • WORLDWIDE">PUERTO IGUAZÚ, ARGENTINA • REMOTO</span></span>
             </div>
-            <p class="about-craft-desc"
-               data-es="SOY MATEO ROJAS, DESARROLLADOR FULL STACK Y ANALISTA DE SISTEMAS. CONSTRUYO PLATAFORMAS EN PRODUCCIÓN DE PUNTA A PUNTA — COMO PAPERFLIX (ACTIVA EN MÁS DE 3.200 ESCUELAS EN CHILE) Y S.I.T.I — COMBINANDO ARQUITECTURA SÓLIDA, INTEGRACIÓN DE INTELIGENCIA ARTIFICIAL Y DOCENCIA EN CIENCIA DE DATOS Y ROBÓTICA."
-               data-en="I AM MATEO ROJAS, A FULL-STACK DEVELOPER &amp; SYSTEMS ANALYST. I BUILD END-TO-END PRODUCTION PLATFORMS — INCLUDING PAPERFLIX (USED BY 3,200+ SCHOOLS IN CHILE) AND S.I.T.I — BLENDING CLEAN ARCHITECTURE, AI INTEGRATION, AND DATA SCIENCE TEACHING.">
-              SOY MATEO ROJAS, DESARROLLADOR FULL STACK Y ANALISTA DE SISTEMAS. CONSTRUYO PLATAFORMAS EN PRODUCCIÓN DE PUNTA A PUNTA — COMO PAPERFLIX (ACTIVA EN MÁS DE 3.200 ESCUELAS EN CHILE) Y S.I.T.I — COMBINANDO ARQUITECTURA SÓLIDA, INTEGRACIÓN DE INTELIGENCIA ARTIFICIAL Y DOCENCIA EN CIENCIA DE DATOS Y ROBÓTICA.
-            </p>
-            <div class="about-metrics-row">
-              <span class="metric-chip"><strong>+15</strong> PROYECTOS EN PRODUCCIÓN</span>
-              <span class="metric-chip"><strong>3.200+</strong> ESCUELAS (PAPERFLIX)</span>
-              <span class="metric-chip"><strong>4 AÑOS</strong> EXPERIENCIA</span>
-              <span class="metric-chip"><strong>IAES</strong> ANALISTA DE SISTEMAS</span>
+
+            <div class="about-bottom">
+              <div>
+                <div class="about-craft">
+                  <b data-es="DISCIPLINA &amp; OFICIO" data-en="DISCIPLINE &amp; CRAFT">DISCIPLINA &amp; OFICIO</b>
+                  <span class="line"></span>
+                  <span>FULL STACK • IA • UI/UX • CLOUD &amp; DOCKER</span>
+                </div>
+                <p class="about-desc"
+                   data-es="SOY MATEO ROJAS, DESARROLLADOR FULL STACK Y ANALISTA DE SISTEMAS. CONSTRUYO PLATAFORMAS EN PRODUCCIÓN DE PUNTA A PUNTA, COMO PAPERFLIX (MÁS DE 3.200 ESCUELAS EN CHILE) Y S.I.T.I, DONDE SE CRUZAN UNA ARQUITECTURA SÓLIDA, LA INTELIGENCIA ARTIFICIAL Y UN DISEÑO CUIDADO."
+                   data-en="I AM MATEO ROJAS, A FULL STACK DEVELOPER AND SYSTEMS ANALYST. I BUILD END-TO-END PRODUCTION PLATFORMS LIKE PAPERFLIX (3,200+ SCHOOLS IN CHILE) AND S.I.T.I, WHERE SOLID ARCHITECTURE, ARTIFICIAL INTELLIGENCE AND CAREFUL DESIGN MEET.">
+                  SOY MATEO ROJAS, DESARROLLADOR FULL STACK Y ANALISTA DE SISTEMAS. CONSTRUYO PLATAFORMAS EN PRODUCCIÓN DE PUNTA A PUNTA, COMO PAPERFLIX (MÁS DE 3.200 ESCUELAS EN CHILE) Y S.I.T.I, DONDE SE CRUZAN UNA ARQUITECTURA SÓLIDA, LA INTELIGENCIA ARTIFICIAL Y UN DISEÑO CUIDADO.
+                </p>
+              </div>
+              <div class="about-ctas">
+                <button class="pill-btn light" type="button" data-open-modal="contactModal" data-es="CONTACTAME" data-en="GET IN TOUCH">CONTACTAME</button>
+                <a class="pill-btn outline-dark" href="#services" data-es="SERVICIOS" data-en="SERVICES">SERVICIOS</a>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div class="about-stage-ctas">
-            <button class="pill-btn light" type="button" data-open-modal="contactModal" data-es="CONECTEMOS" data-en="LET'S CONNECT">CONECTEMOS</button>
-            <a class="pill-btn outline-dark" href="#experience" data-es="EXPERIENCIA" data-en="EXPERIENCE">EXPERIENCIA</a>
-          </div>
+        <div class="about-words" aria-hidden="true">
+          <span id="aboutWordA">ABOUT</span>
+          <span id="aboutWordB">ME</span>
         </div>
       </div>
     </section>
@@ -222,6 +172,7 @@
          5. EXPERIENCE — "WHERE I'VE BEEN" HORIZONTAL TIMELINE (00:08 - 00:11)
          ==================================================================== -->
     <section class="experience-section" id="experience">
+      <div class="exp-pin">
       <div class="exp-topbar">
         <span class="exp-chapter-label" id="expChapterLabel">01 · ORIGEN, ANÁLISIS DE SISTEMAS &amp; FUNDAMENTOS</span>
         <div class="exp-progress-track" aria-hidden="true">
@@ -354,14 +305,7 @@
           <button class="exp-tab-btn" type="button">02 · FREELANCE</button>
           <button class="exp-tab-btn" type="button">03 · PAPERLUX &amp; DOCENCIA IA</button>
         </div>
-        <div class="exp-arrows">
-          <button class="exp-arrow-btn" id="expPrevBtn" type="button" aria-label="Etapa anterior">
-            <i class="bi bi-arrow-left"></i>
-          </button>
-          <button class="exp-arrow-btn" id="expNextBtn" type="button" aria-label="Siguiente etapa">
-            <i class="bi bi-arrow-right"></i>
-          </button>
-        </div>
+      </div>
       </div>
     </section>
 
@@ -369,17 +313,9 @@
          6. FEATURED PROJECT / LANDING PAGES — 3D WAVE RIBBON (00:12 - 00:17)
          ==================================================================== -->
     <section class="landings-section" id="landings">
+      <div class="landings-pin">
       <div class="landings-header-row">
         <h2 class="section-huge-label" data-es="FEATURED PROJECT" data-en="FEATURED PROJECT">FEATURED PROJECT</h2>
-        <div class="ribbon-controls-hint">
-          <span data-es="ARRASTRÁ PARA EXPLORAR" data-en="DRAG TO EXPLORE">ARRASTRÁ PARA EXPLORAR</span>
-          <button class="ribbon-nav-btn" id="ribbonPrevBtn" type="button" aria-label="Proyecto anterior">
-            <i class="bi bi-chevron-left"></i>
-          </button>
-          <button class="ribbon-nav-btn" id="ribbonNextBtn" type="button" aria-label="Siguiente proyecto">
-            <i class="bi bi-chevron-right"></i>
-          </button>
-        </div>
       </div>
 
       <!-- 3D Sine-Wave Curved Ribbon Canvas (f_140.png) -->
@@ -402,29 +338,19 @@
       <div class="landings-footer-row">
         <span class="section-huge-label" data-es="LANDING PAGES" data-en="LANDING PAGES">LANDING PAGES</span>
       </div>
+      </div>
     </section>
 
     <!-- ====================================================================
          7. WORKS '26 — HEXAGON RING & 3D DRUM CAROUSEL (00:18 - 00:25)
          ==================================================================== -->
     <section class="works-section" id="works">
-      <div class="works-mode-bar">
-        <span class="hero-est">SISTEMAS EN PRODUCCIÓN · FULL STACK &amp; IA</span>
-        <div class="works-mode-toggle" role="group" aria-label="Modo de visualización 3D">
-          <button class="mode-btn is-active" id="modeRingBtn" type="button">ANILLO HEXAGONAL</button>
-          <button class="mode-btn" id="modeDrumBtn" type="button">TAMBOR 3D</button>
-        </div>
-      </div>
-
+      <div class="works-pin">
       <div class="works-stage-grid">
         <!-- Left Active Project Panel -->
         <div class="works-active-info">
           <span class="works-active-kind" id="worksActiveKind">Plataforma EdTech · +3.200 Escuelas en Chile</span>
           <h2 class="works-active-title" id="worksActiveTitle">Paperflix</h2>
-          <p class="works-active-desc" id="worksActiveDesc">
-            Plataforma educativa a gran escala con alta concurrencia e integración de IA con Groq que redujo un 60% el tiempo de carga y catalogación de contenido.
-          </p>
-          <div class="works-active-chips" id="worksActiveChips"></div>
           <div class="works-active-actions">
             <a class="works-cta-btn" id="worksActiveCta" href="#works">
               VER GALERÍA DEL SISTEMA <i class="bi bi-images"></i>
@@ -447,8 +373,9 @@
           ↓ SCROLL O ARRASTRÁ EL TAMBOR PARA ROTAR
         </span>
         <button class="all-projects-btn" type="button" data-open-modal="allProjectsModal">
-          VER ARCHIVO COMPLETO (22 PROYECTOS) ↗
+          VER LOS 22 PROYECTOS ↗
         </button>
+      </div>
       </div>
     </section>
 
@@ -528,18 +455,6 @@
       </div>
     </section>
 
-    <!-- ====================================================================
-         9. TICKER STRIP & FOOTER ("LET'S TALK" 00:27 - 00:28)
-         ==================================================================== -->
-    <div class="ticker-strip">
-      <div class="ticker-marquee-wrap" aria-hidden="true">
-        <div class="ticker-track">
-          <span>FULL STACK DEVELOPMENT • AI INTEGRATION • ANGULAR 17 &amp; LARAVEL 12 • NEXT.JS &amp; SUPABASE • UI/UX DESIGN • DOCKER &amp; CLOUD •</span>
-          <span>FULL STACK DEVELOPMENT • AI INTEGRATION • ANGULAR 17 &amp; LARAVEL 12 • NEXT.JS &amp; SUPABASE • UI/UX DESIGN • DOCKER &amp; CLOUD •</span>
-        </div>
-      </div>
-      <button class="ticker-hire-btn" type="button" data-open-modal="contactModal">HIRE ME ↗</button>
-    </div>
   </main>
 
   <footer class="echo-footer" id="contact">
@@ -558,8 +473,8 @@
     </div>
 
     <div class="footer-bottom-bar">
-      <span>PORTFOLIO © 2026 MATEO ROJAS · ALL RIGHTS RESERVED</span>
-      <span>PUERTO IGUAZÚ, MISIONES, ARGENTINA</span>
+      <span>PORTFOLIO. ALL RIGHTS RESERVED</span>
+      <span>DESIGN BY MATEO ROJAS</span>
     </div>
   </footer>
 
