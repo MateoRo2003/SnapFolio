@@ -173,6 +173,51 @@
   }
 
   /* ========================================================================
+     3·. TRANSICIÓN HERO → ABOUT
+     El hero queda fijo y el "About me" sube por encima con el borde en arco. Mientras sube,
+     "EXPLORE MY" se va hacia arriba, "PORTFOLIO" se agranda y se desenfoca, el retrato se achica
+     y todo se oscurece. Cuando el telón ya lo tapó, el hero deja de pintarse.
+     ======================================================================== */
+  const hero = document.getElementById('home');
+  const heroLine1 = document.querySelector('.hero-title-line1');
+  const heroLine2 = document.querySelector('.hero-title-line2');
+  const heroPortraitEl = document.getElementById('heroPortrait');
+  const heroMetas = Array.from(document.querySelectorAll('.hero-meta-left > *, .hero-meta-right > *'));
+  let heroHidden = false;
+
+  function updateHeroOut() {
+    const aboutEl = document.getElementById('about');
+    if (!hero || !aboutEl) return;
+    const vh = window.innerHeight;
+    const q = clamp(1 - aboutEl.getBoundingClientRect().top / vh, 0, 1);
+    const e = q * q * (3 - 2 * q);
+    hero.style.setProperty('--out', e.toFixed(4));
+    aboutEl.style.setProperty('--arch', (1 - e).toFixed(4));
+    aboutEl.classList.toggle('is-flat', e >= 1);
+    if (heroLine1) {
+      heroLine1.style.transform = `translate3d(0, ${(-e * 16).toFixed(2)}vh, 0)`;
+      heroLine1.style.filter = e > 0.01 ? `blur(${(e * 7).toFixed(2)}px)` : '';
+      heroLine1.style.opacity = (1 - e * 0.7).toFixed(3);
+    }
+    if (heroLine2) {
+      heroLine2.style.transform = `translate3d(0, ${(-e * 5).toFixed(2)}vh, 0) scale(${(1 + e * 0.08).toFixed(4)})`;
+      heroLine2.style.filter = e > 0.01 ? `blur(${(e * 9).toFixed(2)}px)` : '';
+    }
+    if (heroPortraitEl) {
+      heroPortraitEl.style.transform = `translateX(-50%) translate3d(0, ${(-e * 6).toFixed(2)}vh, 0) scale(${(1 - e * 0.22).toFixed(4)})`;
+    }
+    heroMetas.forEach((el) => {
+      el.style.transform = `translate3d(0, ${(e * 8).toFixed(2)}vh, 0)`;
+    });
+    // ya tapado del todo: no se pinta (es lo único fijo debajo de toda la página)
+    const covered = q >= 1;
+    if (covered !== heroHidden) {
+      heroHidden = covered;
+      hero.style.visibility = covered ? 'hidden' : '';
+    }
+  }
+
+  /* ========================================================================
      3a. ABOUT ME — portal fijo
      ======================================================================== */
   const about = document.getElementById('about');
@@ -719,6 +764,7 @@
     ticking = false;
     const y = window.scrollY;
     updateHeader(y);
+    updateHeroOut();
     updateAbout();
     updateExperience();
     updateRibbon();

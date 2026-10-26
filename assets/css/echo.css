@@ -307,7 +307,10 @@ img {
    3. HERO: "EXPLORE MY PORTFOLIO" y la silueta a contraluz delante de "PORTFOLIO"
    ========================================================================== */
 .hero-section {
-  position: relative;
+  /* queda fijo debajo: el "About me" sube por encima como un telón (ver la transición más abajo) */
+  position: sticky;
+  top: 0;
+  z-index: 0;
   height: 100vh;
   height: 100svh;
   min-height: 560px;
@@ -504,6 +507,40 @@ html.is-loading .hero-meta-left,
 html.is-loading .hero-meta-right {
   filter: blur(16px);
   opacity: 0.5;
+}
+
+/* --------------------------------------------------------------------------
+   Transición hero → about: mientras el telón sube, el hero se aleja y se oscurece.
+   echo.js pone --out (0 a 1) en el hero y --arch (0 a 1) en el about.
+   -------------------------------------------------------------------------- */
+main > section:not(.hero-section) {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background: #050506;
+  opacity: calc(var(--out, 0) * 0.8);
+  pointer-events: none;
+}
+
+.hero-title-line1,
+.hero-title-line2,
+.hero-meta-left > *,
+.hero-meta-right > * {
+  will-change: transform;
+}
+
+/* el borde de arriba del telón es un arco que se aplana a medida que llega arriba */
+.about-portal {
+  clip-path: inset(0 round 50% 50% 0 0 / calc(var(--arch, 0) * 26vh) calc(var(--arch, 0) * 26vh) 0 0);
+}
+
+.about-portal.is-flat {
+  clip-path: none;
 }
 
 /* ==========================================================================
