@@ -120,6 +120,12 @@
     endLoading();
   }
 
+  // retrato del hero: en pantallas táctiles no hay hover, un toque muestra la foto y otro la oculta
+  const heroPortrait = document.getElementById('heroPortrait');
+  heroPortrait?.addEventListener('click', () => {
+    if (window.matchMedia('(hover: none)').matches) heroPortrait.classList.toggle('is-revealed');
+  });
+
   /* ========================================================================
      2. CABECERA
      ======================================================================== */

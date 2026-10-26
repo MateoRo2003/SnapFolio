@@ -95,8 +95,11 @@
         <span class="hero-title-line2">PORTFOLIO</span>
       </h1>
 
-      <!-- Mateo a contraluz, delante de "PORTFOLIO" -->
-      <img class="hero-portrait-img" id="heroSilhouette" src="assets/img/echo/mateo-silhouette.webp" alt="Mateo Rojas" width="1180" height="1030" fetchpriority="high" decoding="async">
+      <!-- Mateo a contraluz, delante de "PORTFOLIO": al pasar el mouse (o tocarla) aparece la foto -->
+      <div class="hero-portrait" id="heroPortrait" tabindex="0" role="img" aria-label="Mateo Rojas">
+        <img class="hero-portrait-img" src="assets/img/echo/mateo-silhouette.webp" alt="" width="1180" height="1030" fetchpriority="high" decoding="async">
+        <img class="hero-portrait-photo" src="assets/img/echo/mateo-photo.webp" alt="" width="1180" height="1030" decoding="async">
+      </div>
 
       <div class="hero-meta-left">
         <span class="hero-est" data-es="DEVELOPER EST. 2023" data-en="DEVELOPER EST. 2023">DEVELOPER EST. 2023</span>

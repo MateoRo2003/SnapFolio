@@ -346,17 +346,75 @@ img {
   color: transparent;
 }
 
-.hero-portrait-img {
+/* el retrato: chico, con la cabeza apoyada en la parte de abajo de "PORTFOLIO" */
+.hero-portrait {
+  --h: min(40vh, 34vw);
   position: absolute;
   left: 50%;
-  bottom: calc(-76vh * 0.13);
+  top: calc(clamp(5.5rem, 15vh, 9rem) + clamp(3.4rem, 11.2vw, 13.5rem) * 1.02);
   z-index: 3;
-  height: 76vh;
-  width: auto;
-  max-width: none;
+  height: var(--h);
+  aspect-ratio: 1180 / 1030;
   transform: translateX(-50%);
-  pointer-events: none;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero-portrait img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
   user-select: none;
+  pointer-events: none;
+  transform-origin: 50% 85%;
+  transition: opacity 0.6s ease, transform 0.8s var(--ease-out-expo), filter 0.6s ease;
+}
+
+.hero-portrait-photo {
+  opacity: 0;
+  filter: blur(6px);
+}
+
+/* hover (o toque en el celular): la silueta se enciende y aparece la foto, con un leve acercamiento */
+.hero-portrait:hover .hero-portrait-img,
+.hero-portrait:focus-visible .hero-portrait-img,
+.hero-portrait.is-revealed .hero-portrait-img {
+  opacity: 0;
+  transform: scale(1.06);
+}
+
+.hero-portrait:hover .hero-portrait-photo,
+.hero-portrait:focus-visible .hero-portrait-photo,
+.hero-portrait.is-revealed .hero-portrait-photo {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1.06);
+}
+
+/* un halo detrás que se prende con el hover */
+.hero-portrait::before {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  top: -4%;
+  bottom: 30%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+  opacity: 0.5;
+  transform: scale(0.9);
+  transition: opacity 0.6s ease, transform 0.8s var(--ease-out-expo);
+  pointer-events: none;
+}
+
+.hero-portrait:hover::before,
+.hero-portrait:focus-visible::before,
+.hero-portrait.is-revealed::before {
+  opacity: 1;
+  transform: scale(1.12);
 }
 
 .hero-meta-left,
@@ -434,14 +492,14 @@ img {
 
 /* la entrada: después de la carga el hero se enfoca (venía desenfocado desde atrás de la carga) */
 .hero-title,
-.hero-portrait-img,
+.hero-portrait,
 .hero-meta-left,
 .hero-meta-right {
   transition: filter 1.2s ease, opacity 1.2s ease;
 }
 
 html.is-loading .hero-title,
-html.is-loading .hero-portrait-img,
+html.is-loading .hero-portrait,
 html.is-loading .hero-meta-left,
 html.is-loading .hero-meta-right {
   filter: blur(16px);
@@ -1892,14 +1950,14 @@ html.is-loading .hero-meta-right {
 
 @media (max-width: 768px) {
   .hero-title {
-    top: 6.5rem;
+    top: max(6.5rem, 21vh);
     font-size: clamp(3rem, 15vw, 6rem);
   }
 
   /* en el celular la silueta es más grande que el ancho: se ve el centro (la cabeza) */
-  .hero-portrait-img {
-    height: 54vh;
-    bottom: calc(-54vh * 0.13);
+  .hero-portrait {
+    --h: min(36vh, 78vw);
+    top: calc(max(6.5rem, 21vh) + clamp(3rem, 15vw, 6rem) * 1.02);
   }
 
   .hero-meta-right {
