@@ -635,6 +635,18 @@
       url: 'https://siti.mateorojas.com.ar',
     },
     {
+      id: 'neurobrand',
+      title: 'NeuroBrand AI',
+      kind: 'Proyecto personal · Identidad de marca con IA y neuromarketing',
+      img: 'assets/img/portfolio/cards/neurobrand.webp',
+      gallery: [
+        'assets/img/portfolio/neurobrand/1.webp',
+        'assets/img/portfolio/neurobrand/2.webp',
+        'assets/img/portfolio/neurobrand/3.webp',
+        'assets/img/portfolio/neurobrand/4.webp',
+      ],
+    },
+    {
       id: 'petty',
       title: 'Petty Joyas',
       kind: 'E-Commerce + POS con QR & WhatsApp Bot',
@@ -839,6 +851,13 @@
     });
     setActiveWork(0);
   }
+
+  document.querySelectorAll('[data-open-gallery]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const w = flagshipWorks.find((x) => x.id === btn.dataset.openGallery);
+      if (w?.gallery) openGalleryModal(w.title, w.gallery);
+    });
+  });
 
   /* ========================================================================
      3e. EL BUCLE DE SCROLL (uno solo, a lo sumo una vez por cuadro)

@@ -17,6 +17,9 @@ También me desempeño como docente de Ciencia de Datos e Inteligencia Artificia
   en un solo panel, sin comisiones por venta, con dominio propio y Orbi, un asistente con IA. La cofundé y la dirijo
   como CEO, junto a Alexander Ibarra (CPO) y Alan Vega (CTO).
   Stack: Next.js 16, React 19, NestJS, Prisma, Supabase, Google Cloud Run, Vercel, Cloudflare R2.
+- NeuroBrand AI (proyecto personal): genera en 60 segundos un kit de identidad visual (logo, paleta,
+  tipografías y maqueta web) a partir de una frase, con cada decisión fundamentada en neuromarketing
+  y un Neuro-Validation Report™. Stack: Next.js 14, Tailwind, Three.js, Zod, Supabase.
 - Paperflix: Plataforma educativa tipo Netflix implementada en más de 3200 escuelas en Chile.
   Stack: Next.js, NestJS, Prisma, Supabase, Vercel, Cloudflare, IA con Groq.
 - SITI: Sistema Integral de Tiendas Independientes con asistente de IA integrado.
