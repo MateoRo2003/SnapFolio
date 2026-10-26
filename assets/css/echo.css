@@ -509,6 +509,42 @@ html.is-loading .hero-meta-right {
   opacity: 0.5;
 }
 
+/* lo nuevo en el hero: Órbita, arriba de "DEVELOPER EST." */
+.hero-news {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.3rem;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 19, 0.14);
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #1a1a1d;
+  transition: background 0.25s, color 0.25s, transform 0.25s var(--ease-out-expo);
+}
+
+.hero-news:hover {
+  background: #111113;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.hero-news-tag {
+  padding: 0.22rem 0.5rem;
+  border-radius: 999px;
+  background: #111113;
+  color: #ffffff;
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+}
+
+.hero-news:hover .hero-news-tag {
+  background: #ffffff;
+  color: #111113;
+}
+
 /* --------------------------------------------------------------------------
    Transición hero → about: mientras el telón sube, el hero se aleja y se oscurece.
    echo.js pone --out (0 a 1) en el hero y --arch (0 a 1) en el about.
@@ -788,7 +824,7 @@ main > section:not(.hero-section) {
 .experience-section {
   --v: 0;
   position: relative;
-  height: 420vh;
+  height: 760vh; /* seis etapas: más recorrido para que cada una se lea */
   background: var(--bg-dark);
   color: var(--text-light);
 }
@@ -892,7 +928,8 @@ main > section:not(.hero-section) {
   display: flex;
   align-items: stretch;
   width: max-content;
-  padding: 1rem var(--pad-x);
+  /* a la derecha sobra lugar para que la última etapa (Órbita) llegue a acomodarse como las otras */
+  padding: 1rem 34vw 1rem var(--pad-x);
   gap: clamp(3rem, 7vw, 7rem);
   will-change: transform;
 }
@@ -960,6 +997,43 @@ main > section:not(.hero-section) {
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.75);
   margin-bottom: 1rem;
+}
+
+.exp-slide-meta a {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.exp-slide-meta a:hover {
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+/* la etapa nueva (Órbita) lleva una marca */
+.exp-new {
+  display: inline-block;
+  vertical-align: 0.9em;
+  margin-left: 0.4rem;
+  padding: 0.35em 0.6em;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #09090b;
+  font-size: 0.16em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-shadow: none;
+}
+
+.exp-tab-btn.is-new::after {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-left: 0.45rem;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+  vertical-align: middle;
 }
 
 .exp-slide-meta .line {

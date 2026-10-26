@@ -1,7 +1,7 @@
-# Mateo Rojas — Full Stack Developer & Analista de Sistemas
+# Mateo Rojas — Co-founder & CEO de Órbita · Full Stack Developer & Analista de Sistemas
 
 ## Quién soy
-Soy Mateo Rojas, desarrollador Full Stack y Analista de Sistemas de Puerto Iguazú, Misiones, Argentina.
+Soy Mateo Rojas, cofundador y CEO de Órbita (https://orbita.site), desarrollador Full Stack y Analista de Sistemas de Puerto Iguazú, Misiones, Argentina.
 Construyo sistemas web completos de principio a fin: desde el relevamiento de requerimientos hasta el deploy en producción.
 También me desempeño como docente de Ciencia de Datos e Inteligencia Artificial a nivel terciario.
 
@@ -13,6 +13,10 @@ También me desempeño como docente de Ciencia de Datos e Inteligencia Artificia
 - Análisis funcional y relevamiento de requerimientos
 
 ## Proyectos destacados
+- Órbita (https://orbita.site, desde mayo de 2026): plataforma de tiendas online con catálogo, stock y pedidos
+  en un solo panel, sin comisiones por venta, con dominio propio y Orbi, un asistente con IA. La cofundé y la dirijo
+  como CEO, junto a Alexander Ibarra (CPO) y Alan Vega (CTO).
+  Stack: Next.js 16, React 19, NestJS, Prisma, Supabase, Google Cloud Run, Vercel, Cloudflare R2.
 - Paperflix: Plataforma educativa tipo Netflix implementada en más de 3200 escuelas en Chile.
   Stack: Next.js, NestJS, Prisma, Supabase, Vercel, Cloudflare, IA con Groq.
 - SITI: Sistema Integral de Tiendas Independientes con asistente de IA integrado.
