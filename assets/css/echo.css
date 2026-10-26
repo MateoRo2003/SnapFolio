@@ -906,7 +906,14 @@ main > section:not(.hero-section) {
   text-transform: uppercase;
   white-space: nowrap;
   color: #ffffff;
+  width: max-content;
   will-change: transform;
+}
+
+.wm-dot {
+  display: inline-block;
+  margin: 0 0.32em;
+  opacity: 0.5;
 }
 
 .exp-horizontal-viewport {

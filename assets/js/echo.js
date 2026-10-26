@@ -278,14 +278,92 @@
   let expX = 0;
   let expVel = 0;
 
+  // Las letras grises del fondo son dos tiras largas con los textos de todas las etapas (arriba los
+  // puestos, abajo las fechas, en orden inverso). Se deslizan sin cortar con el scroll —la de arriba
+  // hacia la izquierda y la de abajo hacia la derecha— y en cada etapa queda a la vista su texto.
+  const wmTop = { el: watermarkTop, segs: [], path: null };
+  const wmBottom = { el: watermarkBottom, segs: [], path: null };
+
+  function buildStrip(strip, key, reverse) {
+    if (!strip.el) return;
+    const words = expSlides.map((sl) => sl.dataset[key] || '');
+    const order = reverse ? words.map((_, i) => words.length - 1 - i) : words.map((_, i) => i);
+    strip.el.textContent = '';
+    strip.segs = new Array(words.length);
+    order.forEach((i, k) => {
+      const seg = document.createElement('span');
+      seg.className = 'wm-seg';
+      seg.textContent = words[i];
+      strip.el.append(seg);
+      strip.segs[i] = seg;
+      if (k < order.length - 1) {
+        const dot = document.createElement('span');
+        dot.className = 'wm-dot';
+        dot.textContent = '•';
+        strip.el.append(dot);
+      }
+    });
+  }
+  buildStrip(wmTop, 'wmTop', false);
+  buildStrip(wmBottom, 'wmBottom', true);
+
+  // Curva monótona y suave (Fritsch–Carlson) por puntos (avance → desplazamiento): la velocidad cambia
+  // de a poco entre una etapa y la siguiente, sin saltos ni frenadas.
+  function smoothPath(pts) {
+    const n = pts.length;
+    if (n < 2) return () => (pts[0] ? pts[0][1] : 0);
+    const d = [];
+    for (let i = 0; i < n - 1; i++) d.push((pts[i + 1][1] - pts[i][1]) / Math.max(1e-6, pts[i + 1][0] - pts[i][0]));
+    const m = [d[0]];
+    for (let i = 1; i < n - 1; i++) m.push(d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2);
+    m.push(d[n - 2]);
+    for (let i = 0; i < n - 1; i++) {
+      if (d[i] === 0) { m[i] = 0; m[i + 1] = 0; continue; }
+      const a = m[i] / d[i], b = m[i + 1] / d[i], h = a * a + b * b;
+      if (h > 9) { const t = 3 / Math.sqrt(h); m[i] = t * a * d[i]; m[i + 1] = t * b * d[i]; }
+    }
+    return (x) => {
+      if (x <= pts[0][0]) return pts[0][1];
+      if (x >= pts[n - 1][0]) return pts[n - 1][1];
+      let i = 0;
+      while (x > pts[i + 1][0]) i++;
+      const h = pts[i + 1][0] - pts[i][0], t = (x - pts[i][0]) / h, t2 = t * t, t3 = t2 * t;
+      return (2 * t3 - 3 * t2 + 1) * pts[i][1] + (t3 - 2 * t2 + t) * h * m[i] + (-2 * t3 + 3 * t2) * pts[i + 1][1] + (t3 - t2) * h * m[i + 1];
+    };
+  }
+
+  // en qué avance queda cada etapa acomodada (el mismo cálculo que las pestañas)
+  function slideProgress(slide) {
+    const travel = expTravel();
+    return travel ? clamp((slide.offsetLeft - expViewport.clientWidth * 0.12) / travel, 0, 1) : 0;
+  }
+
+  function measureStrips() {
+    if (!expSlides.length || !expViewport) return;
+    const pad = expViewport.clientWidth * 0.04;
+    const lead = expViewport.clientWidth * 0.18;
+    for (const strip of [wmTop, wmBottom]) {
+      if (!strip.el || !strip.segs.length) continue;
+      const pts = [];
+      expSlides.forEach((sl, i) => {
+        const at = slideProgress(sl);
+        const x = pad - strip.segs[i].offsetLeft;
+        if (!pts.length || at > pts[pts.length - 1][0] + 1e-4) pts.push([at, x]);
+      });
+      // antes de la primera etapa y después de la última también se mueve (no hay tramos quietos)
+      const dir = strip === wmTop ? 1 : -1;
+      if (pts[0][0] > 0) pts.unshift([0, pts[0][1] + dir * lead]);
+      if (pts[pts.length - 1][0] < 1) pts.push([1, pts[pts.length - 1][1] - dir * lead]);
+      strip.path = smoothPath(pts);
+    }
+  }
+
   function setActiveExpSlide(idx) {
     if (idx === activeExpIndex || !expSlides[idx]) return;
     activeExpIndex = idx;
     const slide = expSlides[idx];
     expTabBtns.forEach((btn, i) => btn.classList.toggle('is-active', i === idx));
     if (expChapterLabel) expChapterLabel.textContent = slide.dataset.chapter || '';
-    if (watermarkTop && slide.dataset.wmTop) watermarkTop.textContent = slide.dataset.wmTop;
-    if (watermarkBottom && slide.dataset.wmBottom) watermarkBottom.textContent = slide.dataset.wmBottom;
   }
 
   function expTravel() {
@@ -301,8 +379,10 @@
     expTrack.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0)`;
     expSection.style.setProperty('--v', expVel.toFixed(3));
     if (expProgressBar) expProgressBar.style.width = `${(8 + p * 92).toFixed(1)}%`;
-    if (watermarkTop) watermarkTop.style.transform = `translate3d(${(-p * 30).toFixed(2)}%, 0, 0)`;
-    if (watermarkBottom) watermarkBottom.style.transform = `translate3d(${(-12 + p * 22).toFixed(2)}%, 0, 0)`;
+    if (!wmTop.path) measureStrips();
+    for (const strip of [wmTop, wmBottom]) {
+      if (strip.el && strip.path) strip.el.style.transform = `translate3d(${strip.path(p).toFixed(1)}px, 0, 0)`;
+    }
 
     // el panel activo es el que pasa por el 45 % de la pantalla
     const center = -x + expViewport.clientWidth * 0.45;
@@ -320,13 +400,12 @@
 
   expTabBtns.forEach((btn, i) => {
     btn.addEventListener('click', () => {
-      const slide = expSlides[i];
-      if (!slide || !expSection) return;
-      const travel = expTravel();
-      const p = travel ? clamp((slide.offsetLeft - expViewport.clientWidth * 0.12) / travel, 0, 1) : 0;
-      scrollToProgress(expSection, p);
+      if (expSlides[i] && expSection) scrollToProgress(expSection, slideProgress(expSlides[i]));
     });
   });
+  // las medidas cambian con el tamaño de la ventana y cuando termina de cargar la fuente
+  window.addEventListener('resize', () => { wmTop.path = null; });
+  document.fonts?.ready.then(() => { wmTop.path = null; requestAnimationFrame(updateExperience); });
 
   /* ========================================================================
      3c. FEATURED PROJECT — cinta ondulada
