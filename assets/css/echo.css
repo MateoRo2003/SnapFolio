@@ -90,60 +90,68 @@ img {
   transition: opacity 0.9s ease 0.15s, visibility 0s linear 1.1s;
 }
 
-.preloader-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.preloader-ring {
-  fill: none;
-  stroke: #ffffff;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.7));
-}
-
-.preloader-head,
-.preloader-tail {
-  fill: #ffffff;
-  opacity: 0;
-  filter: drop-shadow(0 0 6px #ffffff);
-}
-
-.preloader-word {
+/* la firma: cada trazo se dibuja con su largo real (echo.js), así la "lapicera" va a velocidad pareja */
+.preloader-sign {
   position: relative;
-  display: flex;
-  align-items: baseline;
+  width: min(78vw, 900px);
+}
+
+.sign-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.sign-ink path,
+.sign-glow {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sign-ink path {
+  stroke: #f4f4f2;
+  stroke-width: 4.4;
+  opacity: 0;
+}
+
+.sign-ink {
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.28));
+}
+
+/* la punta: un tramo corto más brillante que va adelante del trazo */
+.sign-glow {
+  stroke: #ffffff;
+  stroke-width: 7;
+  opacity: 0;
+}
+
+.sign-caption {
+  position: absolute;
+  right: 3%;
+  top: 98%; /* debajo de la cola de la "j" */
+  margin: 0;
   font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: clamp(1.7rem, 3.4vw, 2.9rem);
-  letter-spacing: 0.32em;
-  padding-left: 0.32em;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.85), 0 0 26px rgba(255, 255, 255, 0.45), 0 0 60px rgba(255, 255, 255, 0.18);
-  opacity: 0;
-  filter: blur(8px);
-  animation: preloaderWordIn 0.7s ease 0.05s forwards;
+  font-weight: 500;
+  font-size: clamp(0.56rem, 1vw, 0.78rem);
+  letter-spacing: 0.55em;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
 }
 
-.preloader-dot {
+.sign-caption span {
   display: inline-block;
-  width: 0.2em;
-  height: 0.2em;
-  margin-left: -0.12em;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 0 10px #ffffff, 0 0 22px rgba(255, 255, 255, 0.6);
-  transition: opacity 0.15s ease;
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(4px);
+  transition: opacity 0.45s ease, filter 0.45s ease, transform 0.45s ease;
 }
 
-.preloader.is-drawing .preloader-dot {
-  opacity: 0;
+.sign-caption span.is-in {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
 }
 
 /* la salida: todo se desenfoca y se funde mientras el hero aparece debajo, también desenfocado */
@@ -153,18 +161,10 @@ img {
   pointer-events: none;
 }
 
-.preloader.is-done .preloader-word,
-.preloader.is-done .preloader-svg {
+.preloader.is-done .preloader-sign {
   filter: blur(14px);
   transform: scale(1.06);
   transition: filter 0.9s ease, transform 1.1s var(--ease-out-expo);
-}
-
-@keyframes preloaderWordIn {
-  to {
-    opacity: 1;
-    filter: blur(0);
-  }
 }
 
 /* ==========================================================================

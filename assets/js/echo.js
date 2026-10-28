@@ -33,12 +33,9 @@
   }
 
   if (preloader) {
-    const svg = document.getElementById('preloaderSvg');
-    const ring = document.getElementById('preloaderRing');
-    const head = document.getElementById('preloaderHead');
-    const tail = document.getElementById('preloaderTail');
-    const word = document.getElementById('preloaderWord');
-    const dot = document.getElementById('preloaderDot');
+    const strokes = Array.from(document.querySelectorAll('#signInk path'));
+    const glow = document.getElementById('signGlow');
+    const caption = document.getElementById('signCaption');
     let done = false;
     let raf = 0;
 
@@ -46,73 +43,65 @@
       if (done) return;
       done = true;
       cancelAnimationFrame(raf);
+      strokes.forEach((p) => { p.style.opacity = '1'; p.style.strokeDashoffset = '0'; });
       preloader.classList.add('is-done');
       endLoading();
       setTimeout(() => { preloader.style.display = 'none'; }, 1300);
     };
 
-    // el anillo: arranca a la derecha de la palabra (donde está el punto) y gira hacia arriba
-    function ringPath(cx, cy, R) {
-      const pts = [];
-      const steps = 220;
-      for (let i = 0; i <= steps; i++) {
-        const t = -(i / steps) * Math.PI * 2;
-        const r = R * (1 + 0.065 * Math.sin(t * 9) + 0.025 * Math.sin(t * 4 + 0.6));
-        pts.push(`${i ? 'L' : 'M'}${(cx + Math.cos(t) * r).toFixed(2)},${(cy + Math.sin(t) * r).toFixed(2)}`);
-      }
-      return pts.join('');
-    }
+    // "FULL STACK DEVELOPER" va letra por letra
+    const letters = caption ? Array.from(caption.textContent).map((ch) => {
+      const span = document.createElement('span');
+      span.textContent = ch === ' ' ? '\u00a0' : ch;
+      return span;
+    }) : [];
+    if (caption) caption.replaceChildren(...letters);
 
-    const start = () => {
-      const vw = innerWidth;
-      const vh = innerHeight;
-      svg.setAttribute('viewBox', `0 0 ${vw} ${vh}`);
-      const box = word.getBoundingClientRect();
-      const dotBox = dot.getBoundingClientRect();
-      const cx = box.left + box.width / 2;
-      const cy = box.top + box.height / 2;
-      const R = box.width / 2 + Math.max(14, box.height * 0.35);
-      ring.setAttribute('d', ringPath(cx, cy, R));
-      const len = ring.getTotalLength();
-      const from = { x: dotBox.left + dotBox.width / 2, y: dotBox.top + dotBox.height / 2 };
-      const to = ring.getPointAtLength(0);
-      const t0 = performance.now();
-      // tiempos (ms): la palabra entra, el punto sube al anillo, lo dibuja, una pausa y se va
-      const LIFT = 420, DRAW_START = 720, DRAW = 1450, HOLD = 260;
+    // cada trazo se prepara con su largo real: la lapicera avanza a la misma velocidad en todos
+    const lens = strokes.map((p) => p.getTotalLength());
+    strokes.forEach((p, i) => {
+      p.style.strokeDasharray = `${lens[i]} ${lens[i]}`;
+      p.style.strokeDashoffset = String(lens[i]);
+    });
+    const LIFT = 22; // ms que la lapicera "se levanta" entre trazos
+    const total = lens.reduce((a, b) => a + b, 0);
+    const DRAW = 2300; // ms para toda la firma
+    const speed = total / (DRAW - LIFT * strokes.length); // px por ms
+    const starts = [];
+    lens.reduce((at, len) => { starts.push(at); return at + len / speed + LIFT; }, 0);
+    const GLOW = 70; // largo de la punta brillante
+    const CAPTION_AT = DRAW * 0.78, HOLD = 520;
+    let current = -1;
 
-      const place = (el, p) => {
-        el.setAttribute('cx', p.x.toFixed(2));
-        el.setAttribute('cy', p.y.toFixed(2));
-      };
-
-      const tick = (now) => {
-        const t = now - t0;
-        if (t > LIFT) preloader.classList.add('is-drawing');
-        if (t < LIFT) {
-          head.style.opacity = '0';
-        } else if (t < DRAW_START) {
-          const k = smooth(LIFT, DRAW_START, t);
-          head.style.opacity = '1';
-          place(head, { x: lerp(from.x, to.x, k), y: lerp(from.y, to.y, k) });
-        } else {
-          const k = smooth(DRAW_START, DRAW_START + DRAW, t);
-          ring.style.strokeDashoffset = String(1 - k);
-          place(head, ring.getPointAtLength(k * len));
-          place(tail, ring.getPointAtLength(Math.max(0, k - 0.018) * len));
-          tail.style.opacity = k > 0.02 && k < 0.99 ? '0.8' : '0';
-          head.style.opacity = String(1 - smooth(0.96, 1, k));
+    const tick = (t0) => (now) => {
+      const t = now - t0;
+      for (let i = 0; i < strokes.length; i++) {
+        const drawn = clamp((t - starts[i]) * speed, 0, lens[i]);
+        if (drawn > 0) strokes[i].style.opacity = '1';
+        strokes[i].style.strokeDashoffset = String(lens[i] - drawn);
+        if (drawn > 0 && drawn < lens[i]) {
+          if (current !== i) {
+            current = i;
+            glow.setAttribute('d', strokes[i].getAttribute('d'));
+          }
+          const g = Math.min(GLOW, drawn);
+          glow.style.strokeDasharray = `${g} ${lens[i] + GLOW}`;
+          glow.style.strokeDashoffset = String(-(drawn - g));
+          glow.style.opacity = '1';
         }
-        if (t > DRAW_START + DRAW + HOLD) return finish();
-        raf = requestAnimationFrame(tick);
-      };
-      raf = requestAnimationFrame(tick);
+      }
+      if (t > DRAW) glow.style.opacity = String(Math.max(0, 1 - (t - DRAW) / 250));
+      const shown = Math.floor(clamp((t - CAPTION_AT) / 38, 0, letters.length));
+      for (let k = 0; k < shown; k++) letters[k].classList.add('is-in');
+      if (t > Math.max(DRAW, CAPTION_AT + letters.length * 38) + HOLD) return finish();
+      raf = requestAnimationFrame(tick(t0));
     };
 
     if (prefersReducedMotion) {
-      setTimeout(finish, 300);
+      letters.forEach((l) => l.classList.add('is-in'));
+      setTimeout(finish, 500);
     } else {
-      // se mide la palabra recién con la fuente cargada (si tarda, se sigue igual)
-      Promise.race([document.fonts?.ready, new Promise((r) => setTimeout(r, 700))]).then(start);
+      requestAnimationFrame((now) => { raf = requestAnimationFrame(tick(now)); });
     }
     preloader.addEventListener('click', finish);
     window.addEventListener('keydown', finish, { once: true });
