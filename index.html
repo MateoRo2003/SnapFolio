@@ -22,7 +22,6 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Outfit:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/css/echo.css" rel="stylesheet">
-  <link rel="preload" href="assets/img/echo/mateo-silhouette.webp" as="image">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -145,11 +144,8 @@
         <span class="hero-title-line2">PORTFOLIO</span>
       </h1>
 
-      <!-- Mateo a contraluz, delante de "PORTFOLIO": al pasar el mouse (o tocarla) aparece la foto -->
-      <div class="hero-portrait" id="heroPortrait" tabindex="0" role="img" aria-label="Mateo Rojas">
-        <img class="hero-portrait-img" src="assets/img/echo/mateo-silhouette.webp" alt="" width="1180" height="1030" fetchpriority="high" decoding="async">
-        <img class="hero-portrait-photo" src="assets/img/echo/mateo-photo.webp" alt="" width="1180" height="1030" decoding="async">
-      </div>
+      <!-- la grilla viva: celdas como las del gráfico de GitHub que reaccionan al mouse (echo.js) -->
+      <canvas class="hero-grid" id="heroGrid" aria-hidden="true"></canvas>
 
       <div class="hero-meta-left">
         <a class="hero-news" href="https://orbita.site" target="_blank" rel="noopener">

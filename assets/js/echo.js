@@ -1,7 +1,7 @@
 /**
  * MATEO ROJAS — ECHO EDITION PORTFOLIO (2026)
  * La coreografía del video de referencia:
- * 1. Carga: el punto de "MATEO." se despega y dibuja un anillo ondulado; todo se funde con el hero.
+ * 1. Carga: la firma "Mateo Rojas" se escribe con una lapicera de luz y se deshace en polvo.
  * 2. Cabecera transparente que se esconde al bajar y vuelve al subir.
  * 3. Un solo bucle de scroll para las secciones fijas:
  *    - About me: "ABOUT" y "ME" se separan y la tarjeta crece hasta llenar la pantalla.
@@ -30,6 +30,7 @@
 
   function endLoading() {
     root.classList.remove('is-loading');
+    document.dispatchEvent(new Event('echo:loaded'));
   }
 
   if (preloader) {
@@ -273,12 +274,6 @@
     endLoading();
   }
 
-  // retrato del hero: en pantallas táctiles no hay hover, un toque muestra la foto y otro la oculta
-  const heroPortrait = document.getElementById('heroPortrait');
-  heroPortrait?.addEventListener('click', () => {
-    if (window.matchMedia('(hover: none)').matches) heroPortrait.classList.toggle('is-revealed');
-  });
-
   /* ========================================================================
      2. CABECERA
      ======================================================================== */
@@ -334,7 +329,6 @@
   const hero = document.getElementById('home');
   const heroLine1 = document.querySelector('.hero-title-line1');
   const heroLine2 = document.querySelector('.hero-title-line2');
-  const heroPortraitEl = document.getElementById('heroPortrait');
   const heroMetas = Array.from(document.querySelectorAll('.hero-meta-left > *, .hero-meta-right > *'));
   let heroHidden = false;
 
@@ -356,9 +350,6 @@
       heroLine2.style.transform = `translate3d(0, ${(-e * 5).toFixed(2)}vh, 0) scale(${(1 + e * 0.08).toFixed(4)})`;
       heroLine2.style.filter = e > 0.01 ? `blur(${(e * 9).toFixed(2)}px)` : '';
     }
-    if (heroPortraitEl) {
-      heroPortraitEl.style.transform = `translateX(-50%) translate3d(0, ${(-e * 6).toFixed(2)}vh, 0) scale(${(1 - e * 0.22).toFixed(4)})`;
-    }
     heroMetas.forEach((el) => {
       el.style.transform = `translate3d(0, ${(e * 8).toFixed(2)}vh, 0)`;
     });
@@ -367,7 +358,247 @@
     if (covered !== heroHidden) {
       heroHidden = covered;
       hero.style.visibility = covered ? 'hidden' : '';
+      if (!covered) gridKick?.();
     }
+  }
+
+  /* ========================================================================
+     3·b. LA GRILLA VIVA DEL HERO
+     Celdas como las del gráfico de GitHub a pantalla completa, detrás del título. Alrededor del
+     mouse se levantan y se oscurecen (y dejan estela), un clic larga una onda y cada tanto "cae un
+     commit" en alguna. Sin mouse (celular, o si no se mueve) la recorre un cursor fantasma.
+     Lo quieto se pinta una vez en un canvas aparte; cada cuadro solo se dibujan las celdas vivas.
+     ======================================================================== */
+  let gridKick = null;
+  const gridCanvas = document.getElementById('heroGrid');
+  if (gridCanvas && hero) {
+    const gctx = gridCanvas.getContext('2d');
+    const still = document.createElement('canvas');
+    const sctx2 = still.getContext('2d');
+    const INK = '#141416';
+    const REST = [0.042, 0.085, 0.15]; // tonos en reposo (opacidad de la tinta)
+    const BUCKETS = 10;
+    let W = 0, H = 0, dpr = 1, pitch = 16, cell = 12, cols = 0, rows = 0, ox = 0, oy = 0;
+    let level = new Uint8Array(0); // tono en reposo de cada celda
+    let energy = new Float32Array(0); // cuánto está levantada (0 a 1); deja estela
+    let wave = new Float32Array(0); // las ondas del clic: se calculan de nuevo cada cuadro, sin estela
+    let born = new Float32Array(0); // a qué hora aparece en la entrada (ms)
+    const buckets = Array.from({ length: BUCKETS }, () => []);
+    const pointer = { x: 0, y: 0, last: -1e9, inside: false };
+    const spot = { x: 0, y: 0, power: 0 };
+    const ripples = [];
+    let enterAt = -1, entered = false, last = 0, lastPop = 0, raf = 0;
+
+    // manchas suaves de "actividad", para que el reposo no sea un ruido parejo
+    const field = (x, y) => 0.5 + 0.5 * Math.sin(x * 0.19 + Math.sin(y * 0.11) * 2.2) * Math.cos(y * 0.16 - Math.sin(x * 0.06) * 1.6);
+    const cellX = (i) => ox + (i % cols) * pitch;
+    const cellY = (i) => oy + ((i / cols) | 0) * pitch;
+    const square = (ctx, x, y, s) => ctx.roundRect(x - s / 2, y - s / 2, s, s, Math.min(3, s * 0.22));
+
+    function layout() {
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      W = hero.clientWidth;
+      H = hero.clientHeight;
+      pitch = clamp(Math.round(W / 96), 13, 19);
+      cell = Math.round(pitch * 0.72);
+      cols = Math.ceil(W / pitch) + 1;
+      rows = Math.ceil(H / pitch) + 1;
+      ox = (W - (cols - 1) * pitch) / 2;
+      oy = (H - (rows - 1) * pitch) / 2;
+      for (const cv of [gridCanvas, still]) {
+        cv.width = Math.round(W * dpr);
+        cv.height = Math.round(H * dpr);
+      }
+      const n = cols * rows;
+      level = new Uint8Array(n);
+      energy = new Float32Array(n);
+      wave = new Float32Array(n);
+      born = new Float32Array(n);
+      const cx = W / 2, cy = H / 2, far = Math.hypot(cx, cy);
+      for (let i = 0; i < n; i++) {
+        const v = field(i % cols, (i / cols) | 0);
+        const k = Math.random();
+        level[i] = k < v * 0.07 ? 2 : k < v * 0.24 ? 1 : 0;
+        born[i] = (Math.hypot(cellX(i) - cx, cellY(i) - cy) / far) * 950 + Math.random() * 140;
+      }
+      spot.x = W / 2;
+      spot.y = H / 2;
+      paintStill(1);
+    }
+
+    // el reposo, pintado una vez (k < 1: tamaño de entrada de cada celda)
+    function paintStill(scale, ctx = sctx2, at = -1) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = INK;
+      let done = true;
+      for (let lv = 0; lv < REST.length; lv++) {
+        ctx.globalAlpha = REST[lv];
+        ctx.beginPath();
+        for (let i = 0; i < level.length; i++) {
+          if (level[i] !== lv) continue;
+          let s = cell * scale;
+          if (at >= 0) {
+            const k = clamp((at - born[i]) / 420, 0, 1);
+            if (k < 1) done = false;
+            if (k <= 0) continue;
+            // cada celda nace con un destello de tinta: la entrada se ve como una ola
+            if (k < 0.25) energy[i] = Math.max(energy[i], 0.42 * (1 - k * 4));
+            s *= 1 - (1 - k) ** 3;
+          }
+          square(ctx, cellX(i), cellY(i), s);
+        }
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      // hacia los bordes la grilla se apaga: el centro queda con textura y el marco limpio
+      ctx.globalCompositeOperation = 'destination-in';
+      const fade = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.2, W / 2, H / 2, Math.hypot(W, H) * 0.56);
+      fade.addColorStop(0, 'rgba(0,0,0,1)');
+      fade.addColorStop(1, 'rgba(0,0,0,0.12)');
+      ctx.fillStyle = fade;
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'source-over';
+      return done;
+    }
+
+    function lift(x, y, power) {
+      const R = pitch * 6.5;
+      const sig2 = 2 * (R * 0.42) ** 2;
+      const c0 = clamp(Math.floor((x - R - ox) / pitch), 0, cols - 1), c1 = clamp(Math.ceil((x + R - ox) / pitch), 0, cols - 1);
+      const r0 = clamp(Math.floor((y - R - oy) / pitch), 0, rows - 1), r1 = clamp(Math.ceil((y + R - oy) / pitch), 0, rows - 1);
+      for (let r = r0; r <= r1; r++) {
+        for (let c = c0; c <= c1; c++) {
+          const dx = ox + c * pitch - x, dy = oy + r * pitch - y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 > R * R) continue;
+          const i = r * cols + c;
+          const v = power * Math.exp(-d2 / sig2);
+          if (v > energy[i]) energy[i] = v;
+        }
+      }
+    }
+
+    function frame(now) {
+      raf = 0;
+      if (heroHidden || document.hidden) return; // vuelve con gridKick
+      const dt = Math.min(50, now - (last || now));
+      last = now;
+      const decay = Math.exp(-dt / 420);
+      for (let i = 0; i < energy.length; i++) energy[i] *= decay;
+
+      if (entered) {
+        // el mouse manda; si no se mueve hace un rato (o no hay), pasea el cursor fantasma
+        const idle = !pointer.inside || now - pointer.last > 2600;
+        const tt = now * 0.00021;
+        const tx = idle ? W * (0.5 + 0.36 * Math.sin(tt * 1.7)) : pointer.x;
+        const ty = idle ? H * (0.56 + 0.26 * Math.sin(tt * 2.3 + 1)) : pointer.y;
+        const ease = 1 - Math.exp(-dt / (idle ? 260 : 70));
+        spot.x += (tx - spot.x) * ease;
+        spot.y += (ty - spot.y) * ease;
+        spot.power += ((idle ? 0.55 : 1) - spot.power) * (1 - Math.exp(-dt / 300));
+        lift(spot.x, spot.y, spot.power);
+        // commits sueltos por toda la grilla
+        if (now - lastPop > 60) {
+          lastPop = now;
+          const i = (Math.random() * energy.length) | 0;
+          energy[i] = Math.max(energy[i], 0.3 + Math.random() * 0.45);
+        }
+        // las ondas del clic: un anillo que se agranda y se apaga
+        if (ripples.length) wave.fill(0);
+        for (let k = ripples.length - 1; k >= 0; k--) {
+          const rp = ripples[k];
+          rp.t += dt;
+          if (rp.t > 1400) { ripples.splice(k, 1); if (!ripples.length) wave.fill(0); continue; }
+          const radius = rp.t * 0.95, band = pitch * 2.2, amp = 0.8 * (1 - rp.t / 1400) ** 1.4;
+          for (let i = 0; i < wave.length; i++) {
+            const off = Math.abs(Math.hypot(cellX(i) - rp.x, cellY(i) - rp.y) - radius);
+            if (off < band) wave[i] = Math.max(wave[i], amp * (1 - off / band) ** 2);
+          }
+        }
+      }
+
+      gctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      gctx.clearRect(0, 0, W, H);
+      if (!entered) {
+        if (enterAt < 0) { raf = requestAnimationFrame(frame); return; }
+        entered = paintStill(1, gctx, now - enterAt);
+        if (entered) paintStill(1);
+      } else {
+        gctx.drawImage(still, 0, 0, W, H);
+      }
+
+      // las celdas vivas, agrupadas por tono para pintar pocas veces: sombra, y la celda levantada
+      for (const b of buckets) b.length = 0;
+      for (let i = 0; i < energy.length; i++) {
+        const e = Math.max(energy[i], wave[i]);
+        if (e > 0.025) buckets[Math.min(BUCKETS - 1, (e * BUCKETS) | 0)].push(i);
+      }
+      gctx.fillStyle = INK;
+      gctx.globalAlpha = 0.07;
+      gctx.beginPath();
+      for (let b = 3; b < BUCKETS; b++) {
+        for (const i of buckets[b]) {
+          const e = Math.max(energy[i], wave[i]);
+          square(gctx, cellX(i) + e * 1.2, cellY(i) + e * 2, cell * (1 + 0.42 * e));
+        }
+      }
+      gctx.fill();
+      for (let b = 0; b < BUCKETS; b++) {
+        if (!buckets[b].length) continue;
+        gctx.globalAlpha = 0.06 + 0.86 * Math.pow((b + 0.5) / BUCKETS, 1.15);
+        gctx.beginPath();
+        for (const i of buckets[b]) {
+          const e = Math.max(energy[i], wave[i]);
+          square(gctx, cellX(i), cellY(i) - e * 2.5, cell * (1 + 0.42 * e));
+        }
+        gctx.fill();
+      }
+      gctx.globalAlpha = 1;
+      raf = requestAnimationFrame(frame);
+    }
+
+    gridKick = () => {
+      if (!raf && !prefersReducedMotion) {
+        last = 0;
+        raf = requestAnimationFrame(frame);
+      }
+    };
+
+    layout();
+    if (prefersReducedMotion) {
+      // quieta: solo el reposo
+      entered = true;
+      gctx.setTransform(1, 0, 0, 1, 0, 0);
+      gctx.drawImage(still, 0, 0);
+    } else {
+      const start = () => { enterAt = performance.now() + 250; };
+      if (root.classList.contains('is-loading')) document.addEventListener('echo:loaded', start, { once: true });
+      else start();
+      hero.addEventListener('pointermove', (e) => {
+        const r = hero.getBoundingClientRect();
+        pointer.x = e.clientX - r.left;
+        pointer.y = e.clientY - r.top;
+        pointer.last = performance.now();
+        pointer.inside = true;
+      }, { passive: true });
+      hero.addEventListener('pointerleave', () => { pointer.inside = false; });
+      hero.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('a, button')) return;
+        const r = hero.getBoundingClientRect();
+        ripples.push({ x: e.clientX - r.left, y: e.clientY - r.top, t: 0 });
+      });
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) gridKick(); });
+      gridKick();
+    }
+    let resizeTimer = 0;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        layout();
+        if (prefersReducedMotion) gctx.drawImage(still, 0, 0);
+      }, 150);
+    });
   }
 
   /* ========================================================================
