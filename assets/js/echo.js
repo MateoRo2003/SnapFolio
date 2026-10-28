@@ -849,6 +849,262 @@
   });
 
   /* ========================================================================
+     3f. GITHUB — las contribuciones reales contadas en cuatro escenas
+     El año día por día → una ciudad (cada día es un edificio) → la curva semana a semana →
+     el año enrollado en una vuelta. Todo es una sola animación guiada por el scroll.
+     ======================================================================== */
+  const ghSection = document.getElementById('github');
+  const ghCanvas = document.getElementById('ghCanvas');
+  const ghLabel = document.getElementById('ghLabel');
+  const ghNumber = document.getElementById('ghNumber');
+  const ghUnit = document.getElementById('ghUnit');
+  const ghNote = document.getElementById('ghNote');
+  const ghSteps = Array.from(document.querySelectorAll('.gh-steps span'));
+  let gh = null;
+  let ghLastP = -1;
+  let ghScene = -1;
+  let ghDirty = true;
+
+  const isEn = () => root.lang === 'en';
+  const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  const fmtDate = (iso) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    if (isEn()) return new Date(y, m - 1, d).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+    return `${d} ${MONTHS[m - 1]} ${y}`;
+  };
+  const fmtNum = (n) => n.toLocaleString(isEn() ? 'en-US' : 'es-AR');
+
+  // tonos por nivel de GitHub, en tinta en lugar de verde (como el resto de ECHO)
+  const INK = [[227, 227, 224], [190, 190, 187], [140, 140, 140], [85, 85, 90], [24, 24, 27]];
+  const shade = (rgb, k) => `rgb(${rgb.map((v) => Math.round(clamp(v * k, 0, 255))).join(',')})`;
+
+  function prepareGithub(data) {
+    const days = data.days;
+    const w0 = new Date(`${days[0][0]}T12:00:00`).getDay();
+    const cells = days.map(([date, count, level], i) => ({ date, count, level, col: Math.floor((i + w0) / 7), row: (i + w0) % 7, i }));
+    const cols = cells[cells.length - 1].col + 1;
+    const weeks = new Array(cols).fill(0);
+    cells.forEach((c) => { weeks[c.col] += c.count; });
+    let best = 0, run = 0;
+    for (const c of cells) { run = c.count > 0 ? run + 1 : 0; best = Math.max(best, run); }
+    const max = cells.reduce((m, c) => (c.count > m.count ? c : m), cells[0]);
+    const bestWeek = weeks.indexOf(Math.max(...weeks));
+    return {
+      cells, cols, weeks, max,
+      total: data.total,
+      active: cells.filter((c) => c.count > 0).length,
+      streak: best,
+      bestWeek: { total: weeks[bestWeek], from: cells.find((c) => c.col === bestWeek).date },
+      user: data.user,
+      updated: data.updated,
+    };
+  }
+
+  function sceneText(k) {
+    const S = isEn() ? [
+      ['THE YEAR, DAY BY DAY', fmtNum(gh.total), 'contributions in the last year', 'The most honest part of a portfolio: what I did every day of the last year.'],
+      ['LIKE A CITY', fmtNum(gh.max.count), `on my busiest day · ${fmtDate(gh.max.date)}`, 'Every day is a building: the taller it is, the more contributions.'],
+      ['WEEK BY WEEK', fmtNum(gh.bestWeek.total), `in my best week · from ${fmtDate(gh.bestWeek.from)}`, 'The work curve: launch weeks, study weeks and maintenance weeks.'],
+      ['THE YEAR IN ONE LOOP', fmtNum(gh.active), `days with commits · ${gh.streak}-day streak`, `Real data from @${gh.user}, updated ${fmtDate(gh.updated)}.`],
+    ] : [
+      ['EL AÑO, DÍA POR DÍA', fmtNum(gh.total), 'contribuciones en el último año', 'Lo más honesto de un portfolio: lo que hice cada día del último año.'],
+      ['COMO UNA CIUDAD', fmtNum(gh.max.count), `en mi día más intenso · ${fmtDate(gh.max.date)}`, 'Cada día es un edificio: cuanto más alto, más contribuciones.'],
+      ['SEMANA A SEMANA', fmtNum(gh.bestWeek.total), `en mi mejor semana · desde el ${fmtDate(gh.bestWeek.from)}`, 'La curva de trabajo: semanas de lanzamiento, de estudio y de mantenimiento.'],
+      ['EL AÑO EN UNA VUELTA', fmtNum(gh.active), `días con commits · racha de ${gh.streak} seguidos`, `Datos reales de @${gh.user}, actualizados el ${fmtDate(gh.updated)}.`],
+    ];
+    return S[k];
+  }
+
+  function setGithubScene(k) {
+    if (k === ghScene || !gh) return;
+    ghScene = k;
+    const [label, num, unit, note] = sceneText(k);
+    const swap = (el, text) => {
+      if (!el) return;
+      el.textContent = text;
+      el.animate?.([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'ease-out' });
+    };
+    swap(ghLabel, label);
+    swap(ghNumber, num);
+    swap(ghUnit, unit);
+    swap(ghNote, note);
+    ghSteps.forEach((s, i) => s.classList.toggle('is-on', i === k));
+  }
+
+  function drawGithub(p) {
+    const ctx = ghCanvas.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const cw = ghCanvas.clientWidth;
+    const ch = ghCanvas.clientHeight;
+    if (!cw || !ch) return;
+    if (ghCanvas.width !== Math.round(cw * dpr) || ghCanvas.height !== Math.round(ch * dpr)) {
+      ghCanvas.width = Math.round(cw * dpr);
+      ghCanvas.height = Math.round(ch * dpr);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cw, ch);
+
+    // cuánto de cada escena hay en este punto del scroll (se superponen para que no haya cortes)
+    const appear = smooth(0, 0.12, p);
+    const city = smooth(0.2, 0.34, p) * (1 - smooth(0.46, 0.56, p));
+    const line = smooth(0.5, 0.64, p) * (1 - smooth(0.72, 0.8, p));
+    const ring = smooth(0.74, 0.9, p);
+
+    const { cells, cols, weeks, max } = gh;
+    const s = Math.min((cw * 0.94) / cols, (ch * 0.36) / 7);
+    const gx = (cw - cols * s) / 2;
+    // la grilla arranca centrada y baja para dejar lugar a los edificios y a la curva
+    const down = smooth(0.13, 0.3, p) * (1 - smooth(0.72, 0.8, p));
+    const gy = ch * (0.52 + 0.16 * down) - (7 * s) / 2;
+    const size = s * 0.8;
+    const maxH = ch * 0.5;
+    // el anillo: un día por ángulo y el día de la semana como distancia al centro
+    const R0 = Math.min(cw, ch) * 0.2;
+    const rcx = cw / 2;
+    const rcy = ch * 0.52;
+    const ringStep = Math.min(s * 1.05, (Math.min(cw, ch) * 0.46 - R0) / 7);
+
+    const tilt = city;
+    // orden de dibujo en la ciudad: de atrás (domingo) hacia adelante, de izquierda a derecha
+    for (let row = 0; row < 7; row++) {
+      for (const c of cells) {
+        if (c.row !== row) continue;
+        const pop = clamp((appear * 1.25 - c.col / cols) * 7, 0, 1);
+        if (pop <= 0) continue;
+        const base = INK[c.level];
+        // posición plana, inclinada (ciudad) y en el anillo
+        const fx = gx + c.col * s + (s - size) / 2;
+        const fy = gy + c.row * s + (s - size) / 2;
+        const depth = 1 - 0.58 * tilt;
+        const skew = (3.5 - c.row) * s * 0.42 * tilt;
+        const cx = fx + skew;
+        const cy = gy + (c.row * s) * depth + (s - size) / 2 + tilt * s * 1.5;
+        const a = -Math.PI / 2 + (c.i / cells.length) * Math.PI * 2;
+        const rr = R0 + (6 - c.row) * ringStep;
+        const rx = rcx + Math.cos(a) * rr - size / 2;
+        const ry = rcy + Math.sin(a) * rr - size / 2;
+        const x = lerp(cx, rx, ring);
+        const y = lerp(cy, ry, ring);
+        const sz = size * pop * (1 - ring * 0.25);
+        const h = Math.pow(c.count / max.count, 0.55) * maxH * tilt;
+        const top = sz * depth;
+
+        // en la curva semanal, los días se aclaran para que la línea mande
+        const dim = 1 - line * 0.55;
+        ctx.globalAlpha = dim;
+        if (h > 0.5 && ring < 0.01) {
+          // edificio: frente, costado derecho y techo
+          const side = sz * 0.42 * tilt;
+          ctx.fillStyle = shade(base, 0.82);
+          ctx.fillRect(x, y - h + top, sz, h);
+          ctx.fillStyle = shade(base, 0.62);
+          ctx.beginPath();
+          ctx.moveTo(x + sz, y - h + top);
+          ctx.lineTo(x + sz + side, y - h);
+          ctx.lineTo(x + sz + side, y);
+          ctx.lineTo(x + sz, y + top);
+          ctx.fill();
+          ctx.fillStyle = shade(base, 1.08);
+          ctx.beginPath();
+          ctx.moveTo(x, y - h + top);
+          ctx.lineTo(x + side, y - h);
+          ctx.lineTo(x + sz + side, y - h);
+          ctx.lineTo(x + sz, y - h + top);
+          ctx.fill();
+        } else if (ring > 0.01) {
+          ctx.save();
+          ctx.translate(x + sz / 2, y + sz / 2);
+          ctx.rotate(a * ring);
+          ctx.fillStyle = shade(base, 1);
+          ctx.fillRect(-sz / 2, -sz / 2, sz, sz);
+          ctx.restore();
+        } else {
+          ctx.fillStyle = shade(base, 1);
+          ctx.beginPath();
+          ctx.roundRect(x, y, sz, top, Math.min(3, sz * 0.2));
+          ctx.fill();
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // la curva semana a semana, arriba de la grilla
+    if (line > 0.001) {
+      const maxW = Math.max(...weeks);
+      const pts = weeks.map((w, k) => [gx + (k + 0.5) * s, gy - s * 1.4 - (w / maxW) * ch * 0.34]);
+      const upto = line * (pts.length - 1);
+      const n = Math.floor(upto);
+      const f = upto - n;
+      const path = pts.slice(0, n + 1);
+      if (n < pts.length - 1) path.push([lerp(pts[n][0], pts[n + 1][0], f), lerp(pts[n][1], pts[n + 1][1], f)]);
+      const baseY = gy - s * 1.4;
+      ctx.beginPath();
+      ctx.moveTo(path[0][0], baseY);
+      path.forEach(([px, py]) => ctx.lineTo(px, py));
+      ctx.lineTo(path[path.length - 1][0], baseY);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(17,17,19,0.06)';
+      ctx.fill();
+      ctx.beginPath();
+      path.forEach(([px, py], k) => (k ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
+      ctx.strokeStyle = '#111113';
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+      const [hx, hy] = path[path.length - 1];
+      ctx.fillStyle = '#111113';
+      ctx.beginPath();
+      ctx.arc(hx, hy, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // el centro del anillo: los días con commits
+    if (ring > 0.05) {
+      ctx.globalAlpha = smooth(0.4, 1, ring);
+      ctx.fillStyle = '#111113';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = `600 ${Math.round(R0 * 0.5)}px Outfit, sans-serif`;
+      ctx.fillText(String(gh.active), rcx, rcy - R0 * 0.08);
+      ctx.font = `500 ${Math.max(10, Math.round(R0 * 0.1))}px "IBM Plex Mono", monospace`;
+      ctx.fillStyle = '#6b6b72';
+      ctx.fillText(isEn() ? 'ACTIVE DAYS' : 'DÍAS ACTIVOS', rcx, rcy + R0 * 0.3);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function updateGithub() {
+    if (!ghSection || !ghCanvas || !gh) return;
+    const r = ghSection.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > window.innerHeight) return;
+    const p = pinProgress(ghSection);
+    setGithubScene(p < 0.2 ? 0 : p < 0.48 ? 1 : p < 0.73 ? 2 : 3);
+    if (!ghDirty && Math.abs(p - ghLastP) < 0.0004) return;
+    ghLastP = p;
+    ghDirty = false;
+    drawGithub(p);
+  }
+
+  if (ghSection && ghCanvas) {
+    fetch('assets/data/github.json')
+      .then((r) => r.json())
+      .then((data) => {
+        gh = prepareGithub(data);
+        ghDirty = true;
+        requestTick();
+      })
+      .catch(() => { ghSection.style.display = 'none'; });
+    window.addEventListener('resize', () => { ghDirty = true; });
+    document.fonts?.ready.then(() => { ghDirty = true; requestTick(); });
+    // al cambiar de idioma se vuelven a escribir los textos de la escena (después del cambio)
+    document.getElementById('langSwitchBtn')?.addEventListener('click', () => setTimeout(() => {
+      ghScene = -1;
+      ghDirty = true;
+      requestTick();
+    }));
+  }
+
+  /* ========================================================================
      3e. EL BUCLE DE SCROLL (uno solo, a lo sumo una vez por cuadro)
      ======================================================================== */
   let ticking = false;
@@ -863,6 +1119,7 @@
     updateExperience();
     updateRibbon();
     updateWorks();
+    updateGithub();
     // las estelas (velocidad) se apagan solas unos cuadros después de parar
     if ((aboutVel > 0.01 || expVel > 0.01) && settle++ < 40) requestTick();
     else settle = 0;

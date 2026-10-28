@@ -1133,6 +1133,145 @@ main > section:not(.hero-section) {
 }
 
 /* ==========================================================================
+   GITHUB — cuatro escenas con las contribuciones reales (echo.js dibuja el canvas)
+   ========================================================================== */
+.github-section {
+  position: relative;
+  height: 520vh;
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+.gh-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2.5vh, 1.75rem);
+  padding: clamp(2.5rem, 7vh, 4.5rem) var(--pad-x) clamp(1.5rem, 4vh, 2.5rem);
+  overflow: hidden;
+}
+
+.gh-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.gh-link {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted-light);
+  border-bottom: 1px solid rgba(17, 17, 19, 0.2);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.gh-link:hover {
+  color: #111113;
+  border-color: #111113;
+}
+
+.gh-card {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(17, 17, 19, 0.08);
+  box-shadow: 0 30px 70px -40px rgba(0, 0, 0, 0.25);
+  padding: clamp(1.1rem, 2.5vw, 2rem);
+}
+
+.gh-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.gh-label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  color: var(--text-muted-light);
+}
+
+.gh-number {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(2.2rem, 4.4vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.gh-number small {
+  font-size: 0.26em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-muted-light);
+}
+
+.gh-note {
+  max-width: 34ch;
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #55555c;
+  text-align: right;
+}
+
+.gh-canvas {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: block;
+}
+
+.gh-steps {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+}
+
+.gh-steps span {
+  padding: 0.38rem 0.75rem;
+  border-radius: 999px;
+  color: #9a9aa0;
+  transition: background 0.3s, color 0.3s;
+}
+
+.gh-steps span.is-on {
+  background: #111113;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .gh-card-head {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .gh-note {
+    text-align: left;
+  }
+
+  .gh-steps span:not(.is-on) {
+    display: none;
+  }
+}
+
+/* ==========================================================================
    6. FEATURED PROJECT / LANDING PAGES — 3D WAVE RIBBON (00:12 - 00:17)
    ========================================================================== */
 .landings-section {
