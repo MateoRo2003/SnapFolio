@@ -33,21 +33,29 @@
   }
 
   if (preloader) {
+    const svg = document.getElementById('signSvg');
+    const sign = preloader.querySelector('.preloader-sign');
     const strokes = Array.from(document.querySelectorAll('#signInk path'));
-    const glow = document.getElementById('signGlow');
     const caption = document.getElementById('signCaption');
+    const sparks = document.getElementById('signSparks');
+    const sctx = sparks.getContext('2d');
     let done = false;
+    let doneAt = 0;
     let raf = 0;
 
-    const finish = () => {
+    const finish = (skip) => {
       if (done) return;
       done = true;
-      cancelAnimationFrame(raf);
-      strokes.forEach((p) => { p.style.opacity = '1'; p.style.strokeDashoffset = '0'; });
+      doneAt = performance.now();
+      if (skip === true || !raf) {
+        cancelAnimationFrame(raf);
+        sctx.clearRect(0, 0, sparks.width, sparks.height);
+      }
       preloader.classList.add('is-done');
       endLoading();
-      setTimeout(() => { preloader.style.display = 'none'; }, 1300);
+      setTimeout(() => { preloader.style.display = 'none'; cancelAnimationFrame(raf); }, 1300);
     };
+    const skip = () => finish(true);
 
     // "FULL STACK DEVELOPER" va letra por letra
     const letters = caption ? Array.from(caption.textContent).map((ch) => {
@@ -57,54 +65,210 @@
     }) : [];
     if (caption) caption.replaceChildren(...letters);
 
-    // cada trazo se prepara con su largo real: la lapicera avanza a la misma velocidad en todos
+    // cada trazo de la máscara se prepara con su largo real: la lapicera avanza pareja en todos
     const lens = strokes.map((p) => p.getTotalLength());
+    const shown = lens.map(() => -1);
     strokes.forEach((p, i) => {
       p.style.strokeDasharray = `${lens[i]} ${lens[i]}`;
       p.style.strokeDashoffset = String(lens[i]);
     });
     const LIFT = 22; // ms que la lapicera "se levanta" entre trazos
-    const total = lens.reduce((a, b) => a + b, 0);
-    const DRAW = 2300; // ms para toda la firma
-    const speed = total / (DRAW - LIFT * strokes.length); // px por ms
+    const total = lens.reduce((x, y) => x + y, 0);
+    const DRAW = 2200; // ms para toda la firma
+    const speed = total / (DRAW - LIFT * strokes.length); // unidades del SVG por ms
     const starts = [];
     lens.reduce((at, len) => { starts.push(at); return at + len / speed + LIFT; }, 0);
-    const GLOW = 70; // largo de la punta brillante
-    const CAPTION_AT = DRAW * 0.78, HOLD = 520;
-    let current = -1;
+    const CAPTION_AT = DRAW * 0.78, HOLD = 380, WIPE = 650;
+    const isDot = strokes.map((p) => p.hasAttribute('data-dot'));
 
-    const tick = (t0) => (now) => {
-      const t = now - t0;
-      for (let i = 0; i < strokes.length; i++) {
-        const drawn = clamp((t - starts[i]) * speed, 0, lens[i]);
-        if (drawn > 0) strokes[i].style.opacity = '1';
-        strokes[i].style.strokeDashoffset = String(lens[i] - drawn);
-        if (drawn > 0 && drawn < lens[i]) {
-          if (current !== i) {
-            current = i;
-            glow.setAttribute('d', strokes[i].getAttribute('d'));
-          }
-          const g = Math.min(GLOW, drawn);
-          glow.style.strokeDasharray = `${g} ${lens[i] + GLOW}`;
-          glow.style.strokeDashoffset = String(-(drawn - g));
-          glow.style.opacity = '1';
+    // ---- la luz: chispas, cola y polvo, en un canvas encima de la firma ----
+    let vw = 0, vh = 0, dpr = 1, ctm = null, box = null, fx = 1;
+    const sizeSparks = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      vw = window.innerWidth;
+      vh = window.innerHeight;
+      sparks.width = Math.round(vw * dpr);
+      sparks.height = Math.round(vh * dpr);
+      ctm = svg.getScreenCTM();
+      box = svg.getBoundingClientRect();
+      // la luz se achica con la firma (en un celular la firma mide un tercio que en escritorio)
+      fx = clamp(ctm.a / 0.54, 0.4, 1);
+    };
+    const toScreen = (pt) => [pt.x * ctm.a + ctm.e, pt.y * ctm.d + ctm.f];
+    // un punto de luz difuso, dibujado una sola vez y reusado por todas las partículas
+    const tint = (getComputedStyle(preloader).getPropertyValue('--sign-tint').trim() || '255 255 255').split(/\s+/).join(',');
+    const dot = (rgb) => {
+      const c = document.createElement('canvas');
+      c.width = c.height = 64;
+      const g = c.getContext('2d');
+      const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grad.addColorStop(0, `rgba(${rgb},1)`);
+      grad.addColorStop(0.22, `rgba(${rgb},0.6)`);
+      grad.addColorStop(1, `rgba(${rgb},0)`);
+      g.fillStyle = grad;
+      g.fillRect(0, 0, 64, 64);
+      return c;
+    };
+    const glow = dot('255,255,255');
+    const glowTint = dot(tint);
+    const parts = [];
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    const emit = (x, y, o = {}) => parts.push({
+      x, y,
+      vx: (o.vx ?? rnd(-0.04, 0.04)) * (0.4 + 0.6 * fx),
+      vy: (o.vy ?? rnd(-0.06, 0.02)) * (0.4 + 0.6 * fx),
+      age: -(o.delay || 0),
+      life: o.life ?? rnd(450, 1100),
+      size: (o.size ?? rnd(2.5, 8)) * (0.5 + 0.5 * fx),
+      alpha: o.alpha ?? 1,
+      drift: o.drift ?? 0,
+      img: o.img ?? (Math.random() < 0.6 ? glowTint : glow),
+    });
+    const stepSparks = (dt, now) => {
+      sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      sctx.clearRect(0, 0, vw, vh);
+      sctx.globalCompositeOperation = 'lighter';
+      const drag = Math.pow(0.985, dt / 16.7);
+      for (let i = parts.length - 1; i >= 0; i--) {
+        const p = parts[i];
+        p.age += dt;
+        if (p.age < 0) continue;
+        if (p.age > p.life) { parts[i] = parts[parts.length - 1]; parts.pop(); continue; }
+        const k = p.age / p.life;
+        // frenan y suben de a poco, como brasas; el polvo de la salida además ondula
+        p.vx = p.vx * drag + (p.drift ? Math.sin(p.y * 0.025 + now * 0.003) * p.drift * dt : 0);
+        p.vy = p.vy * drag - 0.00003 * dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        const s = p.size * (1 - k * 0.5);
+        sctx.globalAlpha = p.alpha * (1 - k) * (1 - k);
+        sctx.drawImage(p.img, p.x - s / 2, p.y - s / 2, s, s);
+      }
+      sctx.globalAlpha = 1;
+    };
+    // la cola de luz: un tramo que se afina hacia atrás, detrás de la punta de la lapicera
+    const comet = (i, drawn) => {
+      const path = strokes[i];
+      const TAIL = 340, N = 22;
+      const pts = [];
+      for (let k = N; k >= 0; k--) {
+        const at = drawn - (TAIL * k) / N;
+        if (at >= 0) pts.push([toScreen(path.getPointAtLength(at)), 1 - k / N]); // f: 0 en la cola, 1 en la punta
+      }
+      sctx.lineCap = 'round';
+      // dos pasadas: un halo ancho y suave, y el núcleo brillante que se afina hacia atrás
+      for (const [wide, alpha] of [[3.2, 0.16], [1, 0.85]]) {
+        for (let k = 1; k < pts.length; k++) {
+          const [[x0, y0]] = pts[k - 1];
+          const [[x1, y1], f] = pts[k];
+          sctx.strokeStyle = `rgba(${tint},${alpha * f * f})`;
+          sctx.lineWidth = (0.8 + f * 4.2) * wide * fx;
+          sctx.beginPath();
+          sctx.moveTo(x0, y0);
+          sctx.lineTo(x1, y1);
+          sctx.stroke();
         }
       }
-      if (t > DRAW) glow.style.opacity = String(Math.max(0, 1 - (t - DRAW) / 250));
-      const shown = Math.floor(clamp((t - CAPTION_AT) / 38, 0, letters.length));
-      for (let k = 0; k < shown; k++) letters[k].classList.add('is-in');
-      if (t > Math.max(DRAW, CAPTION_AT + letters.length * 38) + HOLD) return finish();
-      raf = requestAnimationFrame(tick(t0));
+      const [hx, hy] = pts[pts.length - 1][0];
+      const g = 68 * fx, c = 18 * (0.5 + 0.5 * fx);
+      sctx.drawImage(glowTint, hx - g / 2, hy - g / 2, g, g);
+      sctx.drawImage(glow, hx - c / 2, hy - c / 2, c, c);
+      return [hx, hy];
+    };
+
+    // la salida: la firma se deshace en polvo de luz siguiendo una barrida de izquierda a derecha
+    let dissolving = false;
+    const dissolve = () => {
+      dissolving = true;
+      sign.style.setProperty('--wipe', `${WIPE}ms`);
+      sign.classList.add('is-dissolving');
+      const left = box.left - 0.25 * box.width;
+      for (let i = 0; i < strokes.length; i++) {
+        for (let at = 0; at < lens[i]; at += 8) {
+          const [x, y] = toScreen(strokes[i].getPointAtLength(at));
+          emit(x + rnd(-2.5, 2.5), y + rnd(-2.5, 2.5), {
+            delay: WIPE * clamp((x - left) / (1.5 * box.width), 0, 1),
+            life: rnd(650, 1400),
+            vx: rnd(0.02, 0.14),
+            vy: rnd(-0.11, -0.01),
+            size: rnd(2, 6.5),
+            alpha: rnd(0.55, 1),
+            drift: 0.0005,
+            img: Math.random() < 0.3 ? glowTint : glow,
+          });
+        }
+      }
+      setTimeout(finish, WIPE * 0.6);
+    };
+
+    let t0 = 0, last = 0, endedAt = 0, prevHead = null;
+    const done_ = new Array(strokes.length).fill(false);
+    const tick = (now) => {
+      const t = now - t0;
+      const dt = Math.min(50, now - (last || now));
+      last = now;
+      if (!dissolving) {
+        let head = null;
+        for (let i = 0; i < strokes.length; i++) {
+          const drawn = clamp((t - starts[i]) * speed, 0, lens[i]);
+          if (drawn !== shown[i]) {
+            if (shown[i] <= 0 && drawn > 0) strokes[i].style.opacity = '1';
+            strokes[i].style.strokeDashoffset = String(lens[i] - drawn);
+            shown[i] = drawn;
+          }
+          if (drawn > 0 && drawn < lens[i]) head = [i, drawn];
+          if (drawn >= lens[i] && !done_[i]) {
+            done_[i] = true;
+            const [x, y] = toScreen(strokes[i].getPointAtLength(lens[i]));
+            // al levantar la lapicera saltan unas chispas; el punto de la j salpica más
+            const n = isDot[i] ? 26 : 4;
+            for (let k = 0; k < n; k++) {
+              const ang = rnd(0, Math.PI * 2), v = isDot[i] ? rnd(0.04, 0.2) : rnd(0.02, 0.07);
+              emit(x, y, { vx: Math.cos(ang) * v, vy: Math.sin(ang) * v, life: rnd(400, 900), size: rnd(2, isDot[i] ? 7 : 5) });
+            }
+          }
+        }
+        stepSparks(dt, now);
+        if (head) {
+          const [hx, hy] = comet(head[0], head[1]);
+          // chispas repartidas por todo el tramo que recorrió la punta en este cuadro (va rápido)
+          const [px, py] = prevHead && prevHead[2] === head[0] ? prevHead : [hx, hy];
+          for (let k = 0, n = Math.round((dt / 16.7) * 6); k < n; k++) {
+            const u = Math.random();
+            emit(lerp(px, hx, u) + rnd(-2, 2), lerp(py, hy, u) + rnd(-2, 2), { vx: rnd(-0.07, 0.07), vy: rnd(-0.09, 0.03), size: rnd(3, 11) });
+          }
+          prevHead = [hx, hy, head[0]];
+        } else prevHead = null;
+        // polvo suave flotando alrededor mientras se escribe
+        if (Math.random() < 0.35) {
+          emit(rnd(box.left, box.right), rnd(box.top, box.bottom), { vx: rnd(-0.01, 0.01), vy: rnd(-0.025, -0.008), life: rnd(1200, 2200), size: rnd(2, 4.5), alpha: 0.35, img: glow });
+        }
+        if (t > DRAW && !endedAt) {
+          endedAt = now;
+          svg.classList.add('is-inked');
+        }
+        const shownLetters = Math.floor(clamp((t - CAPTION_AT) / 38, 0, letters.length));
+        for (let k = 0; k < shownLetters; k++) letters[k].classList.add('is-in');
+        if (t > Math.max(DRAW, CAPTION_AT + letters.length * 38) + HOLD) dissolve();
+      } else {
+        stepSparks(dt, now);
+        if (done && (now - doneAt > 1300 || !parts.length)) return;
+      }
+      raf = requestAnimationFrame(tick);
     };
 
     if (prefersReducedMotion) {
+      strokes.forEach((p) => { p.style.opacity = '1'; p.style.strokeDashoffset = '0'; });
+      svg.classList.add('is-inked');
       letters.forEach((l) => l.classList.add('is-in'));
-      setTimeout(finish, 500);
+      setTimeout(finish, 600);
     } else {
-      requestAnimationFrame((now) => { raf = requestAnimationFrame(tick(now)); });
+      sizeSparks();
+      window.addEventListener('resize', sizeSparks);
+      requestAnimationFrame((now) => { t0 = now; raf = requestAnimationFrame(tick); });
     }
-    preloader.addEventListener('click', finish);
-    window.addEventListener('keydown', finish, { once: true });
+    preloader.addEventListener('click', skip);
+    window.addEventListener('keydown', skip, { once: true });
   } else {
     endLoading();
   }
@@ -860,6 +1024,8 @@
   const ghUnit = document.getElementById('ghUnit');
   const ghNote = document.getElementById('ghNote');
   const ghSteps = Array.from(document.querySelectorAll('.gh-steps span'));
+  const ghStats = document.getElementById('ghStats');
+  const ghLive = document.getElementById('ghLive');
   let gh = null;
   let ghLastP = -1;
   let ghScene = -1;
@@ -897,7 +1063,30 @@
       bestWeek: { total: weeks[bestWeek], from: cells.find((c) => c.col === bestWeek).date },
       user: data.user,
       updated: data.updated,
+      stats: data.stats || {},
     };
+  }
+
+  // la fila de abajo: lo que no entra en el gráfico (solo lo que haya llegado)
+  function renderGithubStats() {
+    if (!ghStats || !gh) return;
+    const st = gh.stats;
+    const en = isEn();
+    const items = [
+      [st.commits, en ? 'COMMITS · 12 MONTHS' : 'COMMITS · 12 MESES'],
+      [st.contributedRepos, en ? 'REPOS WITH COMMITS' : 'REPOS CON COMMITS'],
+      [st.publicRepos, en ? 'PUBLIC REPOS' : 'REPOS PÚBLICOS'],
+      [st.since && st.since.slice(0, 4), en ? 'ON GITHUB SINCE' : 'EN GITHUB DESDE'],
+    ].filter(([v]) => v != null && v !== '');
+    ghStats.replaceChildren(...items.map(([v, label]) => {
+      const row = document.createElement('div');
+      const dt = document.createElement('dt');
+      const dd = document.createElement('dd');
+      dt.textContent = label;
+      dd.textContent = typeof v === 'number' ? fmtNum(v) : v;
+      row.append(dt, dd);
+      return row;
+    }));
   }
 
   function sceneText(k) {
@@ -1086,10 +1275,19 @@
   }
 
   if (ghSection && ghCanvas) {
-    fetch('assets/data/github.json')
-      .then((r) => r.json())
-      .then((data) => {
+    // en vivo desde el hosting (api/github.php); si no está o falla, la copia guardada en el repo
+    const getJson = (url) => fetch(url, { cache: 'no-cache' })
+      .then((r) => (r.ok && (r.headers.get('content-type') || '').includes('json') ? r.json() : Promise.reject(new Error(url))));
+    Promise.allSettled([getJson('api/github.php'), getJson('assets/data/github.json')])
+      .then(([live, saved]) => {
+        const base = saved.status === 'fulfilled' ? saved.value : null;
+        const fresh = live.status === 'fulfilled' && live.value.days?.length ? live.value : null;
+        // lo que el en vivo no trae (p. ej. commits, si el servidor no tiene token) sale de la copia
+        const data = fresh ? { ...fresh, stats: { ...(base?.stats || {}), ...(fresh.stats || {}) } } : base;
+        if (!data?.days?.length) throw new Error('sin datos de GitHub');
         gh = prepareGithub(data);
+        if (ghLive) ghLive.hidden = !fresh;
+        renderGithubStats();
         ghDirty = true;
         requestTick();
       })
@@ -1098,6 +1296,7 @@
     document.fonts?.ready.then(() => { ghDirty = true; requestTick(); });
     // al cambiar de idioma se vuelven a escribir los textos de la escena (después del cambio)
     document.getElementById('langSwitchBtn')?.addEventListener('click', () => setTimeout(() => {
+      renderGithubStats();
       ghScene = -1;
       ghDirty = true;
       requestTick();

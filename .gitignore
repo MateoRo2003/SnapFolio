@@ -2,3 +2,5 @@ node_modules/
 .firebaserc
 firebase.json
 functions/
+# token de GitHub del endpoint en vivo (api/github.php); nunca al repo
+api/github-token.php
