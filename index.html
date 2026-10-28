@@ -144,8 +144,11 @@
         <span class="hero-title-line2">PORTFOLIO</span>
       </h1>
 
-      <!-- la grilla viva: celdas como las del gráfico de GitHub que reaccionan al mouse (echo.js) -->
-      <canvas class="hero-grid" id="heroGrid" aria-hidden="true"></canvas>
+      <!-- la ventana: un arco con la noche estrellada del "About me". Al bajar se agranda hasta
+           ocupar la pantalla y se entra al "About me" por ahí (echo.js) -->
+      <div class="hero-window" id="heroWindow" aria-hidden="true">
+        <img class="hero-window-sky" src="assets/img/echo/starry-night.webp" alt="" width="2000" height="1125" decoding="async" fetchpriority="high">
+      </div>
 
       <div class="hero-meta-left">
         <a class="hero-news" href="https://orbita.site" target="_blank" rel="noopener">
@@ -170,9 +173,6 @@
           <li data-es="LANDING PAGE" data-en="LANDING PAGE">LANDING PAGE</li>
         </ul>
       </div>
-
-      <!-- se oscurece mientras la noche estrellada sube por encima -->
-      <div class="hero-shade" aria-hidden="true"></div>
     </section>
 
     <!-- ====================================================================

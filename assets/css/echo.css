@@ -337,7 +337,8 @@ img {
 }
 
 /* ==========================================================================
-   3. HERO: "EXPLORE MY PORTFOLIO" sobre una grilla viva de celdas
+   3. HERO: "EXPLORE MY PORTFOLIO" y un arco que deja ver la noche estrellada del "About me".
+      Las letras se invierten donde cruzan el arco (blancas sobre la noche, negras sobre el gris).
    ========================================================================== */
 .hero-section {
   /* queda fijo debajo: el "About me" sube por encima como un telón (ver la transición más abajo) */
@@ -367,32 +368,54 @@ img {
   text-transform: uppercase;
   user-select: none;
   pointer-events: none;
+  /* blanco en "diferencia": sobre el gris claro queda casi negro, sobre la noche queda blanco */
+  mix-blend-mode: difference;
 }
 
-.hero-title-line1 {
-  display: block;
-  color: #141416;
-}
-
-/* "PORTFOLIO" se apaga hacia abajo, hasta casi el color del fondo */
+.hero-title-line1,
 .hero-title-line2 {
   display: block;
-  background: linear-gradient(180deg, #3d3d42 0%, #8d8d92 48%, #e2e2df 92%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #ffffff;
 }
 
-/* la grilla viva, detrás del título; al subir el "About me" se aleja apenas */
-.hero-grid {
+/* la ventana ocupa todo el hero y se recorta en arco; adentro, la noche queda quieta y del
+   mismo tamaño que en el "About me" (así, cuando el arco llena la pantalla, ya es esa escena).
+   --out (0 a 1, al bajar) agranda el arco; --in (0 a 1) lo hace subir al terminar la carga. */
+@property --in {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+.hero-window {
+  --win-top: 26%;
+  --win-side: 35vw;
+  --win-r: 15vw;
+  --k: calc(1 - var(--out, 0));
   position: absolute;
   inset: 0;
   z-index: 1;
-  display: block;
+  overflow: hidden;
+  background: #050506;
+  pointer-events: none;
+  clip-path: inset(calc(100% - (100% - var(--k) * var(--win-top)) * var(--in)) calc(var(--k) * var(--win-side)) 0 round calc(var(--k) * var(--win-r)) calc(var(--k) * var(--win-r)) 0 0);
+  transition: --in 1.5s var(--ease-out-expo);
+}
+
+html.is-loading .hero-window {
+  --in: 0;
+}
+
+.hero-window-sky {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
-  transform: scale(calc(1 + var(--out, 0) * 0.06));
+  max-width: none;
+  object-fit: cover;
+  object-position: 30% 50%;
+  /* igual que .about-sky al empezar; el corrimiento (mouse o deriva) se apaga al llenar la pantalla */
+  transform: translate3d(calc(var(--px, 0) * var(--k) * 1px), calc(var(--py, 0) * var(--k) * 1px), 0) scale(1.08);
 }
 
 .hero-meta-left,
@@ -519,21 +542,13 @@ html.is-loading .hero-meta-right {
 }
 
 /* --------------------------------------------------------------------------
-   Transición hero → about: mientras el telón sube, el hero se aleja y se oscurece.
-   echo.js pone --out (0 a 1) en el hero y --arch (0 a 1) en el about.
+   Transición hero → about: al bajar, el arco del hero se agranda hasta llenar la pantalla con
+   la noche estrellada; recién ahí aparece el "About me", que empieza con esa misma imagen.
+   echo.js pone --out (0 a 1) en el hero y .is-flat en el about cuando llega arriba.
    -------------------------------------------------------------------------- */
 main > section:not(.hero-section) {
   position: relative;
   z-index: 1;
-}
-
-.hero-shade {
-  position: absolute;
-  inset: 0;
-  z-index: 6;
-  background: #050506;
-  opacity: calc(var(--out, 0) * 0.8);
-  pointer-events: none;
 }
 
 .hero-title-line1,
@@ -543,13 +558,22 @@ main > section:not(.hero-section) {
   will-change: transform;
 }
 
-/* el borde de arriba del telón es un arco que se aplana a medida que llega arriba */
-.about-portal {
-  clip-path: inset(0 round 50% 50% 0 0 / calc(var(--arch, 0) * 26vh) calc(var(--arch, 0) * 26vh) 0 0);
+/* mientras sube no se ve: lo que se ve es el arco del hero creciendo */
+.about-portal:not(.is-flat) {
+  clip-path: inset(0 0 100% 0);
 }
 
-.about-portal.is-flat {
-  clip-path: none;
+/* al llegar, la noche ya está (es la del arco); la tarjeta y "ABOUT ME" aparecen encima */
+.about-card,
+.about-words {
+  transition: opacity 0.7s ease, filter 0.7s ease;
+}
+
+.about-portal:not(.is-flat) .about-card,
+.about-portal:not(.is-flat) .about-words {
+  opacity: 0;
+  filter: blur(10px);
+  transition: none;
 }
 
 /* ==========================================================================
@@ -2273,6 +2297,22 @@ main > section:not(.hero-section) {
   .hero-title {
     top: 44%;
     font-size: clamp(3rem, 15vw, 6rem);
+  }
+
+  .hero-window {
+    --win-top: 30%;
+    --win-side: 17vw;
+    --win-r: 33vw;
+  }
+
+  /* abajo a la izquierda quedan encima del arco: fondo blanco lleno para que se lean */
+  .hero-news,
+  .hero-scroll-btn {
+    background: #ffffff;
+  }
+
+  .hero-est {
+    display: none;
   }
 
   .hero-meta-right {
