@@ -10,9 +10,9 @@
   'use strict';
 
   const EN = {
-    "CAPACITACIÓN EDTECH · PAPERLUX, CHILE": "EDTECH TRAINING · PAPERLUX, CHILE",
-    "Plataforma para que cada docente aprenda solo a usar su dispositivo Paperlux: un recorrido gamificado de menos de 30 minutos, con certificado, y la institución viendo el avance en tiempo real.": "A platform where every teacher learns to use their Paperlux device on their own: a gamified path under 30 minutes, with a certificate, while the school follows progress in real time.",
-    "De la caja a la clase en menos de 30 minutos": "From the box to the classroom in under 30 minutes",
+    "PLATAFORMA DOCENTE · PAPERLUX, CHILE": "TEACHER PLATFORM · PAPERLUX, CHILE",
+    "La plataforma del docente para su Paperlux: aprende a usarlo en menos de 30 minutos, crea actividades con IA, escribe sobre sus PDF con el lápiz y comparte con otros profes, mientras la institución sigue el avance en tiempo real.": "The teacher platform for their Paperlux: learn to use it in under 30 minutes, create activities with AI, write on PDFs with the pen and share with other teachers, while the school follows progress in real time.",
+    "7 tipos de actividades generadas con IA, desde un tema o una guía": "7 activity types generated with AI, from a topic or a handout",
     "Next.js 14 · Supabase · Framer Motion · React PDF": "Next.js 14 · Supabase · Framer Motion · React PDF",
     "WHATSAPP": "WHATSAPP",
     "DEJAR UN MENSAJE": "LEAVE A MESSAGE",

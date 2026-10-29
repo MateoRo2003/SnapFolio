@@ -8,6 +8,6 @@ Renderizar (necesita Chrome, `puppeteer-core` y ffmpeg):
 ```
 node motion/render.mjs motion/orbita/index.html motion/orbita/frames 30 25
 node motion/render.mjs motion/paperflix/index.html motion/paperflix/frames 30 24
-node motion/render.mjs motion/mipaperlux/index.html motion/mipaperlux/frames 30 24
+node motion/render.mjs motion/mipaperlux/index.html motion/mipaperlux/frames 30 30
 ffmpeg -framerate 30 -i motion/orbita/frames/%04d.jpg -vf format=yuv420p -an -c:v libx264 -preset slow -crf 23 -movflags +faststart assets/video/orbita.mp4
 ```
