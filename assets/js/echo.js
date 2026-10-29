@@ -1426,7 +1426,7 @@
   const featIdx = ringProjects.map((r, i) => (r.feat ? i : -1)).filter((i) => i >= 0);
   const chosen = featIdx[Math.floor(Math.random() * featIdx.length)];
   // el giro: dos vueltas y algo, y frena con el elegido arriba (ángulo -chosen * SLOT, en cualquier vuelta)
-  const SPIN_MS = 3800;
+  const SPIN_MS = 2400;
   const spin = { from: 0, to: 0, t0: 0, dur: SPIN_MS, angle: 0, running: false, doneAt: 0, armed: true };
   const landAngle = (from) => {
     const at = (((360 - chosen * SLOT) % 360) + 360) % 360;
@@ -1435,10 +1435,10 @@
   function startSpin(now) {
     Object.assign(spin, { from: spin.angle, to: landAngle(spin.angle), t0: now, dur: SPIN_MS, running: true, doneAt: 0 });
   }
-  // lo que falta, en medio segundo
+  // lo que falta, en un tercio de segundo
   function hurrySpin(now) {
-    if (!spin.running || spin.dur <= 600) return;
-    Object.assign(spin, { from: spin.angle, t0: now, dur: 500 });
+    if (!spin.running || spin.dur <= 400) return;
+    Object.assign(spin, { from: spin.angle, t0: now, dur: 350 });
   }
   function stepSpin(now) {
     if (!spin.running) return;
@@ -1447,8 +1447,8 @@
     if (k >= 1) {
       spin.running = false;
       spin.doneAt = now;
-      grow.at = now + 600; // un momento para ver cuál salió, y se abre
-      grow.dur = 1200;
+      grow.at = now + 250; // un instante para ver cuál salió, y se abre
+      grow.dur = 750;
     }
   }
   const grow = { at: 0, dur: 1200 };
@@ -1555,9 +1555,9 @@
     if (ahead) hurrySpin(now);
     stepSpin(now);
     const landed = !spin.running && spin.doneAt !== 0;
-    const emph = landed ? smooth(0, 650, now - spin.doneAt) : 0;
+    const emph = landed ? smooth(0, 300, now - spin.doneAt) : 0;
     // B. se abre sola un momento después de frenar (si ya bajó, enseguida y más rápido)
-    if (landed && ahead && grow.at > now) Object.assign(grow, { at: now, dur: 650 });
+    if (landed && ahead && grow.at > now) Object.assign(grow, { at: now, dur: 500 });
     const pB = landed && grow.at ? clamp((now - grow.at) / grow.dur, 0, 1) : 0;
     // C. los siguientes van con el scroll, pero recién con la tarjeta abierta; si el scroll se
     // adelantó, lo alcanzan de a poco
