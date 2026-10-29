@@ -386,8 +386,10 @@
 
     let onDark = false;
     for (const id of darkIds) {
-      const r = document.getElementById(id)?.getBoundingClientRect();
-      if (r && r.top <= 36 && r.bottom >= 36) onDark = true;
+      const el = document.getElementById(id);
+      if (!el || el.dataset.tone === 'light') continue;
+      const r = el.getBoundingClientRect();
+      if (r.top <= 36 && r.bottom >= 36) onDark = true;
     }
     header.classList.toggle('is-dark-mode', onDark);
 
@@ -1257,7 +1259,8 @@
 
     updateRibbon = () => {
       if (dragging || performance.now() < manualUntil) return;
-      const next = pinProgress(landings) * (n - 1);
+      const span = landings.offsetHeight - 2 * window.innerHeight;
+      const next = (span > 0 ? clamp(-landings.getBoundingClientRect().top / span, 0, 1) : 0) * (n - 1);
       if (next !== target) {
         target = next;
         wake();
@@ -1288,9 +1291,12 @@
   }
 
   /* ========================================================================
-     3d. PROYECTOS DESTACADOS — a pantalla completa, uno por uno
-     La sección queda fija y, al bajar, cada proyecto sube por un arco (como el del hero) tapando
-     al anterior, que se oscurece. El texto de cada uno aparece cuando su arco ya llenó la pantalla.
+     3d. PROYECTOS DESTACADOS — la ruleta y después a pantalla completa
+     La sección sube por encima de la cinta como una hoja y queda fija. Al bajar:
+       A. la ruleta gira y va frenando hasta dejar arriba, junto a la flecha, un destacado elegido
+          al azar (cambia en cada visita); al final los demás se apagan;
+       B. esa tarjeta crece hasta llenar la pantalla y se vuelve su proyecto a pantalla completa;
+       C. los demás destacados suben de a uno por un arco (como el del hero) tapando al anterior.
      El fondo es un video si el proyecto tiene data-video; si no, su imagen. Los videos se cargan
      recién cuando su proyecto está cerca y solo corre el que está al frente.
      ======================================================================== */
@@ -1329,10 +1335,63 @@
   });
 
   const featSection = document.getElementById('works');
+  const featPin = featSection?.querySelector('.featured-pin');
   const featSlides = Array.from(document.querySelectorAll('.feat-slide'));
   const featDots = Array.from(document.querySelectorAll('.feat-dots span'));
+  const rouletteRig = document.getElementById('rouletteRig');
+  const rouletteIndex = document.getElementById('rouletteIndex');
+  const roulettePointer = document.getElementById('roulettePointer');
   let featActive = -1;
   let featOnScreen = false;
+
+  // la ruleta: los cuatro destacados y dos más de relleno (en el orden de las agujas del reloj)
+  const ringProjects = [
+    { title: 'Órbita', img: 'orbita', feat: 'orbita' },
+    { title: 'Paperflix', img: 'paperflix', feat: 'paperflix' },
+    { title: 'S.I.T.I System', img: 's-i-t-i-sistema-integral-de-tiendas-inde', feat: 'siti' },
+    { title: 'NeuroBrand AI', img: 'neurobrand', feat: 'neurobrand' },
+    { title: 'Petty Joyas', img: 'petty-joyas' },
+    { title: 'MiPaperlux', img: 'mipaperlux' },
+  ];
+  const SLOT = 360 / ringProjects.length;
+  const featIdx = ringProjects.map((r, i) => (r.feat ? i : -1)).filter((i) => i >= 0);
+  const chosen = featIdx[Math.floor(Math.random() * featIdx.length)];
+  // vueltas y media: el destacado elegido termina arriba
+  const SPIN = 720 + ((360 - chosen * SLOT) % 360);
+  let ringCards = [];
+  let ringNames = [];
+  let ringLast = -1;
+
+  if (rouletteRig && featSlides.length) {
+    rouletteRig.innerHTML = ringProjects.map((r) => `
+      <div class="roulette-card">
+        <div class="roulette-bar"><span class="roulette-dots"><span></span><span></span><span></span></span><span>${r.title.toLowerCase().replace(/\s+/g, '')}.app</span><span>↗</span></div>
+        <img src="assets/img/portfolio/cards/${r.img}.webp" alt="" loading="lazy" decoding="async">
+      </div>`).join('');
+    ringCards = Array.from(rouletteRig.children);
+    ringCards[chosen].classList.add('is-chosen');
+    if (rouletteIndex) {
+      rouletteIndex.innerHTML = ringProjects.map((r) => `<li>${r.title}</li>`).join('');
+      ringNames = Array.from(rouletteIndex.children);
+    }
+    // el elegido pasa a ser el primero a pantalla completa; los demás siguen en su orden
+    const first = featSlides.find((el) => el.dataset.id === ringProjects[chosen].feat);
+    if (first) {
+      featSlides.splice(featSlides.indexOf(first), 1);
+      featSlides.unshift(first);
+      first.parentNode.insertBefore(first, first.parentNode.querySelector('.feat-slide'));
+    }
+    const pad2 = (v) => String(v).padStart(2, '0');
+    featSlides.forEach((el, i) => {
+      const num = el.querySelector('.feat-num');
+      if (num) num.textContent = `${pad2(i + 1)} / ${pad2(featSlides.length)}`;
+    });
+  }
+
+  // los tramos de la sección fija, en pantallas: girar, agrandar y después uno por cada cambio
+  const PH_SPIN = 1.4;
+  const PH_GROW = 0.9;
+  const PH_STEP = 1.1;
 
   // los videos: se crean cuando su proyecto está cerca y corre solo el del frente
   function syncFeatVideos() {
@@ -1340,7 +1399,7 @@
       const src = el.dataset.video;
       if (!src) return;
       let v = el.querySelector('.feat-video');
-      if (!v && Math.abs(i - featActive) <= 1) {
+      if (!v && featActive >= 0 && Math.abs(i - featActive) <= 1) {
         v = document.createElement('video');
         v.className = 'feat-video';
         v.muted = true;
@@ -1360,27 +1419,99 @@
 
   function updateFeatured() {
     if (!featSection || !featSlides.length) return;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
     const r = featSection.getBoundingClientRect();
-    const onScreen = r.bottom > 0 && r.top < window.innerHeight;
+    // la cinta de proyectos se apaga mientras esta sección sube por encima
+    landings?.querySelector('.landings-pin')?.style.setProperty('--cover', clamp(1 - r.top / vh, 0, 1).toFixed(3));
+    const onScreen = r.bottom > 0 && r.top < vh;
     if (onScreen !== featOnScreen) {
       featOnScreen = onScreen;
       syncFeatVideos();
     }
     if (!onScreen) return;
+
     const n = featSlides.length;
-    // f va de 0 a n-1; cada cambio de proyecto ocupa el medio de su tramo y deja quieto el resto
-    const f = pinProgress(featSection) * (n - 1);
+    const total = PH_SPIN + PH_GROW + PH_STEP * (n - 1);
+    const at = clamp(-r.top / vh, 0, total); // pantallas recorridas con la sección fija
+    const pA = clamp(at / PH_SPIN, 0, 1);
+    const pB = clamp((at - PH_SPIN) / PH_GROW, 0, 1);
+    const f = clamp((at - PH_SPIN - PH_GROW) / PH_STEP, 0, n - 1);
+
+    // A. la ruleta: frena de a poco (como una ruleta de verdad) y al final se apagan los demás
+    const mobile = vw < 768;
+    const R = mobile ? Math.min(vw * 0.34, vh * 0.25) : Math.min(vh * 0.27, vw * 0.17);
+    const base = mobile ? 0.78 : 0.52; // en la ruleta las tarjetas van chicas, como en el diseño original
+    const spin = (1 - (1 - pA) ** 3) * SPIN;
+    const emph = smooth(0.8, 1, pA);
+    const card0 = ringCards[0];
+    const cw = card0?.offsetWidth || 300;
+    const ch = card0?.offsetHeight || 190;
+    ringCards.forEach((card, i) => {
+      const th = ((i * SLOT - 90 + spin) * Math.PI) / 180;
+      const x = Math.cos(th) * R;
+      const y = Math.sin(th) * R;
+      const isChosen = i === chosen;
+      const sc = base * (isChosen ? 1 + 0.2 * emph : 1 - 0.08 * emph);
+      const op = isChosen ? 1 - smooth(0.04, 0.2, pB) : (1 - 0.7 * emph) * (1 - smooth(0, 0.25, pB));
+      card.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${((th * 180) / Math.PI + 90).toFixed(2)}deg) scale(${sc.toFixed(3)})`;
+      card.style.opacity = op.toFixed(3);
+    });
+    // el nombre que pasa por la flecha se marca en la lista
+    const under = ((Math.round(-spin / SLOT) % ringCards.length) + ringCards.length) % ringCards.length;
+    if (under !== ringLast) {
+      ringLast = under;
+      ringNames.forEach((li, i) => li.classList.toggle('is-on', i === under));
+    }
+    if (roulettePointer) roulettePointer.style.top = `${(vh / 2 - R - (ch * base * 1.2) / 2 - 20).toFixed(1)}px`;
+    featPin?.style.setProperty('--label', (1 - smooth(0, 0.3, pB)).toFixed(3));
+    featPin?.style.setProperty('--hud', smooth(0.85, 1, pB).toFixed(3));
+
+    // B. la tarjeta elegida crece hasta llenar la pantalla y queda su proyecto
+    const g = pB < 1 ? pB * pB * (3 - 2 * pB) : 1;
+    const first = featSlides[0];
+    if (pB <= 0) {
+      first.classList.remove('is-growing');
+      first.style.clipPath = '';
+    } else if (pB < 1) {
+      const scl = base * 1.2;
+      const w0 = cw * scl;
+      const h0 = ch * scl;
+      const cx = vw / 2;
+      const cy = vh / 2 - R;
+      const top = lerp(cy - h0 / 2, 0, g);
+      const left = lerp(cx - w0 / 2, 0, g);
+      const right = lerp(vw - (cx + w0 / 2), 0, g);
+      const bottom = lerp(vh - (cy + h0 / 2), 0, g);
+      first.classList.add('is-growing');
+      first.style.clipPath = `inset(${top.toFixed(1)}px ${right.toFixed(1)}px ${bottom.toFixed(1)}px ${left.toFixed(1)}px round ${lerp(12, 0, g).toFixed(1)}px)`;
+      // la imagen arranca del tamaño de la tarjeta (cubriéndola) y termina como la de pantalla completa
+      const s0 = Math.max(w0 / vw, h0 / vh) * 1.04;
+      first.style.setProperty('--gs', lerp(s0, 1.04, g).toFixed(4));
+      first.style.setProperty('--gx', '0px');
+      first.style.setProperty('--gy', `${lerp(cy - vh / 2, 0, g).toFixed(1)}px`);
+    } else {
+      first.classList.remove('is-growing');
+      first.style.clipPath = '';
+    }
+
+    // C. los demás, de a uno, por el arco
     let active = 0;
     featSlides.forEach((el, i) => {
-      const t = i === 0 ? 1 : smooth(0.12, 0.82, f - (i - 1));
+      const t = i === 0 ? (pB > 0 ? 1 : 0) : smooth(0.12, 0.82, f - (i - 1));
       const dim = i < n - 1 ? smooth(0.12, 0.82, f - i) : 0;
       if (t > 0.5) active = i;
       el.style.setProperty('--t', t.toFixed(4));
       el.style.setProperty('--dim', dim.toFixed(3));
-      el.style.setProperty('--info', (smooth(0.75, 1, t) * (1 - smooth(0, 0.3, dim))).toFixed(3));
+      el.style.setProperty('--shade', (i === 0 ? smooth(0.2, 1, pB) : 1).toFixed(3));
+      const show = i === 0 ? smooth(0.82, 1, pB) : smooth(0.75, 1, t);
+      el.style.setProperty('--info', (show * (1 - smooth(0, 0.3, dim))).toFixed(3));
       // lo que no se ve no se pinta: el que todavía no subió y el que ya quedó tapado
       el.style.visibility = t < 0.001 || dim > 0.999 ? 'hidden' : '';
     });
+    // el navbar: claro sobre la ruleta, oscuro sobre los proyectos a pantalla completa
+    featSection.dataset.tone = pB > 0.5 ? 'dark' : 'light';
+    if (pB < 0.85) active = -1;
     if (active !== featActive) {
       featActive = active;
       featDots.forEach((d, i) => d.classList.toggle('is-on', i === active));

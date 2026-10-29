@@ -537,12 +537,21 @@
     <!-- ====================================================================
          7. PROYECTOS DESTACADOS — pantalla completa, con video de fondo
          ==================================================================== -->
-    <!-- los proyectos destacados, a pantalla completa y uno por uno: al bajar, el siguiente sube por un
-         arco como el del hero. El fondo de cada uno es un video: poné la ruta en data-video
-         (por ejemplo data-video="assets/video/orbita.mp4"); mientras esté vacío, se ve la imagen -->
-    <section class="featured-section" id="works">
+    <!-- los destacados: la sección sube por encima de la cinta como una hoja. Primero una ruleta con
+         los proyectos que gira al bajar y frena en uno al azar; esa tarjeta crece hasta llenar la
+         pantalla y desde ahí se recorren a pantalla completa (el siguiente sube por un arco como el
+         del hero). El fondo de cada uno es un video: poné la ruta en data-video (por ejemplo
+         data-video="assets/video/orbita.mp4"); mientras esté vacío, se ve la imagen -->
+    <section class="featured-section" id="works" data-tone="light">
       <div class="featured-pin">
-      <article class="feat-slide" data-video="">
+        <div class="roulette" id="roulette">
+          <span class="roulette-label">DESTACADOS ’26</span>
+          <span class="roulette-pointer" id="roulettePointer" aria-hidden="true"></span>
+          <div class="roulette-rig" id="rouletteRig" aria-hidden="true"></div>
+          <ul class="roulette-index" id="rouletteIndex" aria-label="Proyectos de la ruleta"></ul>
+          <span class="roulette-hint">↓ BAJÁ PARA GIRARLA</span>
+        </div>
+      <article class="feat-slide" data-id="orbita" data-video="">
         <div class="feat-media">
           <img class="feat-poster" src="assets/img/portfolio/featured/orbita.webp" alt="" loading="lazy" decoding="async">
         </div>
@@ -560,7 +569,7 @@
           </div>
         </div>
       </article>
-      <article class="feat-slide" data-video="">
+      <article class="feat-slide" data-id="paperflix" data-video="">
         <div class="feat-media">
           <img class="feat-poster" src="assets/img/portfolio/featured/paperflix.webp" alt="" loading="lazy" decoding="async">
         </div>
@@ -578,7 +587,7 @@
           </div>
         </div>
       </article>
-      <article class="feat-slide" data-video="">
+      <article class="feat-slide" data-id="siti" data-video="">
         <div class="feat-media">
           <img class="feat-poster" src="assets/img/portfolio/featured/siti.webp" alt="" loading="lazy" decoding="async">
         </div>
@@ -596,7 +605,7 @@
           </div>
         </div>
       </article>
-      <article class="feat-slide" data-video="">
+      <article class="feat-slide" data-id="neurobrand" data-video="">
         <div class="feat-media">
           <img class="feat-poster" src="assets/img/portfolio/featured/neurobrand.webp" alt="" loading="lazy" decoding="async">
         </div>

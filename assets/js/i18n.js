@@ -10,6 +10,9 @@
   'use strict';
 
   const EN = {
+    "DESTACADOS ’26": "FEATURED ’26",
+    "↓ BAJÁ PARA GIRARLA": "↓ SCROLL TO SPIN IT",
+    "Proyectos de la ruleta": "Projects on the wheel",
     "DESTACADOS": "FEATURED",
     "VER EL ARCHIVO COMPLETO ↗": "SEE THE FULL ARCHIVE ↗",
     "Carrusel ondulado de todos los proyectos": "Wave carousel of all projects",

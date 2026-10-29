@@ -1619,15 +1619,20 @@ main > section:not(.hero-section) {
 }
 
 /* ==========================================================================
-   7. PROYECTOS DESTACADOS — a pantalla completa, uno por uno. Al bajar, el siguiente sube por un
-      arco (como el del hero) y el de atrás se oscurece. echo.js pone en cada uno --t (cuánto
-      subió), --dim (cuánto lo tapó el siguiente) e --info (su texto).
+   7. PROYECTOS DESTACADOS — sube por encima de la cinta como una hoja (empieza 100vh antes de que
+      termine la de proyectos). Adentro: la ruleta, que gira con el scroll y frena en un proyecto al
+      azar; esa tarjeta crece hasta llenar la pantalla y siguen los demás a pantalla completa (el
+      siguiente sube por un arco, como el del hero, y el de atrás se oscurece). echo.js pone en cada
+      uno --t (cuánto subió), --dim (cuánto lo tapó el siguiente), --info (su texto) y --shade.
    ========================================================================== */
 .featured-section {
   position: relative;
-  height: 480vh;
-  background: #060607;
-  color: #ffffff;
+  height: 660vh;
+  margin-top: -100vh;
+  border-radius: 28px 28px 0 0;
+  background: var(--bg-light);
+  color: var(--text-dark);
+  box-shadow: 0 -30px 80px rgba(0, 0, 0, 0.18);
 }
 
 .featured-pin {
@@ -1636,16 +1641,179 @@ main > section:not(.hero-section) {
   height: 100vh;
   height: 100svh;
   overflow: hidden;
+  border-radius: inherit;
+}
+
+/* la cinta de proyectos, mientras la tapa la hoja: se achica un poco y se apaga (--cover, echo.js) */
+.landings-pin {
+  transform: scale(calc(1 - var(--cover, 0) * 0.06));
+  transform-origin: 50% 30%;
+}
+
+.landings-pin::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #060607;
+  opacity: calc(var(--cover, 0) * 0.45);
+  pointer-events: none;
+}
+
+/* ---- la ruleta ---- */
+.roulette {
+  position: absolute;
+  inset: 0;
+  opacity: var(--ring, 1);
+}
+
+.roulette-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  z-index: 1;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: clamp(1.15rem, 2.2vw, 1.85rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #111113;
+  opacity: var(--label, 1);
+  pointer-events: none;
+}
+
+.roulette-pointer {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  z-index: 3;
+  width: 0;
+  height: 0;
+  margin-left: -7px;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 10px solid #111113;
+  opacity: var(--label, 1);
+}
+
+.roulette-rig {
+  position: absolute;
+  inset: 0;
+}
+
+.roulette-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(200px, 25vw, 380px);
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(17, 17, 19, 0.12);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.14);
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+.roulette-card.is-chosen {
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+}
+
+.roulette-bar {
+  height: 22px;
+  background: #f0efeb;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  padding: 0 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: #666666;
+}
+
+.roulette-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.roulette-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.roulette-card img {
+  display: block;
+  width: 100%;
+  height: calc(100% - 22px);
+  max-width: none;
+  object-fit: cover;
+  object-position: top center;
+  background: #18181b;
+}
+
+.roulette-index {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: var(--pad-x);
+  translate: 0 -50%;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.55rem;
+  opacity: var(--label, 1);
+}
+
+.roulette-index li {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  color: #a0a0a8;
+  padding: 0.2rem 0;
+  border-bottom: 1.5px solid transparent;
+  transition: color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.roulette-index li.is-on {
+  color: #111113;
+  font-weight: 700;
+  border-bottom-color: #111113;
+  transform: translateX(-4px);
+}
+
+.roulette-hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.25rem, 4vh, 2.25rem);
+  translate: -50% 0;
+  padding: 0.55rem 1.25rem;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(17, 17, 19, 0.12);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+  color: #333338;
+  opacity: var(--label, 1);
 }
 
 .feat-slide {
   --t: 1;
   --dim: 0;
   --info: 1;
+  --shade: 1;
   --k: calc(1 - var(--t));
   position: absolute;
   inset: 0;
+  z-index: 4;
   overflow: hidden;
+  color: #ffffff;
   background: #060607;
   clip-path: inset(calc(var(--k) * 100%) calc(var(--k) * 35vw) 0 round calc(var(--k) * 15vw) calc(var(--k) * 15vw) 0 0);
 }
@@ -1654,6 +1822,11 @@ main > section:not(.hero-section) {
   position: absolute;
   inset: 0;
   transform: scale(calc(1.04 + var(--k) * 0.12 - var(--dim) * 0.04));
+}
+
+/* el que sale de la ruleta: echo.js lo recorta al tamaño de la tarjeta y lo agranda (--grow) */
+.feat-slide.is-growing .feat-media {
+  transform: translate(var(--gx, 0px), var(--gy, 0px)) scale(var(--gs, 1));
 }
 
 .feat-poster,
@@ -1684,6 +1857,7 @@ main > section:not(.hero-section) {
   background:
     linear-gradient(0deg, rgba(6, 6, 7, 0.96) 0%, rgba(6, 6, 7, 0.72) 45%, rgba(6, 6, 7, 0.5) 100%),
     rgba(6, 6, 7, calc(var(--dim) * 0.7));
+  opacity: var(--shade);
 }
 
 .feat-info {
@@ -1785,7 +1959,8 @@ main > section:not(.hero-section) {
 /* a la derecha: el nombre de la sección y en cuál vas */
 .feat-hud {
   position: absolute;
-  z-index: 2;
+  z-index: 5;
+  opacity: var(--hud, 1);
   top: 50%;
   right: var(--pad-x);
   translate: 0 -50%;
@@ -2367,6 +2542,14 @@ main > section:not(.hero-section) {
 
   .feat-title {
     font-size: clamp(2.3rem, 11.5vw, 5rem);
+  }
+
+  .roulette-card {
+    width: 40vw;
+  }
+
+  .roulette-index {
+    display: none;
   }
 
   .feat-body {
