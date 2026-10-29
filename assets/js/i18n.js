@@ -10,6 +10,13 @@
   'use strict';
 
   const EN = {
+    "Carrusel ondulado de proyectos": "Wave carousel of projects",
+    "Y 16 proyectos más": "And 16 more projects",
+    "Sistemas, e-commerce, landings y proyectos personales": "Systems, e-commerce, landing pages and personal projects",
+    "VER TODOS ↗": "SEE THEM ALL ↗",
+    "Traslados y excursiones en Puerto Iguazú.": "Transfers and tours in Puerto Iguazú.",
+    "Remises y traslados en la provincia de Misiones.": "Car service and transfers in the province of Misiones.",
+    "Traslados en la Triple Frontera.": "Transfers across the Triple Frontier.",
     "DESTACADOS ’26": "FEATURED ’26",
     "↓ SEGUÍ BAJANDO": "↓ KEEP SCROLLING",
     "Proyectos de la ruleta": "Projects on the wheel",

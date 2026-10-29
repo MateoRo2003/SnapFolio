@@ -1087,35 +1087,22 @@
   document.addEventListener('echo:lang', () => { buildStrips(); requestAnimationFrame(updateExperience); });
 
   /* ========================================================================
-     3c. PROYECTOS — la cinta ondulada con todos, empezando por los de traslados. Los que no tienen
-     web pública no muestran enlace; los privados abren sus capturas; los de código, GitHub.
+     3c. PROYECTOS — la cinta ondulada con algunos, empezando por los de traslados (los destacados
+     tienen su sección abajo). La última tarjeta abre el archivo completo con los 24.
      ======================================================================== */
   const landingProjects = [
     { title: 'Traslados Márquez', sub: 'Landing page ejecutiva · Remises turísticos en Puerto Iguazú', img: 'assets/img/portfolio/cards/traslados-marquez.webp', url: 'https://www.trasladosmarquez.com.ar' },
     { title: 'LGK Traslados', sub: 'Landing page comercial · Viajes en la Triple Frontera', img: 'assets/img/portfolio/cards/lgk-traslados.webp', url: 'https://www.trasladoslgk.com.ar' },
     { title: 'DanyTours Iguazú', sub: 'Landing page turística · Reservas directas por WhatsApp', img: 'assets/img/portfolio/cards/danytours.webp', url: 'https://www.danytours.com.ar' },
     { title: 'Travel Online Agency', sub: 'Landing page de turismo · Traslados y excursiones en Misiones', img: 'assets/img/portfolio/cards/travelonlineagency.webp', url: 'https://www.travelonlineagency.com.ar' },
-    { title: 'Edu Rodríguez Traslados', sub: 'Landing page · Traslados en Puerto Iguazú', img: 'assets/img/portfolio/cards/edurodrigueztraslados.webp' },
-    { title: 'Maxi Traslados', sub: 'Landing page · Remises y traslados en Misiones', img: 'assets/img/portfolio/cards/maxi-traslados.webp' },
-    { title: 'Traslados Tres Fronteras', sub: 'Landing page · Traslados en la Triple Frontera', img: 'assets/img/portfolio/cards/traslados-tres-fronteras.webp' },
-    { title: 'Órbita', sub: 'Nuevo · Cofundador y CEO · Tiendas online sin comisión', img: 'assets/img/portfolio/cards/orbita.webp', url: 'https://orbita.site' },
-    { title: 'Paperflix', sub: 'Plataforma EdTech · +3.200 escuelas en Chile', img: 'assets/img/portfolio/cards/paperflix.webp', gallery: 'paperflix' },
-    { title: 'S.I.T.I System', sub: 'Sistema full stack + asistente de IA propio', img: 'assets/img/portfolio/cards/s-i-t-i-sistema-integral-de-tiendas-inde.webp', url: 'https://siti.mateorojas.com.ar' },
-    { title: 'NeuroBrand AI', sub: 'Proyecto personal · Identidad de marca con IA y neuromarketing', img: 'assets/img/portfolio/cards/neurobrand.webp', gallery: 'neurobrand' },
-    { title: 'Petty Joyas', sub: 'E-commerce + POS con QR y bot de WhatsApp', img: 'assets/img/portfolio/cards/petty-joyas.webp', url: 'https://pettyjoyas.com.ar' },
-    { title: 'MiPaperlux', sub: 'Plataforma EdTech · Onboarding gamificado', img: 'assets/img/portfolio/cards/mipaperlux.webp', gallery: 'mipaperlux' },
-    { title: 'GV Store', sub: 'E-commerce deportivo full stack', img: 'assets/img/portfolio/cards/gv-store.webp', url: 'https://gvstore.com.ar' },
-    { title: 'GabyGor', sub: 'Reserva de turnos en tiempo real', img: 'assets/img/portfolio/cards/gabygor.webp', url: 'https://gabygor.com.ar' },
-    { title: 'Taccu Rewards', sub: 'SaaS de fidelización y puntos', img: 'assets/img/portfolio/cards/taccu.webp', url: 'https://taccu.vercel.app/' },
-    { title: 'TeFaltaCalleOK', sub: 'E-commerce de ropa urbana y panel de administración', img: 'assets/img/portfolio/cards/tefaltacalleok.webp', url: 'https://www.tefaltacalleok.com' },
     { title: 'Estudio Jurídico MJHD', sub: 'Sitio web institucional y consultoría legal · SEO optimizado', img: 'assets/img/portfolio/cards/estudio-juridico-mjhd.webp', url: 'https://www.mjhdjuridica.com.ar' },
     { title: 'PresenciaWeb Studio', sub: 'Landing page de agencia digital · Diseño e identidad de marca', img: 'assets/img/portfolio/cards/presenciaweb.webp', url: 'https://presencia-web.vercel.app/' },
+    { title: 'GabyGor', sub: 'Reserva de turnos en tiempo real', img: 'assets/img/portfolio/cards/gabygor.webp', url: 'https://gabygor.com.ar' },
     { title: 'Simulador de Amortización', sub: 'Web app financiera · Cálculo interactivo de préstamos', img: 'assets/img/portfolio/cards/simulador-de-amortizacion.webp', url: 'https://amortizacion-fronted.vercel.app/' },
-    { title: 'HealthTrack', sub: 'Sistema Médico Angular + Laravel', img: 'assets/img/portfolio/cards/healthtrack.webp', url: 'https://github.com/MateoRo2003/PROYECTO-healthtrack' },
-    { title: 'Sistema de Turnos Barbería', sub: 'Sistema PHP MVC + Docker', img: 'assets/img/portfolio/cards/sistema-de-turnos-barberia.webp', url: 'https://github.com/MateoRo2003/AppSalon_PHP_MVC_JS_SASS_FIN' },
-    { title: 'DevWebCamp', sub: 'Plataforma de Eventos', img: 'assets/img/portfolio/cards/devwebcamp.webp', url: 'https://github.com/MateoRo2003/DevWebCamp' },
-    { title: 'Sistema de Bienes Raíces', sub: 'Portal Inmobiliario MVC', img: 'assets/img/portfolio/cards/sistema-de-bienes-raices.webp', url: 'https://github.com/MateoRo2003/bienesRaicesMVC' },
+    // la última: el resto está en el archivo completo
+    { more: true, title: 'Y 16 proyectos más', sub: 'Sistemas, e-commerce, landings y proyectos personales' },
   ];
+  const ALL_PROJECTS = 24;
 
   const landings = document.getElementById('landings');
   const waveCanvas = document.getElementById('waveRibbonCanvas');
@@ -1128,7 +1115,30 @@
   if (waveCanvas && landings) {
     const wCtx = waveCanvas.getContext('2d');
     const n = landingProjects.length;
+    // la tarjeta del final: "+16" dibujado en un canvas, que la cinta usa como una imagen más
+    const moreCard = document.createElement('canvas');
+    const paintMore = () => {
+      moreCard.width = 720;
+      moreCard.height = 450;
+      const g = moreCard.getContext('2d');
+      g.fillStyle = '#111113';
+      g.fillRect(0, 0, 720, 450);
+      g.fillStyle = '#ffffff';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.font = '700 170px Outfit, sans-serif';
+      g.fillText(`+${ALL_PROJECTS - (landingProjects.length - 1)}`, 360, 190);
+      g.font = '500 22px "IBM Plex Mono", monospace';
+      g.fillStyle = 'rgba(255,255,255,0.7)';
+      const en = i18n.lang === 'en';
+      g.fillText((en ? 'MORE PROJECTS' : 'PROYECTOS MÁS').split('').join(' '), 360, 300);
+      g.fillStyle = '#ffffff';
+      g.fillText(en ? 'SEE THEM ALL ↗' : 'VER TODOS ↗', 360, 360);
+      dirty = true;
+      wake();
+    };
     const imgs = landingProjects.map((proj) => {
+      if (proj.more) return moreCard;
       const im = new Image();
       im.decoding = 'async';
       im.src = proj.img;
@@ -1152,13 +1162,26 @@
       if (idx === lastIdx) return;
       lastIdx = idx;
       const item = landingProjects[idx];
-      if (waveTitleEl) waveTitleEl.textContent = item.title;
+      if (waveTitleEl) {
+        waveTitleEl.textContent = item.title;
+        localize(waveTitleEl);
+      }
       if (waveSubEl) {
         waveSubEl.textContent = item.sub;
         localize(waveSubEl);
       }
-      if (waveCountEl) waveCountEl.textContent = `${pad2(idx + 1)} / ${pad2(n)}`;
-      if (waveLinkEl) {
+      if (waveCountEl) waveCountEl.textContent = item.more ? `+${ALL_PROJECTS - (n - 1)}` : `${pad2(idx + 1)} / ${pad2(n - 1)}`;
+      if (waveLinkEl && item.more) {
+        waveLinkEl.closest('.wave-project-meta')?.classList.remove('no-link');
+        waveLinkEl.href = '#landings';
+        waveLinkEl.target = '';
+        waveLinkEl.textContent = 'VER TODOS ↗';
+        waveLinkEl.onclick = (e) => {
+          e.preventDefault();
+          document.getElementById('allProjectsModal')?.classList.add('is-open');
+        };
+        localize(waveLinkEl);
+      } else if (waveLinkEl) {
         const code = item.url?.startsWith('https://github.com/');
         waveLinkEl.closest('.wave-project-meta')?.classList.toggle('no-link', !item.url && !item.gallery);
         waveLinkEl.href = item.url || '#landings';
@@ -1207,9 +1230,10 @@
           const bend = Math.sin(nx * Math.PI * 0.9) * ch * 0.17 * Math.min(1, Math.abs(nx) * 1.5);
           const stripH = cardH * (1 + Math.min(1, Math.abs(nx)) * 0.28);
           const sy = (ch - stripH) * 0.5 - bend;
-          if (img.complete && img.naturalWidth) {
-            const srcW = img.naturalWidth / slices;
-            wCtx.drawImage(img, s * srcW, 0, srcW, img.naturalHeight, sx, sy, stripW + 0.8, stripH);
+          const iw = img.naturalWidth || img.width;
+          if (iw && (img.complete || img === moreCard)) {
+            const srcW = iw / slices;
+            wCtx.drawImage(img, s * srcW, 0, srcW, img.naturalHeight || img.height, sx, sy, stripW + 0.8, stripH);
           } else {
             wCtx.fillStyle = '#1d1d22';
             wCtx.fillRect(sx, sy, stripW + 0.8, stripH);
@@ -1255,6 +1279,12 @@
       dirty = true;
       wake();
     }).observe(waveCanvas);
+    paintMore();
+    document.fonts?.ready.then(paintMore);
+    document.addEventListener('echo:lang', () => {
+      paintMore();
+      lastIdx = -1;
+    });
     window.addEventListener('resize', () => { dirty = true; wake(); });
 
     updateRibbon = () => {

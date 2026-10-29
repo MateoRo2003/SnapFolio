@@ -1494,11 +1494,12 @@ main > section:not(.hero-section) {
 }
 
 /* ==========================================================================
-   6. PROYECTOS — la cinta ondulada con todos (24): al bajar pasa uno por uno
+   6. PROYECTOS — la cinta ondulada con algunos (el resto, en el archivo): al bajar pasa uno por uno;
+      la última pantalla es la que tapa la hoja de los destacados
    ========================================================================== */
 .landings-section {
   position: relative;
-  height: 640vh;
+  height: 560vh;
   background: var(--bg-light);
   color: var(--text-dark);
 }
