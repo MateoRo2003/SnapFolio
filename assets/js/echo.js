@@ -403,9 +403,10 @@
      3·b2. LA NOCHE SE MUEVE
      La noche estrellada (la del arco y la del "About me") se dibuja en WebGL encima de su imagen:
      cada trazo corre a lo largo de sí mismo, las ventanas del castillo se prenden y se apagan, y
-     el mouse revuelve las líneas a su alrededor y prende las ventanas cercanas.
+     cerca del mouse las líneas corren más rápido y brillan, y se prenden las ventanas.
      El sentido de cada trazo sale de starry-flow.webp, calculado una vez desde la imagen:
-     RG = hacia dónde corre, B = número de ventana (0 = ninguna), A = desfase del ciclo.
+     RG = hacia dónde corre y cuánto (en las curvas cerradas, menos, para no salirse del trazo),
+     B = número de ventana (0 = ninguna), A = desfase del ciclo.
      Solo dibuja mientras se ve; quieta va a 30 cuadros por segundo y con el mouse, a 60.
      ======================================================================== */
   const nightCanvases = Array.from(document.querySelectorAll('canvas[data-night]'));
@@ -421,7 +422,7 @@
       uniform vec2 uImgSize;  // la imagen, en píxeles
       uniform vec2 uFocus;    // object-position
       uniform float uTime;
-      uniform vec4 uMouse;    // x, y (píxeles del canvas), cuánto revuelve, cuánto está adentro
+      uniform vec4 uMouse;    // x, y (píxeles del canvas), energía (0 a 1, según la velocidad), cuánto está adentro
       uniform float uRadius;  // radio del mouse, en píxeles del canvas
       out vec4 outColor;
 
@@ -448,28 +449,35 @@
         // dónde hay trazos, mirado de lejos (borroso): así el remolino no corta en el borde del castillo
         float moving = smoothstep(0.04, 0.3, length(textureLod(uFlow, uv, 4.0).rg * 2.0 - 1.0));
 
-        // el mouse revuelve: gira lo que tiene cerca (solo donde hay trazos, no el castillo)
+        // cerca del mouse: un giro apenas (solo donde hay trazos, no el castillo) y más velocidad
         vec2 d = frag - uMouse.xy;
-        float near = exp(-dot(d, d) / (uRadius * uRadius));
-        float ang = uMouse.z * near * moving;
+        float around = exp(-dot(d, d) / (uRadius * uRadius));
+        float near = around * moving;
+        float ang = 0.12 * uMouse.z * near;
         vec2 stirred = uMouse.xy + mat2(cos(ang), sin(ang), -sin(ang), cos(ang)) * d;
         uv = (stirred - offset) / shown;
 
-        // los trazos corren a lo largo de sí mismos: dos copias desfasadas que se turnan
-        vec2 step1 = dir * 22.0 / uImgSize;
-        float ph = uTime / 2.6 + flow.a * 2.0;
+        // los trazos corren a lo largo de sí mismos: dos copias desfasadas que se turnan.
+        // 16 px por ciclo es lo que el mapa supone al frenar las curvas cerradas
+        vec2 step1 = dir * 16.0 * (1.0 + 1.1 * uMouse.z * near) / uImgSize;
+        float ph = uTime / 2.2 + flow.a * 2.0;
         float p0 = fract(ph);
         float p1 = fract(ph + 0.5);
         vec3 c0 = texture(uImg, uv - step1 * p0).rgb;
         vec3 c1 = texture(uImg, uv - step1 * p1).rgb;
         float w = abs(2.0 * p0 - 1.0);
         vec3 col = mix(c0, c1, w);
-        col += near * uMouse.w * moving * 0.05;
+        // al mezclar dos copias se pierde contraste a mitad del ciclo: se devuelve respecto del tono
+        // promedio de la zona (las copias se parecen mucho, por eso se devuelve solo la mitad)
+        vec3 mean = textureLod(uImg, uv, 4.0).rgb;
+        float k = mix(1.0, inversesqrt(w * w + (1.0 - w) * (1.0 - w)), 0.55);
+        col = clamp(mean + (col - mean) * k, 0.0, 1.0);
+        col += near * uMouse.w * (0.04 + 0.05 * uMouse.z) * col;
 
         // las ventanas: apagadas quedan como el castillo; el mouse prende las que tiene cerca
         float id = floor(texelFetch(uFlow, ivec2(uv * vec2(textureSize(uFlow, 0))), 0).b * 255.0 + 0.5);
         if (id > 0.5) {
-          float on = max(windowOn(id, uTime), smoothstep(0.35, 0.9, near * 1.4) * uMouse.w);
+          float on = max(windowOn(id, uTime), smoothstep(0.35, 0.9, around * 1.4) * uMouse.w);
           col *= mix(0.06, 1.0, on);
         }
         outColor = vec4(col, 1.0);
@@ -593,8 +601,8 @@
       if (!shown.length) return;
       const dt = Math.min(0.05, (now - (lastNow || now)) / 1000);
       lastNow = now;
-      // el mouse revuelve más cuanto más rápido se mueve, y se calma solo
-      const target = clamp(mouse.speed / 1600, 0, 1) * 0.42 + 0.1;
+      // cuanto más rápido se mueve el mouse, más energía; después se calma sola
+      const target = clamp(mouse.speed / 1600, 0, 1) * 0.8 + 0.2;
       mouse.stir += (target * mouse.inside - mouse.stir) * (1 - Math.exp(-dt * 4));
       mouse.speed *= Math.exp(-dt * 5);
       const inside = now - mouse.last < 2500 ? 1 : 0;
