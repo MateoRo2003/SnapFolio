@@ -505,6 +505,27 @@ html.is-loading .hero-meta-right {
   opacity: 0.5;
 }
 
+/* los textos chicos se escriben letra por letra al terminar la carga (echo.js) */
+.tw-ch {
+  position: relative;
+  visibility: hidden;
+}
+
+.tw-ch.is-in {
+  visibility: visible;
+}
+
+.tw-ch.is-at::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 0.1em;
+  bottom: 0.1em;
+  width: 0.55em;
+  margin-left: 0.08em;
+  background: currentColor;
+}
+
 /* lo nuevo en el hero: Órbita, arriba de "DEVELOPER EST." */
 .hero-news {
   display: inline-flex;

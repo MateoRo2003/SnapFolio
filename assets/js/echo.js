@@ -369,49 +369,86 @@
 
   /* ========================================================================
      3·b. LA VENTANA DEL HERO
-     Adentro del arco la noche se corre apenas con el mouse, como si se mirara por una ventana
-     de verdad; si el mouse no se mueve (o en el celular) deriva sola, despacio. El corrimiento
-     lo pone en --px/--py y el CSS lo apaga a medida que el arco llena la pantalla.
+     Adentro del arco la noche deriva sola, despacio, como si se mirara por una ventana. El
+     corrimiento lo pone en --px/--py y el CSS lo apaga a medida que el arco llena la pantalla.
      ======================================================================== */
   const heroWindow = document.getElementById('heroWindow');
   if (heroWindow && hero && !prefersReducedMotion) {
     const RANGE = 26; // px que se corre la noche, como mucho
-    const pointer = { x: 0, y: 0, last: -1e9 };
-    const pos = { x: 0, y: 0 };
-    let raf = 0, last = 0;
+    let raf = 0;
 
     function frame(now) {
       raf = 0;
       if (heroHidden || document.hidden) return; // vuelve con windowKick
-      const dt = Math.min(50, now - (last || now));
-      last = now;
-      const idle = now - pointer.last > 2600;
       const t = now * 0.00012;
-      const tx = idle ? Math.sin(t * 1.7) * 0.7 : pointer.x;
-      const ty = idle ? Math.sin(t * 2.3 + 1) * 0.5 : pointer.y;
-      const ease = 1 - Math.exp(-dt / (idle ? 900 : 260));
-      pos.x += (tx - pos.x) * ease;
-      pos.y += (ty - pos.y) * ease;
-      heroWindow.style.setProperty('--px', (-pos.x * RANGE).toFixed(2));
-      heroWindow.style.setProperty('--py', (-pos.y * RANGE * 0.6).toFixed(2));
+      heroWindow.style.setProperty('--px', (-Math.sin(t * 1.7) * 0.7 * RANGE).toFixed(2));
+      heroWindow.style.setProperty('--py', (-Math.sin(t * 2.3 + 1) * 0.5 * RANGE * 0.6).toFixed(2));
       raf = requestAnimationFrame(frame);
     }
 
     windowKick = () => {
-      if (!raf) {
-        last = 0;
-        raf = requestAnimationFrame(frame);
-      }
+      if (!raf) raf = requestAnimationFrame(frame);
     };
-
-    hero.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      pointer.x = clamp((e.clientX / window.innerWidth) * 2 - 1, -1, 1);
-      pointer.y = clamp((e.clientY / window.innerHeight) * 2 - 1, -1, 1);
-      pointer.last = performance.now();
-    }, { passive: true });
     document.addEventListener('visibilitychange', () => { if (!document.hidden) windowKick(); });
     windowKick();
+  }
+
+  /* ========================================================================
+     3·c. LOS TEXTOS DEL HERO SE ESCRIBEN
+     Al terminar la carga, los textos chicos del hero se escriben letra por letra, una sola vez:
+     al volver al hero ya están. Cada letra ocupa su lugar desde el principio (invisible), así
+     nada se corre mientras se escribe.
+     ======================================================================== */
+  const typeGroups = [
+    ['.hero-news > span:last-child', '.hero-est'],
+    ['.hero-bio-snippet', '.hero-roles li'],
+  ].map((sels) => sels.flatMap((sel) => Array.from(document.querySelectorAll(sel))));
+
+  if (!prefersReducedMotion && typeGroups.some((g) => g.length)) {
+    const STEP = 24; // ms por letra
+    const jobs = typeGroups.map((els) => els.map((el) => {
+      const text = el.textContent.trim();
+      const chars = Array.from(text, (ch) => {
+        const s = document.createElement('span');
+        s.className = 'tw-ch';
+        s.textContent = ch;
+        return s;
+      });
+      el.setAttribute('aria-label', text);
+      el.replaceChildren(...chars);
+      return { el, text, chars };
+    }));
+
+    const run = (group) => {
+      let i = 0, k = 0, prev = null;
+      const tick = () => {
+        prev?.classList.remove('is-at');
+        const job = group[i];
+        if (!job) return;
+        // si cambiaron el idioma a mitad de camino, el texto ya está entero
+        if (!job.chars[0]?.isConnected) { i++; k = 0; prev = null; tick(); return; }
+        const ch = job.chars[k];
+        ch.classList.add('is-in', 'is-at');
+        prev = ch;
+        if (++k >= job.chars.length) {
+          setTimeout(() => {
+            ch.classList.remove('is-at');
+            if (job.chars[0].isConnected) job.el.textContent = job.text;
+            job.el.removeAttribute('aria-label');
+          }, 220);
+          prev = null;
+          i++;
+          k = 0;
+          setTimeout(tick, 220);
+          return;
+        }
+        setTimeout(tick, ch.textContent === ' ' ? STEP * 0.5 : STEP);
+      };
+      tick();
+    };
+    const start = () => setTimeout(() => jobs.forEach(run), 450);
+    if (root.classList.contains('is-loading')) document.addEventListener('echo:loaded', start, { once: true });
+    else start();
   }
 
   /* ========================================================================
