@@ -11,7 +11,7 @@
 
   const EN = {
     "DESTACADOS ’26": "FEATURED ’26",
-    "↓ BAJÁ PARA GIRARLA": "↓ SCROLL TO SPIN IT",
+    "↓ SEGUÍ BAJANDO": "↓ KEEP SCROLLING",
     "Proyectos de la ruleta": "Projects on the wheel",
     "DESTACADOS": "FEATURED",
     "VER EL ARCHIVO COMPLETO ↗": "SEE THE FULL ARCHIVE ↗",

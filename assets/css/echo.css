@@ -1627,7 +1627,7 @@ main > section:not(.hero-section) {
    ========================================================================== */
 .featured-section {
   position: relative;
-  height: 660vh;
+  height: 600vh;
   margin-top: -100vh;
   border-radius: 28px 28px 0 0;
   background: var(--bg-light);
@@ -1800,7 +1800,8 @@ main > section:not(.hero-section) {
   letter-spacing: 0.16em;
   white-space: nowrap;
   color: #333338;
-  opacity: var(--label, 1);
+  /* aparece cuando la ruleta frenó */
+  opacity: calc(var(--label, 1) * var(--hint, 0));
 }
 
 .feat-slide {

@@ -1293,9 +1293,10 @@
   /* ========================================================================
      3d. PROYECTOS DESTACADOS — la ruleta y después a pantalla completa
      La sección sube por encima de la cinta como una hoja y queda fija. Al bajar:
-       A. la ruleta gira y va frenando hasta dejar arriba, junto a la flecha, un destacado elegido
-          al azar (cambia en cada visita); al final los demás se apagan;
-       B. esa tarjeta crece hasta llenar la pantalla y se vuelve su proyecto a pantalla completa;
+       A. la ruleta gira sola (no con el scroll): arranca al llegar, frena de a poco y deja arriba,
+          junto a la flecha, un destacado elegido al azar (cambia en cada visita); ahí los demás se
+          apagan. Si se baja antes de que termine, se apura; si se vuelve a entrar, gira de nuevo;
+       B. con el scroll, esa tarjeta crece hasta llenar la pantalla y se vuelve su proyecto;
        C. los demás destacados suben de a uno por un arco (como el del hero) tapando al anterior.
      El fondo es un video si el proyecto tiene data-video; si no, su imagen. Los videos se cargan
      recién cuando su proyecto está cerca y solo corre el que está al frente.
@@ -1356,8 +1357,37 @@
   const SLOT = 360 / ringProjects.length;
   const featIdx = ringProjects.map((r, i) => (r.feat ? i : -1)).filter((i) => i >= 0);
   const chosen = featIdx[Math.floor(Math.random() * featIdx.length)];
-  // vueltas y media: el destacado elegido termina arriba
-  const SPIN = 720 + ((360 - chosen * SLOT) % 360);
+  // el giro: dos vueltas y algo, y frena con el elegido arriba (ángulo -chosen * SLOT, en cualquier vuelta)
+  const SPIN_MS = 3800;
+  const spin = { from: 0, to: 0, t0: 0, dur: SPIN_MS, angle: 0, running: false, doneAt: 0, armed: true };
+  const landAngle = (from) => {
+    const at = (((360 - chosen * SLOT) % 360) + 360) % 360;
+    return Math.ceil((from + 720 - at) / 360) * 360 + at;
+  };
+  function startSpin(now) {
+    Object.assign(spin, { from: spin.angle, to: landAngle(spin.angle), t0: now, dur: SPIN_MS, running: true, doneAt: 0 });
+  }
+  // lo que falta, en medio segundo
+  function hurrySpin(now) {
+    if (!spin.running || spin.dur <= 600) return;
+    Object.assign(spin, { from: spin.angle, t0: now, dur: 500 });
+  }
+  function stepSpin(now) {
+    if (!spin.running) return;
+    const k = clamp((now - spin.t0) / spin.dur, 0, 1);
+    spin.angle = spin.from + (spin.to - spin.from) * (1 - (1 - k) ** 4); // frena como una ruleta
+    if (k >= 1) {
+      spin.running = false;
+      spin.doneAt = now;
+    }
+  }
+  if (prefersReducedMotion) {
+    spin.angle = landAngle(0);
+    spin.doneAt = -1e9;
+    spin.armed = false;
+  }
+  let growShown = 0; // el crecimiento que se ve (alcanza al del scroll de a poco si quedó atrás)
+  let ringRaf = 0;
   let ringCards = [];
   let ringNames = [];
   let ringLast = -1;
@@ -1389,7 +1419,7 @@
   }
 
   // los tramos de la sección fija, en pantallas: girar, agrandar y después uno por cada cambio
-  const PH_SPIN = 1.4;
+  const PH_SPIN = 0.8; // quieto, mientras gira
   const PH_GROW = 0.9;
   const PH_STEP = 1.1;
 
@@ -1424,6 +1454,11 @@
     const r = featSection.getBoundingClientRect();
     // la cinta de proyectos se apaga mientras esta sección sube por encima
     landings?.querySelector('.landings-pin')?.style.setProperty('--cover', clamp(1 - r.top / vh, 0, 1).toFixed(3));
+    // si se sale para arriba, la próxima vez que se llegue la ruleta gira de nuevo
+    if (!spin.armed && !spin.running && r.top > vh * 0.6 && !prefersReducedMotion) {
+      spin.armed = true;
+      spin.doneAt = 0;
+    }
     const onScreen = r.bottom > 0 && r.top < vh;
     if (onScreen !== featOnScreen) {
       featOnScreen = onScreen;
@@ -1431,24 +1466,35 @@
     }
     if (!onScreen) return;
 
+    const now = performance.now();
     const n = featSlides.length;
     const total = PH_SPIN + PH_GROW + PH_STEP * (n - 1);
     const at = clamp(-r.top / vh, 0, total); // pantallas recorridas con la sección fija
-    const pA = clamp(at / PH_SPIN, 0, 1);
-    const pB = clamp((at - PH_SPIN) / PH_GROW, 0, 1);
+    const pBscroll = clamp((at - PH_SPIN) / PH_GROW, 0, 1);
     const f = clamp((at - PH_SPIN - PH_GROW) / PH_STEP, 0, n - 1);
 
-    // A. la ruleta: frena de a poco (como una ruleta de verdad) y al final se apagan los demás
+    // A. la ruleta gira sola al llegar
+    if (spin.armed && r.top <= vh * 0.15) {
+      spin.armed = false;
+      startSpin(now);
+    }
+    if (pBscroll > 0) hurrySpin(now);
+    stepSpin(now);
+    const landed = !spin.running && spin.doneAt !== 0;
+    const emph = landed ? smooth(0, 650, now - spin.doneAt) : 0;
+    // la tarjeta crece recién cuando la ruleta frenó; si el scroll se adelantó, la alcanza de a poco
+    const target = landed ? pBscroll : 0;
+    growShown = Math.abs(target - growShown) > 0.03 ? growShown + (target - growShown) * 0.2 : target;
+    const pB = growShown;
     const mobile = vw < 768;
     const R = mobile ? Math.min(vw * 0.34, vh * 0.25) : Math.min(vh * 0.27, vw * 0.17);
     const base = mobile ? 0.78 : 0.52; // en la ruleta las tarjetas van chicas, como en el diseño original
-    const spin = (1 - (1 - pA) ** 3) * SPIN;
-    const emph = smooth(0.8, 1, pA);
+    const angle = spin.angle;
     const card0 = ringCards[0];
     const cw = card0?.offsetWidth || 300;
     const ch = card0?.offsetHeight || 190;
     ringCards.forEach((card, i) => {
-      const th = ((i * SLOT - 90 + spin) * Math.PI) / 180;
+      const th = ((i * SLOT - 90 + angle) * Math.PI) / 180;
       const x = Math.cos(th) * R;
       const y = Math.sin(th) * R;
       const isChosen = i === chosen;
@@ -1458,13 +1504,14 @@
       card.style.opacity = op.toFixed(3);
     });
     // el nombre que pasa por la flecha se marca en la lista
-    const under = ((Math.round(-spin / SLOT) % ringCards.length) + ringCards.length) % ringCards.length;
+    const under = ((Math.round(-angle / SLOT) % ringCards.length) + ringCards.length) % ringCards.length;
     if (under !== ringLast) {
       ringLast = under;
       ringNames.forEach((li, i) => li.classList.toggle('is-on', i === under));
     }
     if (roulettePointer) roulettePointer.style.top = `${(vh / 2 - R - (ch * base * 1.2) / 2 - 20).toFixed(1)}px`;
     featPin?.style.setProperty('--label', (1 - smooth(0, 0.3, pB)).toFixed(3));
+    featPin?.style.setProperty('--hint', emph.toFixed(3));
     featPin?.style.setProperty('--hud', smooth(0.85, 1, pB).toFixed(3));
 
     // B. la tarjeta elegida crece hasta llenar la pantalla y queda su proyecto
@@ -1516,6 +1563,13 @@
       featActive = active;
       featDots.forEach((d, i) => d.classList.toggle('is-on', i === active));
       syncFeatVideos();
+    }
+    // mientras gira, se apagan los demás o la tarjeta alcanza al scroll, se sigue dibujando solo
+    if ((spin.running || (landed && emph < 1) || growShown !== target) && !ringRaf) {
+      ringRaf = requestAnimationFrame(() => {
+        ringRaf = 0;
+        updateFeatured();
+      });
     }
   }
 
