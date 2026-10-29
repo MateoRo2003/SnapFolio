@@ -37,6 +37,7 @@
   }
 
   if (preloader) {
+    root.classList.add('is-signing'); // el logo espera a que llegue la firma
     const svg = document.getElementById('signSvg');
     const sign = preloader.querySelector('.preloader-sign');
     const strokes = Array.from(document.querySelectorAll('#signInk path'));
@@ -46,6 +47,7 @@
     let done = false;
     let doneAt = 0;
     let raf = 0;
+    let land = null; // mientras la firma vuela: la deja en el logo de una
 
     const finish = (skip) => {
       if (done) return;
@@ -56,10 +58,11 @@
         sctx.clearRect(0, 0, sparks.width, sparks.height);
       }
       preloader.classList.add('is-done');
+      root.classList.remove('is-signing');
       endLoading();
       setTimeout(() => { preloader.style.display = 'none'; cancelAnimationFrame(raf); }, 1300);
     };
-    const skip = () => finish(true);
+    const skip = () => (land ? land() : finish(true));
 
     // "FULL STACK DEVELOPER" va letra por letra
     const letters = caption ? Array.from(caption.textContent).map((ch) => {
@@ -180,7 +183,36 @@
       return [hx, hy];
     };
 
-    // la salida: la firma se deshace en polvo de luz siguiendo una barrida de izquierda a derecha
+    // la salida: la firma vuela hasta el navbar, se achica y toma su color, y queda como logo.
+    // Si el logo no está a la vista, se deshace en polvo como antes.
+    const logo = document.querySelector('.brand-sign');
+    const fly = () => {
+      const to = logo?.getBoundingClientRect();
+      const from = svg.getBoundingClientRect();
+      if (!to?.width || !from.width) {
+        dissolve();
+        return;
+      }
+      dissolving = true; // la lapicera ya no dibuja; las chispas que quedan se apagan solas
+      done = true;
+      doneAt = performance.now();
+      svg.style.setProperty('--sign-color', getComputedStyle(logo).color);
+      preloader.classList.add('is-flying');
+      endLoading(); // el hero aparece detrás mientras se va el fondo
+      requestAnimationFrame(() => {
+        svg.style.transform = `translate(${(to.left - from.left).toFixed(1)}px, ${(to.top - from.top).toFixed(1)}px) scale(${(to.width / from.width).toFixed(4)})`;
+      });
+      const timer = setTimeout(() => land(), 1050);
+      land = () => {
+        clearTimeout(timer);
+        land = null;
+        cancelAnimationFrame(raf);
+        preloader.style.display = 'none';
+        root.classList.remove('is-signing');
+      };
+    };
+
+    // la otra salida: la firma se deshace en polvo de luz siguiendo una barrida de izquierda a derecha
     let dissolving = false;
     const dissolve = () => {
       dissolving = true;
@@ -253,7 +285,7 @@
         }
         const shownLetters = Math.floor(clamp((t - CAPTION_AT) / 38, 0, letters.length));
         for (let k = 0; k < shownLetters; k++) letters[k].classList.add('is-in');
-        if (t > Math.max(DRAW, CAPTION_AT + letters.length * 38) + HOLD) dissolve();
+        if (t > Math.max(DRAW, CAPTION_AT + letters.length * 38) + HOLD) fly();
       } else {
         stepSparks(dt, now);
         if (done && (now - doneAt > 1300 || !parts.length)) return;
@@ -284,6 +316,61 @@
   const navPills = Array.from(document.querySelectorAll('.nav-pill'));
   const darkIds = ['about', 'experience', 'contact'];
   let lastY = window.scrollY;
+
+  // los enlaces internos (#seccion) bajan suave hasta el punto justo de cada una. El hero queda
+  // fijo debajo de toda la página (su ancla no lleva a ningún lado): "inicio" es arriba de todo.
+  // En el "About me" se llega con la tarjeta abierta y el texto a la vista.
+  const NAV_AT = { about: 0.82 }; // avance dentro de la sección fija
+  function navTarget(id) {
+    if (id === 'home') return 0;
+    const el = document.getElementById(id);
+    if (!el) return null;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    const span = Math.max(0, el.offsetHeight - window.innerHeight);
+    return Math.round(top + span * (NAV_AT[id] || 0));
+  }
+  function goTo(id, instant) {
+    const y = navTarget(id);
+    if (y == null) return false;
+    window.scrollTo({ top: y, behavior: instant || prefersReducedMotion ? 'auto' : 'smooth' });
+    history.replaceState(null, '', id === 'home' ? location.pathname + location.search : `#${id}`);
+    return true;
+  }
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest?.('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    const id = a.getAttribute('href').slice(1);
+    if (!id || navTarget(id) == null) return;
+    e.preventDefault();
+    closeMenu();
+    goTo(id);
+  });
+  // si se entra con un ancla (#about…), al punto justo y no al borde de la sección
+  if (location.hash.length > 1) {
+    const id = decodeURIComponent(location.hash.slice(1));
+    document.addEventListener('echo:loaded', () => requestAnimationFrame(() => goTo(id, true)), { once: true });
+  }
+
+  // el menú de tablet y celular
+  const menuBtn = document.getElementById('menuBtn');
+  const navSheet = document.getElementById('navSheet');
+  function openMenu() {
+    if (!navSheet) return;
+    navSheet.classList.add('is-open');
+    navSheet.setAttribute('aria-hidden', 'false');
+    menuBtn?.setAttribute('aria-expanded', 'true');
+    root.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    if (!navSheet?.classList.contains('is-open')) return;
+    navSheet.classList.remove('is-open');
+    navSheet.setAttribute('aria-hidden', 'true');
+    menuBtn?.setAttribute('aria-expanded', 'false');
+    root.style.overflow = '';
+  }
+  menuBtn?.addEventListener('click', openMenu);
+  navSheet?.querySelector('[data-close-menu]')?.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 
   function updateHeader(y) {
     if (!header) return;
