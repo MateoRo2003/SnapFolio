@@ -377,8 +377,9 @@
   fab?.querySelectorAll('.fab-option').forEach((o) => o.addEventListener('click', () => setFab(false)));
   document.addEventListener('click', (e) => { if (fab && !fab.contains(e.target)) setFab(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setFab(false); });
-  // se ve después del hero, y no cuando en pantalla ya hay otra forma de contactar (la llamada o el pie)
-  const fabHides = ['hablemos', 'contact'].map((id) => document.getElementById(id)).filter(Boolean);
+  // se ve después del hero, y no cuando en pantalla ya hay otra forma de contactar (los destacados
+  // tienen su botón justo donde iría este, después viene la llamada y al final el pie)
+  const fabHides = ['works', 'hablemos', 'contact'].map((id) => document.getElementById(id)).filter(Boolean);
   function updateFab(y) {
     if (!fab) return;
     const vh = window.innerHeight;
@@ -1363,7 +1364,7 @@
        A. la ruleta gira sola (no con el scroll): arranca al llegar, frena de a poco y deja arriba,
           junto a la flecha, un destacado elegido al azar (cambia en cada visita); ahí los demás se
           apagan. Si se baja antes de que termine, se apura; si se vuelve a entrar, gira de nuevo;
-       B. con el scroll, esa tarjeta crece hasta llenar la pantalla y se vuelve su proyecto;
+       B. sola, apenas frena, esa tarjeta crece hasta llenar la pantalla y se vuelve su proyecto;
        C. los demás destacados suben de a uno por un arco (como el del hero) tapando al anterior.
      El fondo es un video si el proyecto tiene data-video; si no, su imagen. Los videos se cargan
      recién cuando su proyecto está cerca y solo corre el que está al frente.
@@ -1446,14 +1447,18 @@
     if (k >= 1) {
       spin.running = false;
       spin.doneAt = now;
+      grow.at = now + 600; // un momento para ver cuál salió, y se abre
+      grow.dur = 1200;
     }
   }
+  const grow = { at: 0, dur: 1200 };
   if (prefersReducedMotion) {
     spin.angle = landAngle(0);
     spin.doneAt = -1e9;
     spin.armed = false;
+    grow.at = -1e9;
   }
-  let growShown = 0; // el crecimiento que se ve (alcanza al del scroll de a poco si quedó atrás)
+  let fShown = 0; // el avance entre proyectos que se ve (alcanza al del scroll si este se adelantó)
   let ringRaf = 0;
   let ringCards = [];
   let ringNames = [];
@@ -1487,7 +1492,7 @@
 
   // los tramos de la sección fija, en pantallas: girar, agrandar y después uno por cada cambio
   const PH_SPIN = 0.6; // quieto, mientras gira
-  const PH_GROW = 0.7;
+  const PH_GROW = 0.2; // casi nada: la tarjeta se abre sola
   const PH_STEP = 0.8; // (la altura de la sección en el CSS es 1 + la suma de los tramos)
 
   // los videos: se crean cuando su proyecto está cerca y corre solo el del frente
@@ -1521,10 +1526,12 @@
     const r = featSection.getBoundingClientRect();
     // la cinta de proyectos se apaga mientras esta sección sube por encima
     landings?.querySelector('.landings-pin')?.style.setProperty('--cover', clamp(1 - r.top / vh, 0, 1).toFixed(3));
-    // si se sale para arriba, la próxima vez que se llegue la ruleta gira de nuevo
-    if (!spin.armed && !spin.running && r.top > vh * 0.6 && !prefersReducedMotion) {
+    // si se sale del todo para arriba, la próxima vez que se llegue la ruleta gira de nuevo
+    if (!spin.armed && !spin.running && r.top >= vh && !prefersReducedMotion) {
       spin.armed = true;
       spin.doneAt = 0;
+      grow.at = 0;
+      fShown = 0;
     }
     const onScreen = r.bottom > 0 && r.top < vh;
     if (onScreen !== featOnScreen) {
@@ -1537,22 +1544,26 @@
     const n = featSlides.length;
     const total = PH_SPIN + PH_GROW + PH_STEP * (n - 1);
     const at = clamp(-r.top / vh, 0, total); // pantallas recorridas con la sección fija
-    const pBscroll = clamp((at - PH_SPIN) / PH_GROW, 0, 1);
-    const f = clamp((at - PH_SPIN - PH_GROW) / PH_STEP, 0, n - 1);
+    const fScroll = clamp((at - PH_SPIN - PH_GROW) / PH_STEP, 0, n - 1);
 
     // A. la ruleta gira sola al llegar
     if (spin.armed && r.top <= vh * 0.15) {
       spin.armed = false;
       startSpin(now);
     }
-    if (pBscroll > 0) hurrySpin(now);
+    const ahead = at > PH_SPIN; // bajó antes de que terminara: todo se apura
+    if (ahead) hurrySpin(now);
     stepSpin(now);
     const landed = !spin.running && spin.doneAt !== 0;
     const emph = landed ? smooth(0, 650, now - spin.doneAt) : 0;
-    // la tarjeta crece recién cuando la ruleta frenó; si el scroll se adelantó, la alcanza de a poco
-    const target = landed ? pBscroll : 0;
-    growShown = Math.abs(target - growShown) > 0.03 ? growShown + (target - growShown) * 0.2 : target;
-    const pB = growShown;
+    // B. se abre sola un momento después de frenar (si ya bajó, enseguida y más rápido)
+    if (landed && ahead && grow.at > now) Object.assign(grow, { at: now, dur: 650 });
+    const pB = landed && grow.at ? clamp((now - grow.at) / grow.dur, 0, 1) : 0;
+    // C. los siguientes van con el scroll, pero recién con la tarjeta abierta; si el scroll se
+    // adelantó, lo alcanzan de a poco
+    const fTarget = pB >= 1 ? fScroll : 0;
+    fShown = Math.abs(fTarget - fShown) > 0.02 ? fShown + (fTarget - fShown) * 0.18 : fTarget;
+    const f = fShown;
     const mobile = vw < 768;
     const R = mobile ? Math.min(vw * 0.34, vh * 0.25) : Math.min(vh * 0.27, vw * 0.17);
     const base = mobile ? 0.78 : 0.52; // en la ruleta las tarjetas van chicas, como en el diseño original
@@ -1632,7 +1643,7 @@
       syncFeatVideos();
     }
     // mientras gira, se apagan los demás o la tarjeta alcanza al scroll, se sigue dibujando solo
-    if ((spin.running || (landed && emph < 1) || growShown !== target) && !ringRaf) {
+    if ((spin.running || (landed && (emph < 1 || pB < 1)) || fShown !== fTarget) && !ringRaf) {
       ringRaf = requestAnimationFrame(() => {
         ringRaf = 0;
         updateFeatured();

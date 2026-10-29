@@ -1749,7 +1749,7 @@ main > section:not(.hero-section) {
    ========================================================================== */
 .featured-section {
   position: relative;
-  height: 470vh;
+  height: 420vh;
   margin-top: -100vh;
   border-radius: 28px 28px 0 0;
   background: var(--bg-light);
