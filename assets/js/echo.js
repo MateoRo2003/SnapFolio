@@ -1407,7 +1407,7 @@
   const featPin = featSection?.querySelector('.featured-pin');
   const featCurtain = document.getElementById('featCurtain');
   const CURTAIN_MS = 1300;
-  const curtain = { at: 0 }; // cuándo arrancó la entrada (0: todavía no)
+  const curtain = { at: 0, anchor: 0 }; // cuándo arrancó la entrada (0: todavía no) y hasta dónde se llegó
   let curtainDone = false;
   const featSlides = Array.from(document.querySelectorAll('.feat-slide'));
   const featDots = Array.from(document.querySelectorAll('.feat-dots span'));
@@ -1430,7 +1430,7 @@
   const featIdx = ringProjects.map((r, i) => (r.feat ? i : -1)).filter((i) => i >= 0);
   const chosen = featIdx[Math.floor(Math.random() * featIdx.length)];
   // el giro: dos vueltas y algo, y frena con el elegido arriba (ángulo -chosen * SLOT, en cualquier vuelta)
-  const SPIN_MS = 3800;
+  const SPIN_MS = 2200;
   const spin = { from: 0, to: 0, t0: 0, dur: SPIN_MS, angle: 0, running: false, doneAt: 0, armed: true };
   const landAngle = (from) => {
     const at = (((360 - chosen * SLOT) % 360) + 360) % 360;
@@ -1530,20 +1530,40 @@
     const r = featSection.getBoundingClientRect();
     // la entrada, como la carga y sola (no con el scroll): apenas se empieza a entrar, cinco columnas
     // negras suben escalonadas (de izquierda a derecha) tapando la cinta y se retiran hacia arriba en
-    // el mismo orden destapando la ruleta. Si se sale del todo para arriba, la próxima vez se repite.
+    // el mismo orden destapando la ruleta, que ya viene girando debajo (es un solo movimiento).
+    // Mientras la sección no llegó arriba, la escena queda quieta en la pantalla; si se vuelve para
+    // arriba, baja con el scroll (a su ritmo) y la cinta reaparece detrás. Cuando sale del todo, la
+    // próxima vez que se llegue se repite.
     const nowC = performance.now();
-    if (curtain.at === 0 && r.top < vh * 0.94 && r.bottom > 0) curtain.at = prefersReducedMotion ? -1e9 : nowC;
-    else if (curtain.at !== 0 && r.top >= vh * 0.98) curtain.at = 0;
+    if (curtain.at === 0 && r.top < vh * 0.94 && r.bottom > 0) {
+      curtain.at = prefersReducedMotion ? -1e9 : nowC;
+      curtain.anchor = Math.max(0, r.top);
+    } else if (curtain.at !== 0 && r.top >= vh) {
+      curtain.at = 0;
+      // y la ruleta, de cero
+      if (!prefersReducedMotion) Object.assign(spin, { armed: true, running: false, doneAt: 0 });
+      grow.at = 0;
+      fShown = 0;
+    }
+    // hasta dónde llegó (lo más arriba que estuvo la sección): ahí la escena estaba quieta en la pantalla
+    if (curtain.at) curtain.anchor = Math.min(curtain.anchor, Math.max(0, r.top));
+    const anchor = curtain.anchor;
+    // dónde va la escena: arriba de todo mientras no se volvió; al volver, baja hasta salir justo
+    // cuando la sección queda debajo de la pantalla
+    const sceneY = curtain.at && r.top > anchor ? ((r.top - anchor) / Math.max(1, vh - anchor)) * vh : 0;
     const q = curtain.at === 0 ? 0 : clamp((nowC - curtain.at) / CURTAIN_MS, 0, 1);
     curtainDone = q >= 1;
-    featSection.dataset.covering = curtain.at !== 0 && r.bottom > 0 ? '1' : ''; // (el botón flotante se va)
-    landings?.querySelector('.landings-pin')?.style.setProperty('--cover', q.toFixed(3));
+    const covering = curtain.at !== 0 && sceneY < vh * 0.85 ? '1' : '';
+    if (featSection.dataset.covering !== covering) {
+      featSection.dataset.covering = covering;
+      updateFab(window.scrollY); // el botón flotante se va (o vuelve) en el mismo cuadro
+    }
+    landings?.querySelector('.landings-pin')?.style.setProperty('--cover', (q * (1 - sceneY / vh)).toFixed(3));
     if (featPin && featCurtain) {
-      if (r.top > 0 && r.top < vh) {
-        // mientras la sección no llegó arriba, la escena queda quieta en la pantalla
-        featPin.style.transform = `translateY(${(-r.top).toFixed(1)}px)`;
+      if (curtain.at && r.top > 0 && r.top < vh) {
+        featPin.style.transform = `translateY(${(sceneY - r.top).toFixed(1)}px)`;
       } else if (featPin.style.transform) featPin.style.transform = '';
-      if (q < 1 && r.top < vh) {
+      if (q < 1 && curtain.at && r.top < vh) {
         const COLS = 5;
         const ease = (u) => u * u * (3 - 2 * u);
         const tops = [];
@@ -1557,7 +1577,9 @@
         const scene = [`0px ${vh}px`];
         for (let k = 0; k < COLS; k++) {
           cols.push(`${xs(k).toFixed(1)}px ${tops[k].toFixed(1)}px`, `${xs(k + 1).toFixed(1)}px ${tops[k].toFixed(1)}px`);
-          scene.push(`${xs(k).toFixed(1)}px ${bottoms[k].toFixed(1)}px`, `${xs(k + 1).toFixed(1)}px ${bottoms[k].toFixed(1)}px`);
+          // la escena se recorta en sus propias coordenadas (puede estar bajando)
+          const yb = Math.max(0, bottoms[k] - sceneY);
+          scene.push(`${xs(k).toFixed(1)}px ${yb.toFixed(1)}px`, `${xs(k + 1).toFixed(1)}px ${yb.toFixed(1)}px`);
         }
         for (let k = COLS - 1; k >= 0; k--) cols.push(`${xs(k + 1).toFixed(1)}px ${bottoms[k].toFixed(1)}px`, `${xs(k).toFixed(1)}px ${bottoms[k].toFixed(1)}px`);
         scene.push(`${vw}px ${vh}px`);
@@ -1569,13 +1591,6 @@
         featCurtain.style.clipPath = '';
         featPin.style.clipPath = '';
       }
-    }
-    // si se sale del todo para arriba, la próxima vez que se llegue la ruleta gira de nuevo
-    if (!spin.armed && !spin.running && r.top >= vh && !prefersReducedMotion) {
-      spin.armed = true;
-      spin.doneAt = 0;
-      grow.at = 0;
-      fShown = 0;
     }
     const onScreen = r.bottom > 0 && r.top < vh;
     if (onScreen !== featOnScreen) {
@@ -1591,7 +1606,7 @@
     const fScroll = clamp((at - PH_SPIN - PH_GROW) / PH_STEP, 0, n - 1);
 
     // A. la ruleta gira sola al llegar
-    if (spin.armed && curtainDone) {
+    if (spin.armed && curtain.at && performance.now() - curtain.at > 250) {
       spin.armed = false;
       startSpin(now);
     }
