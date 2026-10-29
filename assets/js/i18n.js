@@ -3,7 +3,8 @@
  * Cada texto en español es la clave de su traducción (sin importar los espacios). Al cambiar de
  * idioma se recorren los textos de la página y algunos atributos, y se cambia lo que tenga
  * traducción; lo que no, queda como está (nombres, números, tecnologías). Lo que echo.js escribe
- * después lo escribe en español y lo pasa por localize(). El idioma elegido se recuerda.
+ * después lo escribe en español y lo pasa por localize(). Por defecto se ve en inglés y
+ * el idioma elegido se recuerda.
  */
 (() => {
   'use strict';
@@ -248,10 +249,11 @@
   const esAttr = new WeakMap(); // elemento → { atributo: su valor en español }
   const root = document.documentElement;
   const esTitle = document.title;
-  let lang = 'es';
+  // se abre en inglés; el español queda si alguien lo eligió antes
+  let lang = 'en';
   try {
-    if (localStorage.getItem('echo-lang') === 'en') lang = 'en';
-  } catch (_) { /* sin almacenamiento: queda en español */ }
+    if (localStorage.getItem('echo-lang') === 'es') lang = 'es';
+  } catch (_) { /* sin almacenamiento: queda en inglés */ }
 
   // el texto en el idioma actual, conservando los espacios de los costados
   function swap(es) {
@@ -302,7 +304,7 @@
     original: (node) => esText.get(node) ?? node.nodeValue,
   };
 
-  // los scripts con defer corren con la página ya leída: si eligieron inglés, se cambia antes de verse
+  // los scripts con defer corren con la página ya leída: en inglés se cambia antes de verse
   if (lang === 'en') {
     root.lang = 'en';
     document.title = swap(esTitle);
