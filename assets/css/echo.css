@@ -200,31 +200,6 @@ img {
   pointer-events: none;
 }
 
-/* la salida: el fondo se va y la firma vuela hasta el logo, tomando el color del navbar
-   (echo.js pone el destino en transform y el color en --sign-color) */
-.preloader.is-flying {
-  background-color: rgba(10, 11, 15, 0);
-  pointer-events: none;
-  transition: background-color 0.85s ease;
-}
-
-.preloader.is-flying .sign-caption,
-.preloader.is-flying .sign-sparks {
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.preloader.is-flying .sign-svg {
-  filter: none;
-  transform-origin: 0 0;
-  transition: transform 1s cubic-bezier(0.65, 0, 0.2, 1), filter 0.5s ease;
-}
-
-.preloader.is-flying .sign-fill {
-  fill: var(--sign-color, #111113);
-  transition: fill 0.8s ease 0.1s;
-}
-
 /* ==========================================================================
    2. CABECERA: transparente arriba; se esconde al bajar y vuelve al subir
    ========================================================================== */
@@ -282,8 +257,13 @@ img {
   overflow: visible;
 }
 
-/* mientras la firma de la carga vuela hasta acá, el logo espera */
-html.is-signing .brand-sign {
+/* mientras se escribe (echo.js) se ve solo lo que destapa la lapicera; al terminar, la letra
+   completa aparece encima y cubre las puntitas que la máscara no alcanza */
+.brand-full {
+  transition: opacity 0.4s ease;
+}
+
+html.is-signing .brand-full {
   opacity: 0;
 }
 

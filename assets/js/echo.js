@@ -37,7 +37,7 @@
   }
 
   if (preloader) {
-    root.classList.add('is-signing'); // el logo espera a que llegue la firma
+    root.classList.add('is-signing'); // el logo se escribe cuando termina la carga
     const svg = document.getElementById('signSvg');
     const sign = preloader.querySelector('.preloader-sign');
     const strokes = Array.from(document.querySelectorAll('#signInk path'));
@@ -47,7 +47,6 @@
     let done = false;
     let doneAt = 0;
     let raf = 0;
-    let land = null; // mientras la firma vuela: la deja en el logo de una
 
     const finish = (skip) => {
       if (done) return;
@@ -58,11 +57,46 @@
         sctx.clearRect(0, 0, sparks.width, sparks.height);
       }
       preloader.classList.add('is-done');
-      root.classList.remove('is-signing');
       endLoading();
       setTimeout(() => { preloader.style.display = 'none'; cancelAnimationFrame(raf); }, 1300);
+      // mientras se va la carga, la firma chica del navbar se escribe sola (arranca vacía)
+      if (!prefersReducedMotion) hideLogoInk();
+      setTimeout(writeLogo, prefersReducedMotion || skip === true ? 0 : 450);
     };
-    const skip = () => (land ? land() : finish(true));
+    const skip = () => finish(true);
+
+    // el logo usa los mismos trazos que la firma grande: se vuelven a tapar y la lapicera los
+    // destapa de nuevo, más rápido y sin levantarse
+    // (la firma grande ya está entera con su letra completa encima: taparle los trazos no se nota)
+    // (cada trazo queda invisible hasta que la lapicera llega: si no, su punta redonda se ve como un punto)
+    const hideLogoInk = () => strokes.forEach((p, i) => {
+      p.style.opacity = '0';
+      p.style.strokeDashoffset = String(lens[i]);
+    });
+    const writeLogo = () => {
+      if (prefersReducedMotion) {
+        root.classList.remove('is-signing');
+        return;
+      }
+      const LOGO_MS = 900;
+      const at = [];
+      lens.reduce((sum, len) => { at.push(sum / total); return sum + len; }, 0);
+      let w0 = 0;
+      const step = (now) => {
+        w0 ||= now;
+        const k = clamp((now - w0) / LOGO_MS, 0, 1);
+        const e = k < 0.5 ? 2 * k * k : 1 - (-2 * k + 2) ** 2 / 2; // arranca y termina suave
+        strokes.forEach((p, i) => {
+          const share = lens[i] / total;
+          const drawn = clamp((e - at[i]) / share, 0, 1) * lens[i];
+          p.style.opacity = drawn > 0 ? '1' : '0';
+          p.style.strokeDashoffset = String(lens[i] - drawn);
+        });
+        if (k < 1) requestAnimationFrame(step);
+        else root.classList.remove('is-signing');
+      };
+      requestAnimationFrame(step);
+    };
 
     // "FULL STACK DEVELOPER" va letra por letra
     const letters = caption ? Array.from(caption.textContent).map((ch) => {
@@ -183,36 +217,7 @@
       return [hx, hy];
     };
 
-    // la salida: la firma vuela hasta el navbar, se achica y toma su color, y queda como logo.
-    // Si el logo no está a la vista, se deshace en polvo como antes.
-    const logo = document.querySelector('.brand-sign');
-    const fly = () => {
-      const to = logo?.getBoundingClientRect();
-      const from = svg.getBoundingClientRect();
-      if (!to?.width || !from.width) {
-        dissolve();
-        return;
-      }
-      dissolving = true; // la lapicera ya no dibuja; las chispas que quedan se apagan solas
-      done = true;
-      doneAt = performance.now();
-      svg.style.setProperty('--sign-color', getComputedStyle(logo).color);
-      preloader.classList.add('is-flying');
-      endLoading(); // el hero aparece detrás mientras se va el fondo
-      requestAnimationFrame(() => {
-        svg.style.transform = `translate(${(to.left - from.left).toFixed(1)}px, ${(to.top - from.top).toFixed(1)}px) scale(${(to.width / from.width).toFixed(4)})`;
-      });
-      const timer = setTimeout(() => land(), 1050);
-      land = () => {
-        clearTimeout(timer);
-        land = null;
-        cancelAnimationFrame(raf);
-        preloader.style.display = 'none';
-        root.classList.remove('is-signing');
-      };
-    };
-
-    // la otra salida: la firma se deshace en polvo de luz siguiendo una barrida de izquierda a derecha
+    // la salida: la firma se deshace en polvo de luz siguiendo una barrida de izquierda a derecha
     let dissolving = false;
     const dissolve = () => {
       dissolving = true;
@@ -285,7 +290,7 @@
         }
         const shownLetters = Math.floor(clamp((t - CAPTION_AT) / 38, 0, letters.length));
         for (let k = 0; k < shownLetters; k++) letters[k].classList.add('is-in');
-        if (t > Math.max(DRAW, CAPTION_AT + letters.length * 38) + HOLD) fly();
+        if (t > Math.max(DRAW, CAPTION_AT + letters.length * 38) + HOLD) dissolve();
       } else {
         stepSparks(dt, now);
         if (done && (now - doneAt > 1300 || !parts.length)) return;
