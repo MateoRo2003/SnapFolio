@@ -1405,6 +1405,7 @@
 
   const featSection = document.getElementById('works');
   const featPin = featSection?.querySelector('.featured-pin');
+  const featCurtain = document.getElementById('featCurtain');
   const featSlides = Array.from(document.querySelectorAll('.feat-slide'));
   const featDots = Array.from(document.querySelectorAll('.feat-dots span'));
   const rouletteRig = document.getElementById('rouletteRig');
@@ -1524,24 +1525,36 @@
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const r = featSection.getBoundingClientRect();
-    // la entrada: cinco columnas suben escalonadas, de izquierda a derecha, y la cinta de atrás se apaga
+    // la entrada, como la carga: cinco columnas negras suben escalonadas (de izquierda a derecha)
+    // tapando la cinta, y después se retiran hacia arriba en el mismo orden destapando la ruleta
     const q = clamp(1 - r.top / vh, 0, 1);
     landings?.querySelector('.landings-pin')?.style.setProperty('--cover', q.toFixed(3));
-    if (featPin) {
+    if (featPin && featCurtain) {
       if (q > 0 && q < 1) {
         const COLS = 5;
-        const pts = [`0px ${vh}px`];
+        const ease = (u) => u * u * (3 - 2 * u);
+        const tops = [];
+        const bottoms = [];
         for (let k = 0; k < COLS; k++) {
-          const u = clamp((q - k * 0.1) / 0.6, 0, 1);
-          const top = vh * (1 - u * u * (3 - 2 * u));
-          const x0 = (vw * k) / COLS;
-          const x1 = (vw * (k + 1)) / COLS + (k < COLS - 1 ? 0.5 : 0); // medio píxel encima: sin rendijas
-          pts.push(`${x0.toFixed(1)}px ${top.toFixed(1)}px`, `${x1.toFixed(1)}px ${top.toFixed(1)}px`);
+          tops.push(vh * (1 - ease(clamp((q - k * 0.05) / 0.35, 0, 1))));
+          bottoms.push(vh * (1 - ease(clamp((q - 0.45 - k * 0.05) / 0.35, 0, 1))));
         }
-        pts.push(`${vw}px ${vh}px`);
+        const xs = (k) => (vw * k) / COLS + (k > 0 && k < COLS ? 0.5 : 0); // medio píxel encima: sin rendijas
+        const curtain = [];
+        const scene = [`0px ${vh}px`];
+        for (let k = 0; k < COLS; k++) {
+          curtain.push(`${xs(k).toFixed(1)}px ${tops[k].toFixed(1)}px`, `${xs(k + 1).toFixed(1)}px ${tops[k].toFixed(1)}px`);
+          scene.push(`${xs(k).toFixed(1)}px ${bottoms[k].toFixed(1)}px`, `${xs(k + 1).toFixed(1)}px ${bottoms[k].toFixed(1)}px`);
+        }
+        for (let k = COLS - 1; k >= 0; k--) curtain.push(`${xs(k + 1).toFixed(1)}px ${bottoms[k].toFixed(1)}px`, `${xs(k).toFixed(1)}px ${bottoms[k].toFixed(1)}px`);
+        scene.push(`${vw}px ${vh}px`);
+        featCurtain.style.visibility = 'visible';
+        featCurtain.style.clipPath = `polygon(${curtain.join(', ')})`;
         featPin.style.transform = `translateY(${(-r.top).toFixed(1)}px)`; // la escena quieta en la pantalla
-        featPin.style.clipPath = `polygon(${pts.join(', ')})`;
+        featPin.style.clipPath = `polygon(${scene.join(', ')})`;
       } else if (featPin.style.clipPath) {
+        featCurtain.style.visibility = '';
+        featCurtain.style.clipPath = '';
         featPin.style.transform = '';
         featPin.style.clipPath = '';
       }

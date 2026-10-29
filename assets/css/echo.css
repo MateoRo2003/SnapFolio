@@ -1741,7 +1741,8 @@ main > section:not(.hero-section) {
 }
 
 /* ==========================================================================
-   7. PROYECTOS DESTACADOS — entra por encima de la cinta en cinco columnas que suben escalonadas
+   7. PROYECTOS DESTACADOS — entra por encima de la cinta como la carga: cinco columnas del negro de
+      la firma suben escalonadas, tapan la cinta y se retiran hacia arriba destapando la ruleta
       (empieza 100vh antes de que termine la de proyectos; echo.js recorta las columnas). Adentro: la ruleta, que gira con el scroll y frena en un proyecto al
       azar; esa tarjeta crece hasta llenar la pantalla y siguen los demás a pantalla completa (el
       siguiente sube por un arco, como el del hero, y el de atrás se oscurece). echo.js pone en cada
@@ -1752,6 +1753,25 @@ main > section:not(.hero-section) {
   height: 420vh;
   margin-top: -100vh;
   color: var(--text-dark);
+}
+
+/* las columnas negras de la entrada (fijas en la pantalla; echo.js les da la forma) */
+.feat-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  background: #0a0b0f;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.feat-curtain span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.4em;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* mientras entra, la escena queda quieta en la pantalla y se ve solo lo que destapan las columnas */
