@@ -1202,6 +1202,9 @@
         const left = cw * 0.5 + (v - pos) * stepX - cardW * 0.5;
         if (left > cw + 50 || left + cardW < -50) continue;
         const stripW = cardW / slices;
+        const tops = [];
+        const bottoms = [];
+        const shadeAt = [];
         for (let s = 0; s < slices; s++) {
           const sx = left + s * stripW;
           const nx = (sx + stripW * 0.5 - cw * 0.5) / (cw * 0.5);
@@ -1215,12 +1218,20 @@
             wCtx.fillStyle = '#1d1d22';
             wCtx.fillRect(sx, sy, stripW + 0.8, stripH);
           }
-          const shade = Math.min(0.45, Math.abs(nx) * 0.32);
-          if (shade > 0.03) {
-            wCtx.fillStyle = `rgba(9,9,11,${shade.toFixed(3)})`;
-            wCtx.fillRect(sx, sy, stripW + 0.8, stripH);
-          }
+          tops.push([sx, sy], [sx + stripW, sy]);
+          bottoms.push([sx, sy + stripH], [sx + stripW, sy + stripH]);
+          shadeAt.push(Math.min(0.45, Math.abs(nx) * 0.32));
         }
+        // la sombra de los costados va en una sola pasada, con un degradé parejo: tira por tira se
+        // pisaban en los bordes y en el medio (donde no había sombra) quedaba una franja más clara
+        const grad = wCtx.createLinearGradient(left, 0, left + cardW, 0);
+        shadeAt.forEach((a, s) => grad.addColorStop((s + 0.5) / slices, `rgba(9,9,11,${a.toFixed(3)})`));
+        wCtx.beginPath();
+        tops.forEach(([x, y], k) => (k ? wCtx.lineTo(x, y) : wCtx.moveTo(x, y)));
+        for (let k = bottoms.length - 1; k >= 0; k--) wCtx.lineTo(bottoms[k][0], bottoms[k][1]);
+        wCtx.closePath();
+        wCtx.fillStyle = grad;
+        wCtx.fill();
       }
     }
 
