@@ -1421,10 +1421,10 @@
   const ringProjects = [
     { title: 'Órbita', img: 'orbita', feat: 'orbita' },
     { title: 'Paperflix', img: 'paperflix', feat: 'paperflix' },
-    { title: 'S.I.T.I System', img: 's-i-t-i-sistema-integral-de-tiendas-inde', feat: 'siti' },
+    { title: 'MiPaperlux', img: 'mipaperlux', feat: 'mipaperlux' },
     { title: 'NeuroBrand AI', img: 'neurobrand', feat: 'neurobrand' },
     { title: 'Petty Joyas', img: 'petty-joyas' },
-    { title: 'MiPaperlux', img: 'mipaperlux' },
+    { title: 'S.I.T.I System', img: 's-i-t-i-sistema-integral-de-tiendas-inde' },
   ];
   const SLOT = 360 / ringProjects.length;
   const featIdx = ringProjects.map((r, i) => (r.feat ? i : -1)).filter((i) => i >= 0);

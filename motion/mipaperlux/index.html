@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>MiPaperlux — tu dispositivo, dominado en una sesión (24 s)</title>
+<!--
+  Composición estilo HyperFrames: una sola línea de tiempo GSAP pausada (window.__timelines.main),
+  24 s a 30 fps, determinista: se renderiza cuadro por cuadro con seek.
+  MiPaperlux: las instituciones compran el dispositivo Paperlux pero no lo usan; esta plataforma
+  hace que cada docente aprenda solo, en menos de 30 minutos, con una capacitación gamificada,
+  certificado y seguimiento en tiempo real. Tema violeta de la app, dorado y letra Jost.
+  A  0.0–3.0   el logo: la P dorada y "MiPaperlux".
+  B  3.0–7.0   "LO COMPRARON. / NADIE LO USA." se tacha → "HASTA AHORA."
+  C  7.0–10.0  "Tu dispositivo, dominado en una sesión." con un reloj que llega a 30 min.
+  D 10.0–14.6  01 · Capacitación gamificada: los módulos se completan, el progreso llega al 100 %
+               y saltan las insignias.
+  E 14.6–17.2  02 · Certificado: entra el certificado y lo sella el dorado.
+  F 17.2–20.8  03 · Seguimiento en tiempo real: el panel de la institución con números que suben.
+  G 20.8–24.0  cierre con el logo y vuelve al fondo (loop).
+-->
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+  :root { --bg: #2b1055; --side: #1c0940; --surface: #412072; --surface2: #4c2884; --gold: #F5CE3C; --gold2: #ffcd1a; --text: #f4efff; --muted: #c9bde6; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--side); color: var(--text); font-family: 'DM Sans', sans-serif; }
+  h1, h2, h3, .head { font-family: 'Jost', sans-serif; }
+  .stage { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(80% 70% at 30% 20%, #3a1670 0%, var(--side) 75%); }
+  #grid { position: absolute; inset: -60px; background-image: linear-gradient(rgba(244,239,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(244,239,255,0.05) 1px, transparent 1px); background-size: 60px 60px; will-change: transform; }
+  .glow { position: absolute; width: 1000px; height: 1000px; border-radius: 50%; background: radial-gradient(closest-side, rgba(245,206,60,0.16), transparent); }
+  #g1 { left: -260px; top: -380px; } #g2 { right: -300px; bottom: -480px; background: radial-gradient(closest-side, rgba(150,90,230,0.32), transparent); }
+  .scene { position: absolute; inset: 0; opacity: 0; will-change: transform, opacity; }
+  .mono { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.2em; text-transform: uppercase; }
+  .step { position: absolute; left: 120px; top: 100px; display: flex; align-items: baseline; gap: 22px; z-index: 5; }
+  .step-n { font-family: 'JetBrains Mono', monospace; font-size: 26px; color: var(--gold); }
+  .step-t { font-family: 'Jost', sans-serif; font-weight: 700; font-size: 62px; letter-spacing: -0.02em; }
+  .brand { display: flex; align-items: center; gap: 22px; }
+  .brand img { display: block; }
+  .brand .w { font-family: 'Jost', sans-serif; font-weight: 600; letter-spacing: -0.01em; }
+  #corner { position: absolute; z-index: 20; right: 110px; top: 100px; opacity: 0; }
+  #corner img { height: 46px; } #corner .w { font-size: 34px; }
+
+  /* A */
+  .intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  #markA { height: 230px; }
+  #wordA { font-size: 150px; display: flex; overflow: hidden; padding: 8px 0; }
+  #wordA span { display: inline-block; }
+  .ringA { position: absolute; left: 50%; top: 50%; width: 260px; height: 260px; margin: -130px 0 0 -130px; border-radius: 50%; border: 6px solid var(--gold); opacity: 0; }
+
+  /* B */
+  .beat { position: absolute; left: 0; right: 0; text-align: center; font-family: 'Jost', sans-serif; font-weight: 800; font-size: 170px; line-height: 1; letter-spacing: -0.03em; }
+  #b1 { top: 230px; } #b2 { top: 430px; }
+  #b3 { top: 690px; color: var(--gold); font-size: 150px; }
+  .strike { position: absolute; left: 50%; top: 520px; width: 1240px; height: 18px; margin: -9px 0 0 -620px; border-radius: 9px; background: var(--gold); transform-origin: left center; box-shadow: 0 0 40px rgba(245,206,60,0.6); }
+
+  /* C */
+  .c-text { position: absolute; left: 140px; top: 330px; width: 980px; }
+  .c-text h2 { font-weight: 700; font-size: 104px; line-height: 1.02; letter-spacing: -0.02em; }
+  .c-text h2 em { font-style: normal; color: var(--gold); }
+  .c-text p { margin-top: 30px; font-size: 34px; color: var(--muted); }
+  .clock { position: absolute; right: 200px; top: 290px; width: 500px; height: 500px; }
+  .clock svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .clock .lbl { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .clock .n { font-family: 'Jost', sans-serif; font-weight: 800; font-size: 170px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .clock .u { font-size: 30px; color: var(--muted); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.2em; }
+
+  /* D */
+  .course { position: absolute; left: 120px; right: 120px; top: 240px; bottom: 100px; display: flex; gap: 40px; }
+  .mods { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+  .mod { display: flex; align-items: center; gap: 24px; padding: 24px 30px; border-radius: 22px; background: var(--surface); border: 1px solid rgba(244,239,255,0.14); will-change: transform; }
+  .mod .ic { width: 56px; height: 56px; border-radius: 50%; border: 3px solid rgba(244,239,255,0.35); flex: none; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; color: var(--side); position: relative; }
+  .mod .ic::after { content: '✓'; position: absolute; inset: -3px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; opacity: var(--done, 0); transform: scale(calc(0.4 + var(--done, 0) * 0.6)); }
+  .mod .t { font-size: 30px; font-weight: 600; }
+  .mod .m { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 20px; color: var(--muted); }
+  .side { width: 560px; flex: none; border-radius: 28px; background: var(--surface); border: 1px solid rgba(244,239,255,0.16); padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 26px; }
+  .ring { position: relative; width: 330px; height: 330px; }
+  .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring .pct { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring .pct b { font-family: 'Jost', sans-serif; font-size: 100px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .ring .pct span { font-size: 22px; color: var(--muted); }
+  .badges { display: flex; gap: 22px; }
+  .bdg { width: 128px; height: 128px; border-radius: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: var(--surface2); border: 2px solid var(--gold); font-size: 50px; will-change: transform; }
+  .bdg span { font-size: 15px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* E */
+  #certWrap { position: absolute; inset: 0; perspective: 2000px; }
+  .cert { position: absolute; left: 50%; top: 250px; width: 1240px; height: 740px; margin-left: -620px; border-radius: 26px; background: #fbfaf7; color: #1c1c1e; padding: 70px 90px; box-shadow: 0 60px 160px rgba(0,0,0,0.5); overflow: hidden; }
+  .cert::before { content: ''; position: absolute; inset: 22px; border: 3px solid #e9d27a; border-radius: 16px; }
+  .cert .k { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.22em; font-size: 22px; color: #8a7a3a; }
+  .cert h3 { margin-top: 24px; font-size: 80px; font-weight: 700; letter-spacing: -0.02em; }
+  .cert .who { margin-top: 36px; font-size: 30px; color: #57544d; }
+  .cert .name { margin-top: 10px; font-family: 'Jost', sans-serif; font-size: 72px; font-weight: 600; color: #1c1c1e; }
+  .cert .det { margin-top: 40px; display: flex; gap: 60px; font-size: 26px; color: #57544d; }
+  .cert .det b { display: block; color: #1c1c1e; font-size: 30px; margin-top: 6px; }
+  .seal { position: absolute; right: 110px; bottom: 90px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #ffe27a, #F5CE3C 55%, #d9a514); display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 30px rgba(180,130,0,0.4); }
+  .seal img { height: 120px; filter: brightness(0) saturate(100%); opacity: 0.85; }
+
+  /* F */
+  #dashWrap { position: absolute; inset: 0; perspective: 2200px; }
+  #dash { position: absolute; left: 520px; top: 250px; width: 1280px; height: 708px; border-radius: 24px; overflow: hidden; box-shadow: 0 50px 140px rgba(0,0,0,0.55); transform-style: preserve-3d; }
+  #dash img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+  .stats { position: absolute; left: 120px; top: 270px; display: flex; flex-direction: column; gap: 24px; z-index: 3; }
+  .stat { width: 520px; padding: 30px 34px; border-radius: 24px; background: var(--surface); border: 1px solid rgba(244,239,255,0.18); box-shadow: 0 24px 70px rgba(0,0,0,0.45); will-change: transform; }
+  .stat .lb { font-size: 22px; color: var(--muted); }
+  .stat .v { margin-top: 6px; font-family: 'Jost', sans-serif; font-size: 82px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat .v small { font-size: 30px; color: #4ade80; margin-left: 14px; font-family: 'DM Sans', sans-serif; font-weight: 700; }
+  .live { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 4px; font-size: 20px; font-weight: 700; color: #4ade80; }
+  .live i { width: 14px; height: 14px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 14px #4ade80; }
+
+  /* G */
+  .outro { position: absolute; left: 0; right: 0; top: 320px; display: flex; flex-direction: column; align-items: center; }
+  #markG { height: 150px; } .outro .w { font-size: 110px; }
+  .outro-t { margin-top: 50px; font-family: 'Jost', sans-serif; font-weight: 700; font-size: 58px; }
+  .outro-t b { color: var(--gold); font-weight: 700; }
+  .outro-u { margin-top: 28px; padding: 14px 32px; border-radius: 999px; border: 1.5px solid rgba(245,206,60,0.5); font-family: 'JetBrains Mono', monospace; font-size: 28px; color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="stage" data-duration="24">
+  <div id="grid"></div>
+  <div class="glow" id="g1"></div><div class="glow" id="g2"></div>
+  <div id="corner" class="brand"><img src="img/logo-mark.svg" alt=""><span class="w">MiPaperlux</span></div>
+
+  <section class="scene" id="A">
+    <div class="ringA" id="ringA"></div>
+    <div class="intro"><div class="brand" id="brandA"><img id="markA" src="img/logo-mark.svg" alt=""><div class="w" id="wordA"></div></div></div>
+  </section>
+
+  <section class="scene" id="B">
+    <div class="beat" id="b1">LO COMPRARON.</div>
+    <div class="beat" id="b2">NADIE LO USA.</div>
+    <div class="strike" id="strike"></div>
+    <div class="beat" id="b3">HASTA AHORA.</div>
+  </section>
+
+  <section class="scene" id="C">
+    <div class="c-text">
+      <h2 id="cT">Tu dispositivo,<br>dominado en <em>una sesión.</em></h2>
+      <p id="cP">Cada docente aprende solo, a su ritmo, sin esperar a un capacitador.</p>
+    </div>
+    <div class="clock">
+      <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" fill="none" stroke="rgba(244,239,255,0.12)" stroke-width="12"/><circle id="clockArc" cx="100" cy="100" r="88" fill="none" stroke="#F5CE3C" stroke-width="12" stroke-linecap="round"/></svg>
+      <div class="lbl"><div class="n" id="mins">0</div><div class="u">MINUTOS</div></div>
+    </div>
+  </section>
+
+  <section class="scene" id="D">
+    <div class="step"><span class="step-n">01</span><span class="step-t">Capacitación gamificada</span></div>
+    <div class="course">
+      <div class="mods" id="mods"></div>
+      <div class="side" id="side">
+        <div class="ring">
+          <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="86" fill="none" stroke="rgba(244,239,255,0.12)" stroke-width="16"/><circle id="progArc" cx="100" cy="100" r="86" fill="none" stroke="#F5CE3C" stroke-width="16" stroke-linecap="round"/></svg>
+          <div class="pct"><b id="pct">0%</b><span>completado</span></div>
+        </div>
+        <div class="badges" id="badges"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="E">
+    <div class="step"><span class="step-n">02</span><span class="step-t">Certificado al terminar</span></div>
+    <div id="certWrap"><div class="cert" id="cert">
+      <div class="k">PAPERLUX · CERTIFICADO DE CAPACITACIÓN</div>
+      <h3 class="head">Docente certificada</h3>
+      <div class="who">Se certifica que</div>
+      <div class="name">Francisca Tapia</div>
+      <div class="det"><div>Dispositivo<b>Paperlux Tank</b></div><div>Duración<b>28 minutos</b></div><div>Recorrido<b>5 de 5 módulos</b></div></div>
+      <div class="seal" id="seal"><img src="img/logo-mark.svg" alt=""></div>
+    </div></div>
+  </section>
+
+  <section class="scene" id="F">
+    <div class="step"><span class="step-n">03</span><span class="step-t">Seguimiento en tiempo real</span></div>
+    <div id="dashWrap"><div id="dash"><img src="img/3.png" alt=""></div></div>
+    <div class="stats">
+      <div class="stat" id="st1"><div class="live"><i></i>EN VIVO</div><div class="lb">Clases potenciadas este mes</div><div class="v"><span id="v1">0</span></div></div>
+      <div class="stat" id="st2"><div class="lb">Dispositivos en uso</div><div class="v"><span id="v2">0</span></div></div>
+      <div class="stat" id="st3"><div class="lb">Instituciones</div><div class="v"><span id="v3">0</span></div></div>
+    </div>
+  </section>
+
+  <section class="scene" id="G">
+    <div class="outro">
+      <div class="brand" id="brandG"><img id="markG" src="img/logo-mark.svg" alt=""><span class="w">MiPaperlux</span></div>
+      <div class="outro-t" id="oT">Capacitación <b>autónoma, gamificada y medible.</b></div>
+      <div class="outro-u" id="oU">mi.paperlux.cl</div>
+    </div>
+  </section>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  [...'MiPaperlux'].forEach((ch) => { const s = document.createElement('span'); s.textContent = ch; $('wordA').append(s); });
+  const MODS = [['Conocé tu Paperlux Tank', '4 min'], ['Encender y conectar', '5 min'], ['Tu primera clase interactiva', '7 min'], ['Juegos y actividades', '6 min'], ['En la sala, con tus alumnos', '6 min']];
+  MODS.forEach(([t, m], i) => { const e = document.createElement('div'); e.className = 'mod'; e.innerHTML = `<div class="ic"></div><div class="t">${i + 1}. ${t}</div><div class="m">${m}</div>`; $('mods').append(e); });
+  const BADGES = [['🚀', 'Primer paso'], ['🎯', 'Constante'], ['🏆', 'Experta']];
+  BADGES.forEach(([e2, t]) => { const b = document.createElement('div'); b.className = 'bdg'; b.innerHTML = `${e2}<span>${t}</span>`; $('badges').append(b); });
+
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  const show = (id, at, dur = 0.35) => tl.fromTo(id, { opacity: 0 }, { opacity: 1, duration: dur, ease: 'power2.out' }, at);
+  const hide = (id, at, dur = 0.35) => tl.fromTo(id, { opacity: 1 }, { opacity: 0, duration: dur, ease: 'power2.in', immediateRender: false }, at);
+  const stepIn = (sc, at) => {
+    tl.fromTo(`${sc} .step-n`, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' }, at);
+    tl.fromTo(`${sc} .step-t`, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power4.out' }, at + 0.05);
+  };
+  const exitZoom = (sc, at, to = 1.1) => {
+    tl.fromTo(sc, { scale: 1 }, { scale: to, duration: 0.45, ease: 'power3.in', immediateRender: false }, at);
+    hide(sc, at + 0.05, 0.35);
+  };
+  const counter = (el, to, at, dur, fmt = (v) => Math.round(v).toLocaleString('es-AR')) => {
+    const o = { v: 0 };
+    tl.fromTo(o, { v: 0 }, { v: to, duration: dur, ease: 'power3.out', onUpdate: () => { el.textContent = fmt(o.v); } }, at);
+  };
+  const arc = (el) => { const L = el.getTotalLength(); gsap.set(el, { strokeDasharray: L, strokeDashoffset: L }); return L; };
+  tl.fromTo('#grid', { x: 0, y: 0 }, { x: -60, y: -60, duration: 24, ease: 'none' }, 0);
+  tl.fromTo('#g1', { x: 0, y: 0 }, { x: 240, y: 150, duration: 24, ease: 'sine.inOut' }, 0);
+  tl.fromTo('#g2', { x: 0, y: 0 }, { x: -220, y: -140, duration: 24, ease: 'sine.inOut' }, 0);
+
+  // A · el logo
+  show('#A', 0, 0.01);
+  tl.fromTo('#markA', { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.65, ease: 'back.out(2)' }, 0.2);
+  tl.fromTo('#ringA', { scale: 0.5, opacity: 0 }, { scale: 2.6, duration: 0.9, ease: 'power2.out' }, 0.45);
+  tl.fromTo('#ringA', { opacity: 0 }, { keyframes: { opacity: [0, 0.9, 0] }, duration: 0.9, ease: 'none' }, 0.45);
+  const shiftA = () => ($('wordA').offsetWidth + 22) / 2;
+  tl.fromTo('#brandA', { x: shiftA }, { x: 0, duration: 0.8, ease: 'power3.inOut' }, 1.0);
+  tl.fromTo('#wordA span', { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.5, ease: 'power4.out', stagger: 0.04 }, 1.2);
+  tl.fromTo('#brandA', { scale: 1 }, { scale: 1.04, duration: 1.0, ease: 'none', immediateRender: false }, 1.8);
+  tl.fromTo('#brandA', { scale: 1.04, y: 0 }, { scale: 0.55, y: -60, duration: 0.4, ease: 'power3.in', immediateRender: false }, 2.65);
+  hide('#A', 2.7, 0.3);
+  show('#corner', 2.95, 0.4);
+
+  // B · el problema y el giro
+  show('#B', 3.0, 0.01);
+  tl.fromTo('#b1', { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power4.out' }, 3.1);
+  tl.fromTo('#b2', { opacity: 0, scale: 1.6, filter: 'blur(14px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.45, ease: 'power4.out' }, 3.75);
+  tl.to('#B', { keyframes: { x: [0, -12, 9, -4, 0] }, duration: 0.26, ease: 'none' }, 3.77);
+  tl.fromTo('#strike', { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: 'power3.out' }, 4.75);
+  tl.fromTo('#b1, #b2', { opacity: 1 }, { opacity: 0.35, duration: 0.4, ease: 'power2.out', immediateRender: false }, 4.85);
+  tl.fromTo('#b3', { opacity: 0, y: 80, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'back.out(1.7)' }, 5.25);
+  exitZoom('#B', 6.6, 1.15);
+
+  // C · dominado en una sesión
+  show('#C', 7.0, 0.2);
+  tl.fromTo('#cT', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power4.out' }, 7.05);
+  tl.fromTo('#cP', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 7.6);
+  tl.fromTo('.clock', { opacity: 0, scale: 0.7, rotation: -30 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: 'back.out(1.6)' }, 7.2);
+  const cL = arc($('clockArc'));
+  tl.fromTo('#clockArc', { strokeDashoffset: cL }, { strokeDashoffset: cL * 0.5, duration: 1.6, ease: 'power2.inOut' }, 7.6);
+  counter($('mins'), 30, 7.6, 1.6, (v) => (v >= 29.5 ? '< 30' : String(Math.round(v))));
+  exitZoom('#C', 9.6, 1.1);
+
+  // D · capacitación gamificada
+  show('#D', 10.0, 0.2);
+  stepIn('#D', 10.0);
+  tl.fromTo('#mods .mod', { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.45, ease: 'power3.out', stagger: 0.08 }, 10.15);
+  tl.fromTo('#side', { opacity: 0, x: 80 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' }, 10.3);
+  const pL = arc($('progArc'));
+  const mods = [...document.querySelectorAll('#mods .mod')];
+  mods.forEach((m, i) => {
+    const at = 10.9 + i * 0.46;
+    tl.fromTo(m, { '--done': 0 }, { '--done': 1, duration: 0.3, ease: 'back.out(2)' }, at);
+    tl.fromTo(m, { scale: 1 }, { keyframes: { scale: [1, 1.03, 1] }, duration: 0.3, ease: 'power2.out', immediateRender: false }, at);
+    tl.fromTo(m, { borderColor: 'rgba(244,239,255,0.14)' }, { borderColor: 'rgba(245,206,60,0.7)', duration: 0.3, ease: 'none', immediateRender: false }, at);
+  });
+  tl.fromTo('#progArc', { strokeDashoffset: pL }, { strokeDashoffset: 0, duration: 2.3, ease: 'none' }, 10.9);
+  counter($('pct'), 100, 10.9, 2.3, (v) => `${Math.round(v)}%`);
+  tl.fromTo('#badges .bdg', { opacity: 0, scale: 0.3, rotation: -15 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.45, ease: 'back.out(2.4)', stagger: 0.4 }, 11.4);
+  exitZoom('#D', 14.2, 0.9);
+
+  // E · certificado
+  show('#E', 14.6, 0.25);
+  stepIn('#E', 14.6);
+  tl.fromTo('#cert', { opacity: 0, rotationX: 50, y: 160, scale: 0.85 }, { opacity: 1, rotationX: 0, y: 0, scale: 1, duration: 0.8, ease: 'power3.out' }, 14.7);
+  tl.fromTo('#seal', { scale: 2.6, opacity: 0, rotation: -40 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.35, ease: 'power4.in' }, 15.7);
+  tl.to('#cert', { keyframes: { y: [0, 8, -3, 0] }, duration: 0.3, ease: 'none' }, 16.05);
+  exitZoom('#E', 16.8, 0.9);
+
+  // F · seguimiento en tiempo real
+  show('#F', 17.2, 0.25);
+  stepIn('#F', 17.2);
+  tl.fromTo('#dash', { opacity: 0, rotationY: -24, rotationX: 8, z: -400, x: 200 }, { opacity: 1, rotationY: -10, rotationX: 3, z: 0, x: 0, duration: 1.0, ease: 'power3.out' }, 17.3);
+  tl.fromTo('#dash', { rotationY: -10 }, { rotationY: -4, duration: 2.4, ease: 'none', immediateRender: false }, 18.3);
+  tl.fromTo('.stats .stat', { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.45, ease: 'back.out(1.6)', stagger: 0.15 }, 17.6);
+  counter($('v1'), 412, 17.9, 1.4);
+  counter($('v2'), 89, 18.05, 1.4);
+  counter($('v3'), 5, 18.2, 1.0);
+  hide('#corner', 20.4, 0.3);
+  exitZoom('#F', 20.4, 0.92);
+
+  // G · cierre
+  show('#G', 20.8, 0.2);
+  tl.fromTo('#markG', { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.55, ease: 'back.out(2)' }, 20.85);
+  tl.fromTo('#brandG .w', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' }, 21.0);
+  tl.fromTo('#oT', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 21.25);
+  tl.fromTo('#oU', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 21.5);
+  hide('#G', 23.35, 0.6);
+  tl.to({}, { duration: 0.01 }, 23.99);
+
+  window.__timelines.main = tl;
+  document.fonts.ready.then(() => { tl.seek(0); document.documentElement.dataset.ready = '1'; });
+</script>
+</body>
+</html>
