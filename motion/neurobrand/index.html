@@ -44,7 +44,7 @@
 
   /* A */
   .intro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; }
-  #cube { width: 340px; will-change: transform; }
+  #cube { width: 440px; height: 440px; margin: -50px 0; }
   #wordA { font-weight: 700; font-size: 120px; letter-spacing: -0.04em; display: flex; overflow: hidden; padding-bottom: 6px; }
   #wordA span { display: inline-block; }
   #wordA .ai { color: var(--indigo); margin-left: 24px; }
@@ -99,7 +99,7 @@
 
   /* G */
   .outro { position: absolute; left: 0; right: 0; top: 270px; display: flex; flex-direction: column; align-items: center; }
-  #cubeG { width: 200px; }
+  #cubeG { width: 260px; height: 260px; margin: -30px 0; }
   .outro .logo { margin-top: 10px; } .outro .logo i { width: 70px; height: 70px; border-radius: 20px; } .outro .logo b { font-size: 80px; }
   .outro-t { margin-top: 40px; font-weight: 500; font-size: 58px; letter-spacing: -0.03em; text-align: center; }
   .outro-t b { color: var(--indigo); font-weight: 700; }
@@ -112,7 +112,7 @@
   <div id="corner" class="logo"><i></i><b>NeuroBrand</b></div>
 
   <section class="scene" id="A">
-    <div class="intro"><img id="cube" src="img/cube.png" alt=""><div id="wordA"></div></div>
+    <div class="intro"><canvas id="cube"></canvas><div id="wordA"></div></div>
   </section>
 
   <section class="scene" id="B">
@@ -154,7 +154,7 @@
 
   <section class="scene" id="G">
     <div class="outro">
-      <img id="cubeG" src="img/cube.png" alt="">
+      <canvas id="cubeG"></canvas>
       <div class="logo" id="logoG"><i></i><b>NeuroBrand AI</b></div>
       <div class="outro-t" id="oT">Una marca que el cerebro <b>elige antes de pensarlo.</b></div>
       <div class="outro-s mono" id="oS">De una frase a una marca en 60 segundos</div>
@@ -191,8 +191,8 @@
 
   // A · el cubo y el nombre
   show('#A', 0, 0.01);
-  tl.fromTo('#cube', { opacity: 0, scale: 0.6, rotation: -18, y: 40 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 1.0, ease: 'expo.out' }, 0.15);
-  tl.fromTo('#cube', { y: 0, rotation: 0 }, { y: -14, rotation: 4, duration: 2.0, ease: 'sine.inOut', immediateRender: false }, 1.15);
+  // la forma crece y cambia de geometría desde el módulo de abajo; acá solo aparece
+  tl.fromTo('#cube', { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power2.out' }, 0.15);
   tl.fromTo('#wordA span', { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.55, ease: 'power3.out', stagger: 0.04 }, 0.8);
   tl.fromTo('#A', { scale: 1, filter: 'blur(0px)' }, { scale: 0.92, filter: 'blur(8px)', duration: 0.4, ease: 'power2.in', immediateRender: false }, 2.65);
   hide('#A', 2.7, 0.3);
@@ -257,15 +257,229 @@
 
   // G · cierre
   show('#G', 24.6, 0.2);
-  tl.fromTo('#cubeG', { opacity: 0, scale: 0.6, rotation: -16 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: 'expo.out' }, 24.65);
+  tl.fromTo('#cubeG', { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power2.out' }, 24.65);
   tl.fromTo('#logoG', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 24.9);
   tl.fromTo('#oT', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 25.15);
   tl.fromTo('#oS', { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 25.5);
   hide('#G', 27.4, 0.55);
   tl.to({}, { duration: 0.01 }, 27.99);
 
+  tl.eventCallback('onUpdate', () => { if (window.__form) window.__form(tl.time()); });
   window.__timelines.main = tl;
-  document.fonts.ready.then(() => { tl.seek(0); document.documentElement.dataset.ready = '1'; });
+  const formReady = new Promise((resolve) => { window.__formReady = resolve; });
+  Promise.all([document.fonts.ready, formReady]).then(() => { tl.seek(0); window.__form(0); document.documentElement.dataset.ready = '1'; });
+</script>
+<script type="module">
+  // La forma 3D real de NeuroBrand (src/lib/three/neuroFormScene.ts + neuroFormShader.ts), portada sin reloj:
+  // cada cuadro integra la misma persecución amortiguada desde el inicio de la escena con paso fijo, así es determinista.
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js';
+const FORM_VERTEX_HEAD = `
+uniform float uTime;
+uniform float uNoise;
+uniform float uWeights[8];
+varying float vFormHeight;
+
+const float INV_SQRT3 = 0.57735027;
+
+// Ondulación orgánica barata: productos de senos a dos frecuencias
+float formWobble(vec3 d) {
+  float slow = sin(d.x * 2.3 + uTime * 0.9) * sin(d.y * 2.7 - uTime * 0.7) * sin(d.z * 2.1 + uTime * 0.5);
+  float fast = sin(d.x * 4.1 - uTime * 0.6 + 1.7) * sin(d.y * 3.7 + uTime * 0.8 + 0.4) * sin(d.z * 4.6 - uTime * 0.4);
+  return slow * 0.7 + fast * 0.3;
+}
+
+// Cubo de esquinas suaves (superelipsoide)
+float radiusSquircle(vec3 d) {
+  vec3 a = pow(abs(d), vec3(5.0));
+  return 0.8 * pow(a.x + a.y + a.z, -0.2);
+}
+
+// Octaedro: 8 caras, aristas apenas biseladas
+float radiusDiamond(vec3 d) {
+  float sum = 0.0;
+  for (int i = 0; i < 8; i++) {
+    vec3 n = vec3((i & 1) == 0 ? 1.0 : -1.0, (i & 2) == 0 ? 1.0 : -1.0, (i & 4) == 0 ? 1.0 : -1.0) * INV_SQRT3;
+    sum += pow(max(dot(d, n), 0.0) / 0.7, 14.0);
+  }
+  return pow(sum, -1.0 / 14.0);
+}
+
+// Tetraedro: el vector angular
+float radiusTriangle(vec3 d) {
+  float sum = pow(max(dot(d, vec3(1.0, 1.0, 1.0) * INV_SQRT3), 0.0) / 0.47, 12.0);
+  sum += pow(max(dot(d, vec3(1.0, -1.0, -1.0) * INV_SQRT3), 0.0) / 0.47, 12.0);
+  sum += pow(max(dot(d, vec3(-1.0, 1.0, -1.0) * INV_SQRT3), 0.0) / 0.47, 12.0);
+  sum += pow(max(dot(d, vec3(-1.0, -1.0, 1.0) * INV_SQRT3), 0.0) / 0.47, 12.0);
+  return pow(sum, -1.0 / 12.0);
+}
+
+// Prisma hexagonal mirando a cámara
+float radiusHexagon(vec3 d) {
+  float sum = pow(abs(d.z) / 0.5, 12.0);
+  for (int i = 0; i < 6; i++) {
+    float angle = float(i) * 1.04719755;
+    sum += pow(max(dot(d, vec3(cos(angle), sin(angle), 0.0)), 0.0) / 0.84, 12.0);
+  }
+  return pow(sum, -1.0 / 12.0);
+}
+
+// Estrella de seis puntas: Kiki puro
+float radiusStar(vec3 d) {
+  vec3 a = abs(d);
+  return 0.5 + 0.8 * pow(max(a.x, max(a.y, a.z)), 5.0);
+}
+
+// Canto rodado: ovoide más estrecho arriba
+float radiusArch(vec3 d) {
+  float taper = 0.74 * (1.0 - 0.2 * d.y);
+  return 1.0 / length(vec3(d.x / taper, d.y, d.z / taper));
+}
+
+// Flor de cinco lóbulos mirando a cámara
+float radiusFlower(vec3 d) {
+  return 0.78 + 0.17 * cos(5.0 * atan(d.y, d.x)) * (1.0 - d.z * d.z);
+}
+
+float formRadius(vec3 d) {
+  float radius = 0.0;
+  if (uWeights[0] > 0.001) radius += uWeights[0] * radiusSquircle(d);
+  if (uWeights[1] > 0.001) radius += uWeights[1] * radiusDiamond(d);
+  if (uWeights[2] > 0.001) radius += uWeights[2] * radiusTriangle(d);
+  if (uWeights[3] > 0.001) radius += uWeights[3] * 0.92;
+  if (uWeights[4] > 0.001) radius += uWeights[4] * radiusHexagon(d);
+  if (uWeights[5] > 0.001) radius += uWeights[5] * radiusStar(d);
+  if (uWeights[6] > 0.001) radius += uWeights[6] * radiusArch(d);
+  if (uWeights[7] > 0.001) radius += uWeights[7] * radiusFlower(d);
+  return radius * (1.0 + uNoise * formWobble(d));
+}
+
+vec3 formPoint(vec3 d) {
+  return d * formRadius(d);
+}
+`;
+const FORM_VERTEX_NORMAL = `
+vec3 formDir = normalize(position);
+vec3 formHelper = abs(formDir.y) > 0.92 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 1.0, 0.0);
+vec3 formTangent = normalize(cross(formHelper, formDir));
+vec3 formBitangent = cross(formDir, formTangent);
+vec3 formP0 = formPoint(formDir);
+vec3 formP1 = formPoint(normalize(formDir + formTangent * 0.006));
+vec3 formP2 = formPoint(normalize(formDir + formBitangent * 0.006));
+vec3 objectNormal = normalize(cross(formP1 - formP0, formP2 - formP0));
+vFormHeight = formP0.y / 1.6 + 0.5;
+`;
+const FORM_VERTEX_POSITION = `
+vec3 transformed = formP0;
+`;
+const FORM_FRAGMENT_HEAD = `
+uniform vec3 uColorCore;
+uniform vec3 uColorRim;
+uniform float uBands;
+uniform vec3 uBand60;
+uniform vec3 uBand30;
+uniform vec3 uBand10;
+varying float vFormHeight;
+`;
+const FORM_FRAGMENT_COLOR = `
+{
+  vec3 formNormal = normalize(vNormal);
+  float formFacing = clamp(dot(formNormal, normalize(vViewPosition)), 0.0, 1.0);
+  float formRim = pow(1.0 - formFacing, 1.5);
+  vec3 formTint = mix(uColorCore, uColorRim, clamp(formRim * 1.1 + formNormal.y * 0.22 + 0.08, 0.0, 1.0));
+
+  float formHeight = clamp(vFormHeight, 0.0, 1.0);
+  vec3 formBands = mix(uBand60, uBand30, smoothstep(0.585, 0.615, formHeight));
+  formBands = mix(formBands, uBand10, smoothstep(0.885, 0.915, formHeight));
+
+  diffuseColor.rgb = mix(formTint, formBands, uBands);
+}
+`;
+  const SHAPES = ['squircle', 'diamond', 'triangle', 'circle', 'hexagon', 'star', 'arch', 'flower'];
+  const POSE_SPEED = 4.5, FOLLOW_SPEED = 7, STEP = 1 / 240;
+  const CORE = [0x33 / 255, 0x47 / 255, 0xc4 / 255], RIM = [0xe6 / 255, 0x56 / 255, 0x71 / 255];
+  const pose = (shape, extra = {}) => ({ weights: SHAPES.map((s) => (s === shape ? 1 : 0)), noise: 0, spin: 0.3, ...extra });
+  const LIVING = pose('circle', { noise: 0.2, spin: 0.2 });
+  // la carga real del sitio: recorre las geometrías hasta quedar viva
+  const INTRO = [{ at: 0, pose: pose('diamond', { spin: 2.4 }) }, { at: 0.28, pose: pose('triangle', { spin: 2.1 }) }, { at: 0.52, pose: pose('hexagon', { spin: 1.7 }) }, { at: 0.76, pose: pose('squircle', { spin: 1.2 }) }, { at: 1, pose: LIVING }];
+  const OUTRO = [{ at: 0, pose: pose('squircle', { spin: 1.2 }) }, { at: 1, pose: LIVING }];
+  const smooth = (v) => { const c = Math.min(1, Math.max(0, v)); return c * c * (3 - 2 * c); };
+  const mix = (a, b, k) => ({ weights: a.weights.map((w, i) => w + (b.weights[i] - w) * k), noise: a.noise + (b.noise - a.noise) * k, spin: a.spin + (b.spin - a.spin) * k });
+  const sample = (keys, p) => {
+    if (p <= keys[0].at) return keys[0].pose;
+    for (let i = 1; i < keys.length; i += 1) if (p <= keys[i].at) return mix(keys[i - 1].pose, keys[i].pose, smooth((p - keys[i - 1].at) / (keys[i].at - keys[i - 1].at)));
+    return keys[keys.length - 1].pose;
+  };
+
+  function buildEnvironment(renderer) {
+    const studio = new THREE.Scene();
+    studio.background = new THREE.Color('#dfe3f4');
+    [['#ffffff', 5, [0, 6, 1], 9], ['#4058d4', 4, [-6, 0.5, 2], 7], ['#e65671', 3.5, [6, -1, 1], 7], ['#ffffff', 2.5, [0, 1, -7], 8], ['#ffffff', 1.2, [0, -6, 0], 9]].forEach(([color, intensity, position, size]) => {
+      const panel = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(intensity), side: THREE.DoubleSide }));
+      panel.position.set(...position); panel.lookAt(0, 0, 0); studio.add(panel);
+    });
+    const generator = new THREE.PMREMGenerator(renderer);
+    const texture = generator.fromScene(studio, 0.04).texture;
+    generator.dispose();
+    return texture;
+  }
+
+  // canvas, escala del sólido, inicio de la escena, fotogramas de pose y duración del recorrido
+  function makeForm(canvas, scale, start, keys, span) {
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, preserveDrawingBuffer: true });
+    renderer.setPixelRatio(2);
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
+    camera.position.z = 7;
+    scene.environment = buildEnvironment(renderer);
+    const key = new THREE.DirectionalLight('#ffffff', 1.1); key.position.set(3, 4, 5); scene.add(key);
+
+    const uniforms = {
+      uTime: { value: 0 }, uNoise: { value: 0 }, uWeights: { value: keys[0].pose.weights.slice() }, uBands: { value: 0 },
+      uColorCore: { value: new THREE.Color().setRGB(...CORE, THREE.SRGBColorSpace) }, uColorRim: { value: new THREE.Color().setRGB(...RIM, THREE.SRGBColorSpace) },
+      uBand60: { value: new THREE.Color('#e9ebf7') }, uBand30: { value: new THREE.Color('#4058d4') }, uBand10: { value: new THREE.Color('#e65671') },
+    };
+    const material = new THREE.MeshPhysicalMaterial({ metalness: 0.3, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.12, iridescence: 0.85, iridescenceIOR: 1.6, iridescenceThicknessRange: [140, 520], envMapIntensity: 1.15 });
+    material.onBeforeCompile = (shader) => {
+      Object.assign(shader.uniforms, uniforms);
+      shader.vertexShader = shader.vertexShader.replace('#include <common>', `#include <common>\n${FORM_VERTEX_HEAD}`).replace('#include <beginnormal_vertex>', FORM_VERTEX_NORMAL).replace('#include <begin_vertex>', FORM_VERTEX_POSITION);
+      shader.fragmentShader = shader.fragmentShader.replace('#include <common>', `#include <common>\n${FORM_FRAGMENT_HEAD}`).replace('#include <color_fragment>', `#include <color_fragment>\n${FORM_FRAGMENT_COLOR}`);
+    };
+    const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 56), material);
+    mesh.frustumCulled = false;
+    scene.add(mesh);
+
+    return (time) => {
+      const local = time - start;
+      if (local < -0.05 || local > 4) return;
+      // nace diminuta y persigue la pose, igual que el render() del sitio
+      const cur = { size: 0, spin: keys[0].pose.spin, noise: keys[0].pose.noise, angle: 0, weights: keys[0].pose.weights.slice() };
+      for (let s = 0; s < local; s += STEP) {
+        const dt = Math.min(STEP, local - s);
+        const target = sample(keys, s / span);
+        const move = 1 - Math.exp(-dt * FOLLOW_SPEED), morph = 1 - Math.exp(-dt * POSE_SPEED);
+        cur.size += (1 - cur.size) * move;
+        cur.spin += (target.spin - cur.spin) * morph;
+        cur.noise += (target.noise - cur.noise) * morph;
+        target.weights.forEach((w, i) => { cur.weights[i] += (w - cur.weights[i]) * morph; });
+        cur.angle += cur.spin * dt;
+      }
+      uniforms.uTime.value = Math.max(0, local);
+      uniforms.uNoise.value = cur.noise;
+      uniforms.uWeights.value = cur.weights;
+      mesh.scale.setScalar(Math.max(0.0001, cur.size * scale));
+      mesh.rotation.set(0.22, cur.angle, 0.1);
+      renderer.render(scene, camera);
+    };
+  }
+
+  const forms = [makeForm(document.getElementById('cube'), 1.45, 0.15, INTRO, 2.1), makeForm(document.getElementById('cubeG'), 1.59, 24.65, OUTRO, 1.1)];
+  window.__form = (t) => forms.forEach((f) => f(t));
+  window.__form(0.15); window.__form(24.65);
+  window.__form(window.__timelines.main.time());
+  window.__formReady();
 </script>
 </body>
 </html>
