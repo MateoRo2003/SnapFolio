@@ -6,6 +6,6 @@ determinista) que se renderizan cuadro por cuadro. **No hace falta subir esta ca
 Renderizar (necesita Chrome, `puppeteer-core` y ffmpeg):
 
 ```
-node motion/render.mjs motion/orbita/index.html motion/orbita/frames 30 15
+node motion/render.mjs motion/orbita/index.html motion/orbita/frames 30 25
 ffmpeg -framerate 30 -i motion/orbita/frames/%04d.jpg -vf format=yuv420p -an -c:v libx264 -preset slow -crf 23 -movflags +faststart assets/video/orbita.mp4
 ```

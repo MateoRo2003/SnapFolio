@@ -3,54 +3,92 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1920, height=1080">
-<title>Órbita — tu tienda, a tu gusto (15 s)</title>
+<title>Órbita — tu tienda, a tu manera (25 s)</title>
 <!--
   Composición estilo HyperFrames: una sola línea de tiempo GSAP pausada (window.__timelines.main),
-  15 s a 30 fps, determinista (sin azar ni relojes): se renderiza cuadro por cuadro con seek.
-  La idea: con Órbita armás tu propia tienda online, a tu gusto.
-  A 0.0–2.4   "TU TIENDA, / A TU GUSTO." sobre el cielo y el borde del planeta.
-  B 2.4–4.8   01 · Elegí qué vendés: los rubros caen en una grilla y se marca uno.
-  C 4.8–9.2   02 · Hacela tuya: una tienda que se arma en vivo y cambia color, letra y portada
-              mientras un panel de estilo va eligiendo.
-  D 9.2–11.2  03 · Publicala: se escribe el link y la tienda queda online.
-  E 11.2–15   mosaico de tiendas reales hechas con Órbita (cada una distinta) que se aleja y cierra
-              con "Tu negocio, en órbita." y vuelve al cielo (el video va en loop).
+  25 s a 30 fps, determinista (sin azar ni relojes): se renderiza cuadro por cuadro con seek.
+  La idea: con Órbita cualquier negocio arma su propia tienda online, a su manera.
+  Letra Geist, como la marca; el logo es el de la app (planeta, anillo y satélite que gira).
+  A  0.0–3.4   el logo se arma: anillo, planeta, satélite en órbita y "Órbita".
+  B  3.4–6.4   "TU MARCA. / TU TIENDA. / TUS REGLAS." en tres golpes.
+  C  6.4–9.4   01 · Elegí qué vendés: caen los rubros y se marca uno.
+  D  9.4–12.6  02 · Cargá tus productos: llegan con foto, precio y stock.
+  E 12.6–17.4  03 · Hacela tuya: la tienda cambia de color, letra y portada.
+  F 17.4–20.0  04 · Compartí tu link: se escribe el link, sale a WhatsApp e Instagram, queda online.
+  G 20.0–22.8  tiendas reales hechas con Órbita, cada una distinta.
+  H 22.8–25.0  cierre con el logo grande y "Tu negocio, en órbita." y vuelve al cielo (loop).
+  Desde B hasta G, el logo queda chico arriba a la derecha.
 -->
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&family=Playfair+Display:wght@700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@500;600&family=Playfair+Display:wght@700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <style>
-  :root { --blue: #3b82f6; --blue2: #60a5fa; --ink: #05060a; }
+  :root { --blue: #3b82f6; --blue2: #60a5fa; --sky: #93c5fd; --ink: #05060a; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--ink); color: #fff; font-family: 'Outfit', sans-serif; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--ink); color: #fff; font-family: 'Geist', sans-serif; }
   .stage { position: absolute; inset: 0; overflow: hidden; }
   .scene { position: absolute; inset: 0; opacity: 0; will-change: transform, opacity; }
-  .mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.22em; text-transform: uppercase; }
+  .mono { font-family: 'Geist Mono', monospace; letter-spacing: 0.22em; text-transform: uppercase; }
   #stars { position: absolute; inset: -60px; will-change: transform; }
   .star { position: absolute; border-radius: 50%; background: #fff; }
-  .nebula { position: absolute; inset: 0; background: radial-gradient(60% 45% at 50% 105%, rgba(59,130,246,0.26), transparent 70%); }
+  .nebula { position: absolute; inset: 0; background: radial-gradient(60% 45% at 50% 105%, rgba(59,130,246,0.24), transparent 70%); }
   .step { position: absolute; left: 120px; top: 110px; display: flex; align-items: baseline; gap: 22px; }
-  .step-n { font-family: 'IBM Plex Mono', monospace; font-size: 26px; color: var(--blue2); }
-  .step-t { font-weight: 700; font-size: 64px; letter-spacing: -0.03em; }
+  .step-n { font-family: 'Geist Mono', monospace; font-size: 26px; color: var(--blue2); }
+  .step-t { font-weight: 800; font-size: 64px; letter-spacing: -0.035em; }
 
-  /* A */
-  #planet { position: absolute; left: 50%; top: 760px; width: 3000px; height: 3000px; margin-left: -1500px; border-radius: 50%;
-    background: radial-gradient(circle at 50% 0%, #0b1a3a 0%, #050914 18%, #02030a 40%);
-    box-shadow: 0 -2px 0 0 rgba(147,197,253,0.95), 0 -10px 40px 6px rgba(59,130,246,0.85), 0 -60px 160px 40px rgba(59,130,246,0.35), inset 0 30px 90px rgba(59,130,246,0.45); }
-  .hero-line { position: absolute; left: 0; right: 0; text-align: center; font-weight: 800; font-size: 190px; line-height: 1; letter-spacing: -0.045em; }
-  #l1 { top: 300px; }
-  #l2 { top: 500px; background: linear-gradient(90deg, #93c5fd, #3b82f6 45%, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  /* el logo de Órbita (como OrbitaLogo de la app) */
+  .lg { position: relative; display: inline-block; flex: none; }
+  .lg .ring { position: absolute; inset: 0; border-radius: 50%; border: solid rgba(59,130,246,0.4); }
+  .lg .planet { position: absolute; left: 50%; top: 50%; width: 34%; height: 34%; border-radius: 50%; background: var(--blue); transform: translate(-50%, -50%); }
+  .lg .orb { position: absolute; inset: 0; }
+  .lg .sat { position: absolute; left: 50%; border-radius: 50%; background: var(--sky); transform: translateX(-50%); box-shadow: 0 0 14px rgba(147,197,253,0.85); }
+  .word { font-weight: 900; letter-spacing: -0.02em; }
 
-  /* B */
+  /* A: el logo se arma */
+  .intro { position: absolute; left: 50%; top: 50%; display: flex; align-items: center; gap: 46px; transform: translate(-50%, -50%); }
+  #lgA { width: 240px; height: 240px; }
+  #lgA .ring { border-width: 8px; }
+  #lgA .planet { box-shadow: 0 0 80px rgba(59,130,246,0.55); }
+  #lgA .sat { top: -18px; width: 40px; height: 40px; }
+  #wordA { font-size: 190px; line-height: 1; display: flex; overflow: hidden; padding: 10px 0; }
+  #wordA span { display: inline-block; }
+  .flare { position: absolute; left: 50%; top: 50%; width: 900px; height: 900px; margin: -450px 0 0 -450px; border-radius: 50%; background: radial-gradient(closest-side, rgba(59,130,246,0.35), transparent); opacity: 0; }
+
+  /* el logo chico de la esquina */
+  #corner { position: absolute; z-index: 20; right: 110px; top: 96px; display: flex; align-items: center; gap: 16px; opacity: 0; }
+  #lgC { width: 54px; height: 54px; }
+  #lgC .ring { border-width: 2px; }
+  #lgC .planet { box-shadow: 0 0 18px rgba(59,130,246,0.5); }
+  #lgC .sat { top: -4px; width: 10px; height: 10px; }
+  #corner .word { font-size: 34px; }
+
+  /* B: tres golpes */
+  .beat { position: absolute; left: 0; right: 0; text-align: center; font-weight: 900; font-size: 210px; line-height: 1; letter-spacing: -0.05em; }
+  #b1 { top: 160px; } #b2 { top: 400px; } #b3 { top: 640px; }
+  #b3 { background: linear-gradient(90deg, #93c5fd, #3b82f6 45%, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* C: rubros */
   .grid { position: absolute; left: 120px; right: 120px; top: 270px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; perspective: 1400px; }
   .rubro { height: 150px; border-radius: 22px; background: rgba(15,23,42,0.85); border: 1.5px solid rgba(147,197,253,0.2); display: flex; flex-direction: column; justify-content: center; padding: 0 34px; will-change: transform; }
-  .rubro b { font-size: 38px; font-weight: 600; }
+  .rubro b { font-size: 38px; font-weight: 700; }
   .rubro span { margin-top: 6px; font-size: 21px; color: rgba(255,255,255,0.55); }
   .rubro.pick { border-color: var(--blue2); }
 
-  /* C: el armado */
+  /* D: productos */
+  .pgrid { position: absolute; left: 120px; right: 120px; top: 260px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
+  .pc { border-radius: 26px; overflow: hidden; background: #0f172a; border: 1px solid rgba(147,197,253,0.22); will-change: transform; }
+  .pc img { display: block; width: 100%; height: 330px; object-fit: cover; background: #f4f5f8; }
+  .pc .b { padding: 22px 26px; }
+  .pc .n { font-size: 28px; font-weight: 600; }
+  .pc .row { margin-top: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .pc .p { font-size: 32px; font-weight: 800; color: var(--sky); font-variant-numeric: tabular-nums; }
+  .pc .s { padding: 8px 16px; border-radius: 999px; background: rgba(34,197,94,0.14); color: #4ade80; font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .upload { position: absolute; left: 120px; bottom: 96px; display: flex; align-items: center; gap: 16px; padding: 18px 30px; border-radius: 999px; background: var(--blue); font-size: 26px; font-weight: 600; }
+  .upload i { font-style: normal; font-size: 32px; }
+
+  /* E: el armado */
   .builder { position: absolute; left: 120px; right: 120px; top: 240px; bottom: 90px; display: flex; gap: 40px; }
   .panel { width: 420px; flex: none; border-radius: 26px; background: #0f172a; border: 1px solid rgba(147,197,253,0.25); padding: 34px; display: flex; flex-direction: column; gap: 30px; }
-  .p-label { font-family: 'IBM Plex Mono', monospace; font-size: 16px; letter-spacing: 0.16em; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+  .p-label { font-family: 'Geist Mono', monospace; font-size: 16px; letter-spacing: 0.16em; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
   .swatches { display: flex; gap: 16px; }
   .sw { width: 56px; height: 56px; border-radius: 50%; position: relative; }
   .sw.on::after { content: ''; position: absolute; inset: -9px; border-radius: 50%; border: 3px solid #fff; }
@@ -58,72 +96,98 @@
   .opt { padding: 14px 18px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.08); font-size: 24px; }
   .opt.on { border-color: var(--blue2); background: rgba(59,130,246,0.14); }
   .covers { flex-direction: row; }
-  .cv { flex: 1; height: 66px; border-radius: 12px; background-size: cover; background-position: center; border: 3px solid transparent; }
+  .cv { flex: 1; height: 66px; border-radius: 12px; border: 3px solid transparent; }
   .cv.on { border-color: #fff; }
   .browser { flex: 1; border-radius: 26px; overflow: hidden; background: #fff; box-shadow: 0 40px 120px rgba(0,0,0,0.55), 0 0 0 1px rgba(147,197,253,0.3); display: flex; flex-direction: column; }
   .bar { height: 54px; background: #eef0f4; display: flex; align-items: center; gap: 10px; padding: 0 22px; flex: none; }
   .bar i { width: 13px; height: 13px; border-radius: 50%; background: #c9ccd3; }
-  .url { margin-left: 18px; padding: 8px 22px; border-radius: 999px; background: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 19px; color: #475569; min-width: 420px; }
+  .url { margin-left: 18px; padding: 8px 22px; border-radius: 999px; background: #fff; font-family: 'Geist Mono', monospace; font-size: 19px; color: #475569; min-width: 420px; }
   .shop { position: relative; flex: 1; overflow: hidden; --c: #3b82f6; }
   .s-nav { height: 76px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; background: #fff; border-bottom: 1px solid #eef0f4; }
   .s-logo { font-size: 34px; font-weight: 800; color: #0f172a; }
   .s-links { display: flex; gap: 30px; font-size: 20px; color: #64748b; }
   .s-cart { padding: 10px 22px; border-radius: 999px; color: #fff; font-size: 19px; font-weight: 600; background: var(--c); }
   .s-hero { position: relative; height: 330px; overflow: hidden; }
-  .s-hero .img { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; }
+  .s-hero .img { position: absolute; inset: 0; opacity: 0; }
   .s-hero .img.k0 { opacity: 1; }
-  .s-hero .img.k1 { z-index: 0; } .s-hero .img.k2 { z-index: 0; }
   .s-hero .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.35), rgba(0,0,0,0)); }
   .s-title { position: absolute; z-index: 1; left: 44px; top: 56px; font-size: 72px; font-weight: 800; line-height: 1; color: #fff; letter-spacing: -0.02em; }
   .s-btn { position: absolute; z-index: 1; left: 44px; top: 238px; padding: 14px 30px; border-radius: 999px; background: var(--c); color: #fff; font-size: 22px; font-weight: 600; }
-  .s-prods { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; padding: 28px 40px; }
+  .s-prods { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; padding: 26px 40px; }
   .prod { border-radius: 16px; overflow: hidden; background: #f4f5f8; will-change: transform; }
-  .prod .ph { height: 118px; }
-  .prod .tx { padding: 12px 16px; font-size: 18px; color: #0f172a; }
-  .prod .pr { padding: 0 16px 14px; font-size: 20px; font-weight: 700; color: var(--c); }
+  .prod img { display: block; width: 100%; height: 118px; object-fit: cover; }
+  .prod .tx { padding: 10px 16px 4px; font-size: 18px; color: #0f172a; }
+  .prod .pr { padding: 0 16px 12px; font-size: 20px; font-weight: 700; color: var(--c); }
 
-  /* D */
-  .publish { position: absolute; left: 50%; top: 380px; width: 1200px; margin-left: -600px; text-align: center; }
-  .link { display: inline-block; padding: 34px 60px; border-radius: 999px; background: #0f172a; border: 2px solid rgba(147,197,253,0.4); font-family: 'IBM Plex Mono', monospace; font-size: 58px; color: #fff; min-width: 940px; min-height: 140px; text-align: left; }
+  /* F: compartí */
+  .publish { position: absolute; left: 50%; top: 360px; width: 1300px; margin-left: -650px; text-align: center; }
+  .link { display: inline-block; padding: 34px 60px; border-radius: 999px; background: #0f172a; border: 2px solid rgba(147,197,253,0.4); font-family: 'Geist Mono', monospace; font-size: 58px; color: #fff; min-width: 940px; min-height: 140px; text-align: left; }
   .link em { font-style: normal; color: var(--blue2); }
-  .live { margin-top: 44px; display: inline-flex; align-items: center; gap: 18px; padding: 18px 34px; border-radius: 999px; background: rgba(34,197,94,0.14); color: #4ade80; font-size: 34px; font-weight: 600; }
+  .shares { margin-top: 40px; display: flex; justify-content: center; gap: 22px; }
+  .share { padding: 18px 32px; border-radius: 999px; font-size: 28px; font-weight: 600; }
+  .wa { background: #16a34a; } .ig { background: linear-gradient(90deg, #f97316, #db2777, #7c3aed); } .cp { background: #1e293b; border: 1px solid rgba(255,255,255,0.2); }
+  .live { margin-top: 36px; display: inline-flex; align-items: center; gap: 18px; padding: 16px 32px; border-radius: 999px; background: rgba(34,197,94,0.14); color: #4ade80; font-size: 32px; font-weight: 600; }
   .live i { width: 20px; height: 20px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 20px #4ade80; }
-  .ring { position: absolute; left: 50%; top: 450px; width: 300px; height: 300px; margin: -150px 0 0 -150px; border-radius: 50%; border: 5px solid var(--blue2); opacity: 0; }
+  .ring2 { position: absolute; left: 50%; top: 430px; width: 300px; height: 300px; margin: -150px 0 0 -150px; border-radius: 50%; border: 5px solid var(--blue2); opacity: 0; }
 
-  /* E */
+  /* G: tiendas reales */
   #wallWrap { position: absolute; inset: 0; perspective: 1800px; }
   #wall { position: absolute; left: 50%; top: 50%; width: 2700px; height: 1131px; margin: -565px 0 0 -1350px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; transform-style: preserve-3d; will-change: transform; }
   .tile { border-radius: 22px; overflow: hidden; position: relative; box-shadow: 0 30px 90px rgba(0,0,0,0.5); background: #111; }
+  .tile img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+  .tile span { position: absolute; left: 22px; bottom: 20px; padding: 10px 20px; border-radius: 999px; background: rgba(5,6,10,0.8); font-family: 'Geist Mono', monospace; font-size: 22px; }
   .tile.yours { background: #0f172a; border: 3px dashed rgba(147,197,253,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
   .yours .plus { font-size: 170px; font-weight: 300; line-height: 0.8; color: var(--blue2); }
-  .yours .yt { font-size: 56px; font-weight: 700; }
-  .tile img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
-  .tile span { position: absolute; left: 22px; bottom: 20px; padding: 10px 20px; border-radius: 999px; background: rgba(5,6,10,0.8); font-family: 'IBM Plex Mono', monospace; font-size: 22px; letter-spacing: 0.04em; }
-  .end { position: absolute; left: 0; right: 0; top: 400px; text-align: center; }
-  .end-eyebrow { font-size: 24px; color: #93c5fd; opacity: 0; }
-  .end-t { margin-top: 20px; font-weight: 800; font-size: 150px; letter-spacing: -0.045em; line-height: 1; opacity: 0; }
-  .end-t b { background: linear-gradient(90deg, #93c5fd, #3b82f6 45%, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .veil { position: absolute; inset: 0; background: radial-gradient(60% 50% at 50% 52%, rgba(5,6,10,0.92), rgba(5,6,10,0.55)); opacity: 0; }
+  .yours .yt { font-size: 56px; font-weight: 800; }
+  .g-cap { position: absolute; left: 0; right: 0; bottom: 70px; text-align: center; font-size: 24px; color: var(--sky); opacity: 0; }
+
+  /* H: cierre */
+  .outro { position: absolute; left: 0; right: 0; top: 250px; display: flex; flex-direction: column; align-items: center; }
+  .outro-logo { display: flex; align-items: center; gap: 30px; }
+  #lgH { width: 150px; height: 150px; }
+  #lgH .ring { border-width: 5px; }
+  #lgH .planet { box-shadow: 0 0 60px rgba(59,130,246,0.55); }
+  #lgH .sat { top: -12px; width: 26px; height: 26px; }
+  .outro-logo .word { font-size: 120px; }
+  .outro-t { margin-top: 56px; font-weight: 900; font-size: 96px; letter-spacing: -0.045em; }
+  .outro-t b { background: linear-gradient(90deg, #93c5fd, #3b82f6 45%, #a5b4fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .outro-url { margin-top: 30px; padding: 16px 36px; border-radius: 999px; border: 1.5px solid rgba(147,197,253,0.4); font-family: 'Geist Mono', monospace; font-size: 30px; color: var(--sky); }
 </style>
 </head>
 <body>
-<div class="stage" data-duration="15">
+<div class="stage" data-duration="25">
   <div id="stars"></div>
   <div class="nebula"></div>
 
+  <div id="corner"><span class="lg" id="lgC"><span class="ring"></span><span class="planet"></span><span class="orb"><span class="sat"></span></span></span><span class="word">Órbita</span></div>
+
   <section class="scene" id="A">
-    <div id="planet"></div>
-    <div class="hero-line" id="l1">TU TIENDA,</div>
-    <div class="hero-line" id="l2">A TU GUSTO.</div>
+    <div class="flare" id="flare"></div>
+    <div class="intro">
+      <span class="lg" id="lgA"><span class="ring"></span><span class="planet"></span><span class="orb"><span class="sat"></span></span></span>
+      <div class="word" id="wordA"></div>
+    </div>
   </section>
 
   <section class="scene" id="B">
+    <div class="beat" id="b1">TU MARCA.</div>
+    <div class="beat" id="b2">TU TIENDA.</div>
+    <div class="beat" id="b3">TUS REGLAS.</div>
+  </section>
+
+  <section class="scene" id="C">
     <div class="step"><span class="step-n">01</span><span class="step-t">Elegí qué vendés</span></div>
     <div class="grid" id="grid"></div>
   </section>
 
-  <section class="scene" id="C">
-    <div class="step"><span class="step-n">02</span><span class="step-t">Hacela tuya</span></div>
+  <section class="scene" id="D">
+    <div class="step"><span class="step-n">02</span><span class="step-t">Cargá tus productos</span></div>
+    <div class="pgrid" id="pgrid"></div>
+    <div class="upload" id="upload"><i>＋</i>Agregar producto</div>
+  </section>
+
+  <section class="scene" id="E">
+    <div class="step"><span class="step-n">03</span><span class="step-t">Hacela tuya</span></div>
     <div class="builder">
       <div class="panel" id="panel">
         <div><div class="p-label">COLOR</div><div class="swatches" id="sws"></div></div>
@@ -141,21 +205,26 @@
     </div>
   </section>
 
-  <section class="scene" id="D">
-    <div class="step"><span class="step-n">03</span><span class="step-t">Publicala y empezá a vender</span></div>
-    <div class="ring" id="ring"></div>
+  <section class="scene" id="F">
+    <div class="step"><span class="step-n">04</span><span class="step-t">Compartí tu link</span></div>
+    <div class="ring2" id="ring2"></div>
     <div class="publish">
       <div class="link" id="link"><span id="linkText"></span></div>
+      <div class="shares" id="shares"><div class="share wa">WhatsApp</div><div class="share ig">Instagram</div><div class="share cp">Copiar link</div></div>
       <div><div class="live" id="live"><i></i>Tu tienda está online</div></div>
     </div>
   </section>
 
-  <section class="scene" id="E">
+  <section class="scene" id="G">
     <div id="wallWrap"><div id="wall"></div></div>
-    <div class="veil" id="veil"></div>
-    <div class="end" id="end">
-      <div class="end-eyebrow mono">Negocios reales, cada uno a su manera</div>
-      <div class="end-t">Tu negocio, <b>en órbita.</b></div>
+    <div class="g-cap mono" id="gCap">Negocios reales que ya venden con Órbita, cada uno a su manera</div>
+  </section>
+
+  <section class="scene" id="H">
+    <div class="outro">
+      <div class="outro-logo"><span class="lg" id="lgH"><span class="ring"></span><span class="planet"></span><span class="orb"><span class="sat"></span></span></span><span class="word" id="wordH">Órbita</span></div>
+      <div class="outro-t" id="outroT">Tu negocio, <b>en órbita.</b></div>
+      <div class="outro-url" id="outroUrl">orbita.site</div>
     </div>
   </section>
 </div>
@@ -163,21 +232,37 @@
 <script>
   const hash = (i) => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
   const $ = (id) => document.getElementById(id);
-  for (let i = 0; i < 220; i++) {
+  for (let i = 0; i < 230; i++) {
     const s = document.createElement('div');
     s.className = 'star';
     const r = hash(i + 7) < 0.08 ? 2.6 : 0.8 + hash(i + 3) * 1.4;
     Object.assign(s.style, { left: `${hash(i) * 2040}px`, top: `${hash(i + 101) * 1200}px`, width: `${r}px`, height: `${r}px`, opacity: (0.25 + hash(i + 9) * 0.7).toFixed(2) });
     $('stars').append(s);
   }
-  // B: los rubros (en cada uno el panel se arma distinto)
+  // A: "Órbita" letra por letra
+  [...'Órbita'].forEach((ch) => { const s = document.createElement('span'); s.textContent = ch; $('wordA').append(s); });
+
+  // C: rubros
   const RUBROS = [['Indumentaria', 'Talles y colores'], ['Electrónica', 'N° de serie e IMEI'], ['Joyería', 'Materiales y medidas'], ['Ferretería', 'Venta por metro'],
     ['Librería', 'ISBN y editorial'], ['Pet shop', 'Por peso'], ['Calzado', 'Numeración'], ['Cosmética', 'Tonos y vencimientos']];
-  RUBROS.forEach(([t, d], i) => { const e = document.createElement('div'); e.className = 'rubro' + (i === 0 ? ' pick' : ''); e.innerHTML = `<b>${t}</b><span>${d}</span>`; $('grid').append(e); });
+  const PICK = 1; // electrónica, como los productos
+  RUBROS.forEach(([t, d], i) => { const e = document.createElement('div'); e.className = 'rubro' + (i === PICK ? ' pick' : ''); e.innerHTML = `<b>${t}</b><span>${d}</span>`; $('grid').append(e); });
 
-  // C: los estilos que se van eligiendo (cada portada es de una tienda real hecha con Órbita)
+  // D y E: productos (fotos de la tienda demo de Órbita)
+  const PRODS = [['Auriculares Pulse', 54900, 'img/prod-1.jpg', 24], ['Parlante Dot', 41249, 'img/prod-2.jpg', 12], ['Smartwatch Run', 179999, 'img/prod-3.jpg', 8], ['Robot aspiradora', 292499, 'img/prod-4.jpg', 5]];
+  const money = (n) => '$' + Math.round(n).toLocaleString('es-AR');
+  PRODS.forEach(([t, p, img, st], i) => {
+    const e = document.createElement('div'); e.className = 'pc';
+    e.innerHTML = `<img src="${img}" alt=""><div class="b"><div class="n">${t}</div><div class="row"><span class="p" data-p="${p}">$0</span><span class="s" data-s="${st}">Stock 0</span></div></div>`;
+    $('pgrid').append(e);
+    const m = document.createElement('div'); m.className = 'prod';
+    m.innerHTML = `<img src="${img}" alt=""><div class="tx">${t}</div><div class="pr">${money(p)}</div>`;
+    $('prods').append(m);
+  });
+
+  // E: estilos (portadas sin texto)
   const LOOKS = [
-    { c: '#3b82f6', font: "'Outfit', sans-serif", name: 'Moderna', logo: 'Tu Tienda',
+    { c: '#3b82f6', font: "'Geist', sans-serif", name: 'Moderna', logo: 'Tu Tienda',
       cover: 'radial-gradient(circle at 78% 40%, #93c5fd 0 70px, transparent 71px), radial-gradient(circle at 66% 70%, rgba(255,255,255,0.35) 0 120px, transparent 121px), radial-gradient(circle at 88% 85%, #1e40af 0 160px, transparent 161px), linear-gradient(120deg, #1d4ed8, #60a5fa)' },
     { c: '#ef4444', font: "'Playfair Display', serif", name: 'Elegante', logo: 'Tu Tienda',
       cover: 'linear-gradient(90deg, transparent 0 62%, rgba(239,68,68,0.9) 62% 62.6%, transparent 62.6% 70%, rgba(239,68,68,0.5) 70% 70.4%, transparent 70.4%), radial-gradient(ellipse at 80% 50%, #3f0d0d, transparent 60%), linear-gradient(120deg, #0a0a0a, #1c1c1c)' },
@@ -191,8 +276,6 @@
     const im = document.createElement('div'); im.className = `img k${i}`; im.style.background = l.cover; $('sHero').insertBefore(im, $('sHero').querySelector('.shade'));
   });
   const extra = document.createElement('div'); extra.className = 'sw'; extra.style.background = '#16a34a'; $('sws').append(extra);
-  const PRODS = [['Remera básica', '$18.900'], ['Campera', '$54.000'], ['Zapatillas', '$72.500'], ['Gorra', '$12.300']];
-  PRODS.forEach(([t, p], i) => { const e = document.createElement('div'); e.className = 'prod'; e.innerHTML = `<div class="ph" style="background:hsl(${210 + i * 25} 25% ${84 - i * 3}%)"></div><div class="tx">${t}</div><div class="pr">${p}</div>`; $('prods').append(e); });
   let lookNow = -1;
   const setLook = (k) => {
     if (k === lookNow) return;
@@ -207,12 +290,10 @@
     [...$('covers').children].forEach((e, i) => e.classList.toggle('on', i === k));
   };
 
-  // E: tiendas reales hechas con Órbita
+  // G: tiendas reales
   const STORES = [['euge', 'euge-joyas.orbita.site'], ['fachi', 'fachiimports.orbita.site'], ['indecisas', 'indecisastore.orbita.site'], ['venus', 'venustyle.orbita.site'], ['tfc', 'tefaltacalleok.com']];
   STORES.forEach(([img, url]) => { const e = document.createElement('div'); e.className = 'tile'; e.innerHTML = `<img src="img/store-${img}.jpg" alt=""><span>${url}</span>`; $('wall').append(e); });
-  // la última: el lugar para la tuya
-  const yours = document.createElement('div');
-  yours.className = 'tile yours';
+  const yours = document.createElement('div'); yours.className = 'tile yours';
   yours.innerHTML = '<div class="plus">+</div><div class="yt">Tu tienda acá</div><span>tutienda.orbita.site</span>';
   $('wall').append(yours);
 
@@ -225,79 +306,119 @@
     tl.fromTo(`${sc} .step-n`, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' }, at);
     tl.fromTo(`${sc} .step-t`, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power4.out' }, at + 0.05);
   };
-  tl.fromTo('#stars', { x: 0, y: 0 }, { x: -50, y: -30, duration: 15, ease: 'none' }, 0);
+  const exitZoom = (sc, at, to = 1.1) => {
+    tl.fromTo(sc, { scale: 1 }, { scale: to, duration: 0.45, ease: 'power3.in', immediateRender: false }, at);
+    hide(sc, at + 0.05, 0.35);
+  };
+  tl.fromTo('#stars', { x: 0, y: 0 }, { x: -80, y: -45, duration: 25, ease: 'none' }, 0);
+  // los satélites de los tres logos giran todo el video (una vuelta cada 3,2 s, como en la app)
+  tl.fromTo('.lg .orb', { rotation: 0 }, { rotation: 360 * (25 / 3.2), duration: 25, ease: 'none' }, 0);
 
-  // A · TU TIENDA, A TU GUSTO.
+  // A · el logo se arma
   show('#A', 0, 0.01);
-  tl.fromTo('#planet', { y: 420, scale: 1.06 }, { y: 0, scale: 1, duration: 1.6, ease: 'expo.out' }, 0);
-  tl.fromTo('#l1', { opacity: 0, scale: 1.7, filter: 'blur(18px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.5, ease: 'power4.out' }, 0.35);
-  tl.fromTo('#l2', { opacity: 0, scale: 1.7, filter: 'blur(18px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.5, ease: 'power4.out' }, 0.7);
-  tl.to('#A', { keyframes: { x: [0, -14, 10, -5, 0] }, duration: 0.3, ease: 'none' }, 0.72);
-  tl.fromTo('#A', { scale: 1, transformOrigin: '50% 55%' }, { scale: 2.6, duration: 0.55, ease: 'power3.in', immediateRender: false }, 1.95);
-  hide('#A', 2.15, 0.3);
+  tl.fromTo('#lgA .ring', { scale: 0, rotation: -120, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.9, ease: 'expo.out' }, 0.25);
+  tl.fromTo('#lgA .planet', { scale: 0 }, { scale: 1, duration: 0.55, ease: 'back.out(2.4)' }, 0.55);
+  tl.fromTo('#lgA .sat', { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 0.85);
+  tl.fromTo('#flare', { opacity: 0, scale: 0.4 }, { keyframes: { opacity: [0, 1, 0.5] }, scale: 1.3, duration: 1.2, ease: 'power2.out' }, 0.55);
+  // el logo arranca centrado y se corre a la izquierda mientras entra la palabra
+  tl.fromTo('.intro', { x: 260 }, { x: 0, duration: 0.8, ease: 'power3.inOut' }, 1.1);
+  tl.fromTo('#wordA span', { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.55, ease: 'power4.out', stagger: 0.05 }, 1.3);
+  tl.fromTo('.intro', { scale: 1 }, { scale: 1.04, duration: 1.2, ease: 'none', immediateRender: false }, 1.9);
+  // se achica hacia la esquina
+  tl.fromTo('.intro', { scale: 1.04, y: 0 }, { scale: 0.6, y: -40, duration: 0.45, ease: 'power3.in', immediateRender: false }, 3.0);
+  hide('#A', 3.05, 0.35);
+  show('#corner', 3.3, 0.4);
 
-  // B · elegí qué vendés
-  show('#B', 2.3, 0.2);
-  stepIn('#B', 2.3);
-  tl.fromTo('#grid .rubro', { opacity: 0, y: -60, rotationX: -50, scale: 0.9 }, { opacity: 1, y: 0, rotationX: 0, scale: 1, duration: 0.5, ease: 'back.out(1.6)', stagger: 0.05 }, 2.5);
-  tl.fromTo('#grid .rubro:not(.pick)', { opacity: 1 }, { opacity: 0.28, duration: 0.3, ease: 'power2.out', immediateRender: false }, 3.55);
+  // B · TU MARCA. TU TIENDA. TUS REGLAS.
+  show('#B', 3.4, 0.01);
+  tl.fromTo('#b1', { opacity: 0, scale: 1.8, filter: 'blur(16px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.42, ease: 'power4.out' }, 3.5);
+  tl.fromTo('#b2', { opacity: 0, x: -260 }, { opacity: 1, x: 0, duration: 0.42, ease: 'power4.out' }, 4.15);
+  tl.fromTo('#b3', { opacity: 0, y: 120, rotation: -4 }, { opacity: 1, y: 0, rotation: 0, duration: 0.5, ease: 'back.out(1.6)' }, 4.8);
+  [3.52, 4.17, 4.82].forEach((at) => tl.to('#B', { keyframes: { x: [0, -12, 9, -4, 0] }, duration: 0.26, ease: 'none' }, at));
+  exitZoom('#B', 6.0, 1.15);
+
+  // C · elegí qué vendés
+  show('#C', 6.4, 0.2);
+  stepIn('#C', 6.4);
+  tl.fromTo('#grid .rubro', { opacity: 0, y: -60, rotationX: -50, scale: 0.9 }, { opacity: 1, y: 0, rotationX: 0, scale: 1, duration: 0.5, ease: 'back.out(1.6)', stagger: 0.06 }, 6.6);
+  tl.fromTo('#grid .rubro:not(.pick)', { opacity: 1 }, { opacity: 0.28, duration: 0.3, ease: 'power2.out', immediateRender: false }, 7.9);
   tl.fromTo('#grid .pick', { scale: 1, backgroundColor: 'rgba(15,23,42,0.85)', boxShadow: '0 0 0px rgba(59,130,246,0)' },
-    { scale: 1.08, backgroundColor: 'rgba(59,130,246,0.32)', boxShadow: '0 0 80px rgba(59,130,246,0.7)', duration: 0.35, ease: 'back.out(2)', immediateRender: false }, 3.55);
-  tl.fromTo('#B', { scale: 1 }, { scale: 1.12, duration: 0.45, ease: 'power3.in', immediateRender: false }, 4.35);
-  hide('#B', 4.4, 0.35);
+    { scale: 1.08, backgroundColor: 'rgba(59,130,246,0.32)', boxShadow: '0 0 80px rgba(59,130,246,0.7)', duration: 0.35, ease: 'back.out(2)', immediateRender: false }, 7.9);
+  exitZoom('#C', 9.0, 1.12);
 
-  // C · hacela tuya (la tienda se arma y cambia de estilo)
-  show('#C', 4.7, 0.25);
-  stepIn('#C', 4.7);
-  tl.fromTo('#panel', { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' }, 4.8);
-  tl.fromTo('#browser', { opacity: 0, y: 60, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power3.out' }, 4.9);
-  tl.fromTo('#sHero', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.6, ease: 'power3.inOut' }, 5.2);
-  tl.fromTo('#prods .prod', { opacity: 0, y: 40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.6)', stagger: 0.08 }, 5.5);
-  // los cambios de estilo: a cada toque en el panel, la tienda cambia de color, letra y portada
-  const CHANGES = [6.15, 7.05, 7.95];
+  // D · cargá tus productos
+  show('#D', 9.4, 0.2);
+  stepIn('#D', 9.4);
+  tl.fromTo('#upload', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: 'back.out(1.8)' }, 9.6);
+  const pcs = [...document.querySelectorAll('#pgrid .pc')];
+  pcs.forEach((pc, i) => {
+    const at = 9.8 + i * 0.32;
+    tl.fromTo('#upload', { scale: 1 }, { keyframes: { scale: [1, 0.92, 1] }, duration: 0.2, ease: 'power2.out', immediateRender: false }, at - 0.08);
+    tl.fromTo(pc, { opacity: 0, y: 120, scale: 0.8, rotation: (i % 2 ? 4 : -4) }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.55, ease: 'back.out(1.5)' }, at);
+    const pEl = pc.querySelector('.p'), sEl = pc.querySelector('.s');
+    const tgt = +pEl.dataset.p, stk = +sEl.dataset.s;
+    const o = { v: 0 };
+    tl.fromTo(o, { v: 0 }, { v: 1, duration: 0.7, ease: 'power3.out', onUpdate: () => { pEl.textContent = money(tgt * o.v); sEl.textContent = `Stock ${Math.round(stk * o.v)}`; } }, at + 0.2);
+  });
+  exitZoom('#D', 12.2, 0.9);
+
+  // E · hacela tuya
+  show('#E', 12.6, 0.25);
+  stepIn('#E', 12.6);
+  tl.fromTo('#panel', { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' }, 12.7);
+  tl.fromTo('#browser', { opacity: 0, y: 60, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power3.out' }, 12.8);
+  tl.fromTo('#sHero', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.6, ease: 'power3.inOut' }, 13.1);
+  tl.fromTo('#prods .prod', { opacity: 0, y: 40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.6)', stagger: 0.08 }, 13.4);
+  const CHANGES = [14.1, 15.15, 16.2];
   const looks = { t: 0 };
-  tl.fromTo(looks, { t: 0 }, { t: 1, duration: 3.2, ease: 'none', onUpdate: () => {
+  tl.fromTo(looks, { t: 0 }, { t: 1, duration: 3.6, ease: 'none', onUpdate: () => {
     const now = tl.time();
     let k = 0;
     CHANGES.forEach((at, i) => { if (now >= at) k = i; });
     setLook(k);
-  } }, 5.8);
+  } }, 13.7);
   CHANGES.forEach((at, i) => {
     if (i === 0) return;
     tl.fromTo(`#sHero .k${i}`, { opacity: 0, scale: 1.12 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'power3.out' }, at);
     tl.fromTo('#browser', { scale: 1 }, { keyframes: { scale: [1, 0.985, 1] }, duration: 0.3, ease: 'power2.out', immediateRender: false }, at);
     tl.fromTo('#sTitle', { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out', immediateRender: false }, at + 0.05);
   });
-  tl.fromTo('#C', { scale: 1 }, { scale: 0.9, duration: 0.4, ease: 'power3.in', immediateRender: false }, 8.85);
-  hide('#C', 8.9, 0.35);
+  exitZoom('#E', 17.0, 0.9);
 
-  // D · publicala
-  show('#D', 9.15, 0.25);
-  stepIn('#D', 9.15);
-  tl.fromTo('#link', { opacity: 0, y: 40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.7)' }, 9.3);
+  // F · compartí tu link
+  show('#F', 17.4, 0.25);
+  stepIn('#F', 17.4);
+  tl.fromTo('#link', { opacity: 0, y: 40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.7)' }, 17.55);
   const LINK = 'tutienda.orbita.site';
   const typing = { n: 0 };
   tl.fromTo(typing, { n: 0 }, { n: LINK.length, duration: 0.75, ease: 'none', onUpdate: () => {
     const t = LINK.slice(0, Math.round(typing.n));
     const dot = t.indexOf('.');
     $('linkText').innerHTML = dot < 0 ? t : `${t.slice(0, dot)}<em>${t.slice(dot)}</em>`;
-  } }, 9.5);
-  tl.fromTo('#live', { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2.2)' }, 10.35);
-  tl.fromTo('#ring', { scale: 0.3 }, { scale: 5, duration: 0.9, ease: 'power2.out' }, 10.35);
-  tl.fromTo('#ring', { opacity: 0 }, { keyframes: { opacity: [0, 0.9, 0.5, 0] }, duration: 0.9, ease: 'none' }, 10.35);
-  tl.fromTo('#D', { scale: 1 }, { scale: 0.86, duration: 0.4, ease: 'power3.in', immediateRender: false }, 10.85);
-  hide('#D', 10.9, 0.35);
+  } }, 17.75);
+  tl.fromTo('#shares .share', { opacity: 0, y: -50, scale: 0.6 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(2)', stagger: 0.1 }, 18.55);
+  tl.fromTo('#live', { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2.2)' }, 19.05);
+  tl.fromTo('#ring2', { scale: 0.3 }, { scale: 5, duration: 0.9, ease: 'power2.out' }, 19.05);
+  tl.fromTo('#ring2', { opacity: 0 }, { keyframes: { opacity: [0, 0.9, 0.5, 0] }, duration: 0.9, ease: 'none' }, 19.05);
+  exitZoom('#F', 19.6, 0.86);
 
-  // E · las tiendas reales y el cierre
-  show('#E', 11.1, 0.3);
-  tl.fromTo('#wall', { z: 400, rotationX: 16, rotationZ: -4, y: 140 }, { z: -1250, rotationX: 0, rotationZ: 0, y: 0, duration: 2.4, ease: 'power3.out' }, 11.1);
-  tl.fromTo('#wall .tile', { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'power3.out', stagger: 0.07 }, 11.1);
-  tl.fromTo('#veil', { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 12.55);
-  tl.fromTo('#end .end-eyebrow', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, 12.7);
-  tl.fromTo('#end .end-t', { opacity: 0, scale: 1.3, filter: 'blur(14px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.55, ease: 'power4.out' }, 12.85);
+  // G · tiendas reales
+  show('#G', 20.0, 0.3);
+  tl.fromTo('#wall', { z: 400, rotationX: 16, rotationZ: -4, y: 140 }, { z: -1250, rotationX: 0, rotationZ: 0, y: -30, duration: 2.6, ease: 'power3.out' }, 20.0);
+  tl.fromTo('#wall .tile', { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'power3.out', stagger: 0.08 }, 20.0);
+  tl.fromTo('#gCap', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 20.9);
+  hide('#corner', 22.4, 0.3);
+  exitZoom('#G', 22.4, 0.92);
+
+  // H · cierre con el logo grande
+  show('#H', 22.8, 0.2);
+  tl.fromTo('#lgH', { scale: 0, rotation: -90 }, { scale: 1, rotation: 0, duration: 0.6, ease: 'back.out(1.8)' }, 22.85);
+  tl.fromTo('#wordH', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' }, 23.0);
+  tl.fromTo('#outroT', { opacity: 0, y: 30, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.5, ease: 'power3.out' }, 23.2);
+  tl.fromTo('#outroUrl', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 23.45);
   // vuelve al cielo (empalma con el principio)
-  hide('#E', 14.35, 0.6);
-  tl.to({}, { duration: 0.01 }, 14.99);
+  hide('#H', 24.4, 0.55);
+  tl.to({}, { duration: 0.01 }, 24.99);
 
   window.__timelines.main = tl;
   document.fonts.ready.then(() => { setLook(0); tl.seek(0); document.documentElement.dataset.ready = '1'; });
