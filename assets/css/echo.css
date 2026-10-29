@@ -102,7 +102,7 @@ img {
 
 /* color de la luz de la lapicera (cola y chispas), en R G B; la letra queda siempre blanca */
 .preloader {
-  --sign-tint: 150 225 255;
+  --sign-tint: 255 255 255;
 }
 
 @media (max-width: 640px) {
@@ -275,9 +275,9 @@ img {
 
 .brand-sign {
   display: block;
-  height: 40px;
+  height: 34px;
   width: auto;
-  aspect-ratio: 1679 / 572;
+  aspect-ratio: 2004 / 526;
   fill: currentColor;
   overflow: visible;
 }
@@ -2453,7 +2453,7 @@ main > section:not(.hero-section) {
 
 @media (max-width: 768px) {
   .brand-sign {
-    height: 32px;
+    height: 28px;
   }
 
   .hero-title {

@@ -79,7 +79,7 @@
       p.style.strokeDasharray = `${lens[i]} ${lens[i]}`;
       p.style.strokeDashoffset = String(lens[i]);
     });
-    const LIFT = 22; // ms que la lapicera "se levanta" entre trazos
+    const LIFT = 10; // ms que la lapicera "se levanta" entre trazos (la letra de pincel tiene muchos)
     const total = lens.reduce((x, y) => x + y, 0);
     const DRAW = 2200; // ms para toda la firma
     const speed = total / (DRAW - LIFT * strokes.length); // unidades del SVG por ms
