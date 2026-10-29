@@ -1741,8 +1741,8 @@ main > section:not(.hero-section) {
 }
 
 /* ==========================================================================
-   7. PROYECTOS DESTACADOS — sube por encima de la cinta como una hoja (empieza 100vh antes de que
-      termine la de proyectos). Adentro: la ruleta, que gira con el scroll y frena en un proyecto al
+   7. PROYECTOS DESTACADOS — entra por encima de la cinta en cinco columnas que suben escalonadas
+      (empieza 100vh antes de que termine la de proyectos; echo.js recorta las columnas). Adentro: la ruleta, que gira con el scroll y frena en un proyecto al
       azar; esa tarjeta crece hasta llenar la pantalla y siguen los demás a pantalla completa (el
       siguiente sube por un arco, como el del hero, y el de atrás se oscurece). echo.js pone en cada
       uno --t (cuánto subió), --dim (cuánto lo tapó el siguiente), --info (su texto) y --shade.
@@ -1751,22 +1751,21 @@ main > section:not(.hero-section) {
   position: relative;
   height: 420vh;
   margin-top: -100vh;
-  border-radius: 28px 28px 0 0;
-  background: var(--bg-light);
   color: var(--text-dark);
-  box-shadow: 0 -30px 80px rgba(0, 0, 0, 0.18);
 }
 
+/* mientras entra, la escena queda quieta en la pantalla y se ve solo lo que destapan las columnas */
 .featured-pin {
   position: sticky;
   top: 0;
   height: 100vh;
   height: 100svh;
   overflow: hidden;
-  border-radius: inherit;
+  background: var(--bg-light);
+  will-change: transform, clip-path;
 }
 
-/* la cinta de proyectos, mientras la tapa la hoja: se achica un poco y se apaga (--cover, echo.js) */
+/* la cinta de proyectos, mientras la tapan las columnas: se achica un poco y se apaga (--cover, echo.js) */
 .landings-pin {
   transform: scale(calc(1 - var(--cover, 0) * 0.06));
   transform-origin: 50% 30%;

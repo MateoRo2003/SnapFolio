@@ -1524,8 +1524,28 @@
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const r = featSection.getBoundingClientRect();
-    // la cinta de proyectos se apaga mientras esta sección sube por encima
-    landings?.querySelector('.landings-pin')?.style.setProperty('--cover', clamp(1 - r.top / vh, 0, 1).toFixed(3));
+    // la entrada: cinco columnas suben escalonadas, de izquierda a derecha, y la cinta de atrás se apaga
+    const q = clamp(1 - r.top / vh, 0, 1);
+    landings?.querySelector('.landings-pin')?.style.setProperty('--cover', q.toFixed(3));
+    if (featPin) {
+      if (q > 0 && q < 1) {
+        const COLS = 5;
+        const pts = [`0px ${vh}px`];
+        for (let k = 0; k < COLS; k++) {
+          const u = clamp((q - k * 0.1) / 0.6, 0, 1);
+          const top = vh * (1 - u * u * (3 - 2 * u));
+          const x0 = (vw * k) / COLS;
+          const x1 = (vw * (k + 1)) / COLS + (k < COLS - 1 ? 0.5 : 0); // medio píxel encima: sin rendijas
+          pts.push(`${x0.toFixed(1)}px ${top.toFixed(1)}px`, `${x1.toFixed(1)}px ${top.toFixed(1)}px`);
+        }
+        pts.push(`${vw}px ${vh}px`);
+        featPin.style.transform = `translateY(${(-r.top).toFixed(1)}px)`; // la escena quieta en la pantalla
+        featPin.style.clipPath = `polygon(${pts.join(', ')})`;
+      } else if (featPin.style.clipPath) {
+        featPin.style.transform = '';
+        featPin.style.clipPath = '';
+      }
+    }
     // si se sale del todo para arriba, la próxima vez que se llegue la ruleta gira de nuevo
     if (!spin.armed && !spin.running && r.top >= vh && !prefersReducedMotion) {
       spin.armed = true;
