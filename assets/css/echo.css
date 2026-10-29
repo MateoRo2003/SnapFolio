@@ -2320,6 +2320,11 @@ main > section:not(.hero-section) {
     font-size: clamp(3rem, 15vw, 6rem);
   }
 
+  /* el anillo es chico en el celular: "PROYECTOS ’26" tiene que entrar adentro */
+  .works-center-label {
+    font-size: 0.8rem;
+  }
+
   .hero-window {
     --win-top: 30%;
     --win-side: 17vw;

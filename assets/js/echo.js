@@ -22,6 +22,9 @@
     const t = clamp((v - a) / (b - a), 0, 1);
     return t * t * (3 - 2 * t);
   };
+  // idiomas (i18n.js): lo que se escribe desde acá va en español y se pasa por localize()
+  const i18n = window.echoI18n || { lang: 'es', localize() {}, set() {}, original: (n) => n.nodeValue };
+  const localize = (el) => i18n.localize(el);
 
   /* ========================================================================
      1. CARGA
@@ -404,9 +407,11 @@
     ['.hero-bio-snippet', '.hero-roles li'],
   ].map((sels) => sels.flatMap((sel) => Array.from(document.querySelectorAll(sel))));
 
+  let finishTyping = () => {};
   if (!prefersReducedMotion && typeGroups.some((g) => g.length)) {
     const STEP = 24; // ms por letra
     const jobs = typeGroups.map((els) => els.map((el) => {
+      const es = i18n.original(el.firstChild || el); // para volver al español si cambian el idioma
       const text = el.textContent.trim();
       const chars = Array.from(text, (ch) => {
         const s = document.createElement('span');
@@ -416,37 +421,46 @@
       });
       el.setAttribute('aria-label', text);
       el.replaceChildren(...chars);
-      return { el, text, chars };
+      return { el, es, chars, done: false };
     }));
+    const timers = new Set();
+    const later = (fn, ms) => { const id = setTimeout(() => { timers.delete(id); fn(); }, ms); timers.add(id); };
+    const finish = (job) => {
+      if (job.done) return;
+      job.done = true;
+      job.el.textContent = job.es;
+      job.el.removeAttribute('aria-label');
+      localize(job.el);
+    };
+    // al cambiar de idioma a mitad de camino, lo que falta aparece entero
+    finishTyping = () => {
+      timers.forEach(clearTimeout);
+      timers.clear();
+      jobs.flat().forEach(finish);
+    };
 
     const run = (group) => {
       let i = 0, k = 0, prev = null;
       const tick = () => {
         prev?.classList.remove('is-at');
         const job = group[i];
-        if (!job) return;
-        // si cambiaron el idioma a mitad de camino, el texto ya está entero
-        if (!job.chars[0]?.isConnected) { i++; k = 0; prev = null; tick(); return; }
+        if (!job || job.done) return;
         const ch = job.chars[k];
         ch.classList.add('is-in', 'is-at');
         prev = ch;
         if (++k >= job.chars.length) {
-          setTimeout(() => {
-            ch.classList.remove('is-at');
-            if (job.chars[0].isConnected) job.el.textContent = job.text;
-            job.el.removeAttribute('aria-label');
-          }, 220);
+          later(() => finish(job), 220);
           prev = null;
           i++;
           k = 0;
-          setTimeout(tick, 220);
+          later(tick, 220);
           return;
         }
-        setTimeout(tick, ch.textContent === ' ' ? STEP * 0.5 : STEP);
+        later(tick, ch.textContent === ' ' ? STEP * 0.5 : STEP);
       };
       tick();
     };
-    const start = () => setTimeout(() => jobs.forEach(run), 450);
+    const start = () => later(() => jobs.forEach(run), 450);
     if (root.classList.contains('is-loading')) document.addEventListener('echo:loaded', start, { once: true });
     else start();
   }
@@ -523,6 +537,7 @@
     const words = expSlides.map((sl) => sl.dataset[key] || '');
     const order = reverse ? words.map((_, i) => words.length - 1 - i) : words.map((_, i) => i);
     strip.el.textContent = '';
+    strip.path = null;
     strip.segs = new Array(words.length);
     order.forEach((i, k) => {
       const seg = document.createElement('span');
@@ -538,8 +553,13 @@
       }
     });
   }
-  buildStrip(wmTop, 'wmTop', false);
-  buildStrip(wmBottom, 'wmBottom', true);
+  function buildStrips() {
+    buildStrip(wmTop, 'wmTop', false);
+    buildStrip(wmBottom, 'wmBottom', true);
+    localize(watermarkTop);
+    localize(watermarkBottom);
+  }
+  buildStrips();
 
   // Curva monótona y suave (Fritsch–Carlson) por puntos (avance → desplazamiento): la velocidad cambia
   // de a poco entre una etapa y la siguiente, sin saltos ni frenadas.
@@ -597,7 +617,10 @@
     activeExpIndex = idx;
     const slide = expSlides[idx];
     expTabBtns.forEach((btn, i) => btn.classList.toggle('is-active', i === idx));
-    if (expChapterLabel) expChapterLabel.textContent = slide.dataset.chapter || '';
+    if (expChapterLabel) {
+      expChapterLabel.textContent = slide.dataset.chapter || '';
+      localize(expChapterLabel);
+    }
   }
 
   function expTravel() {
@@ -640,6 +663,8 @@
   // las medidas cambian con el tamaño de la ventana y cuando termina de cargar la fuente
   window.addEventListener('resize', () => { wmTop.path = null; });
   document.fonts?.ready.then(() => { wmTop.path = null; requestAnimationFrame(updateExperience); });
+  // en otro idioma las tiras miden distinto: se arman de nuevo
+  document.addEventListener('echo:lang', () => { buildStrips(); requestAnimationFrame(updateExperience); });
 
   /* ========================================================================
      3c. FEATURED PROJECT — cinta ondulada
@@ -647,43 +672,43 @@
   const landingProjects = [
     {
       title: 'Estudio Jurídico MJHD',
-      sub: 'Sitio Web Institucional & Consultoría Legal · SEO Optimizado',
+      sub: 'Sitio web institucional y consultoría legal · SEO optimizado',
       img: 'assets/img/portfolio/cards/estudio-juridico-mjhd.webp',
       url: 'https://www.mjhdjuridica.com.ar',
     },
     {
       title: 'PresenciaWeb Studio',
-      sub: 'Landing Page Agencia Digital · Diseño & Identidad de Marca',
+      sub: 'Landing page de agencia digital · Diseño e identidad de marca',
       img: 'assets/img/portfolio/cards/presenciaweb.webp',
       url: 'https://presencia-web.vercel.app/',
     },
     {
       title: 'Travel Online Agency',
-      sub: 'Landing Page Turismo · Traslados y Excursiones en Misiones',
+      sub: 'Landing page de turismo · Traslados y excursiones en Misiones',
       img: 'assets/img/portfolio/cards/travelonlineagency.webp',
       url: 'https://www.travelonlineagency.com.ar',
     },
     {
       title: 'DanyTours Iguazú',
-      sub: 'Landing Page Turística · Reservas Directas por WhatsApp',
+      sub: 'Landing page turística · Reservas directas por WhatsApp',
       img: 'assets/img/portfolio/cards/danytours.webp',
       url: 'https://www.danytours.com.ar',
     },
     {
       title: 'Traslados Márquez',
-      sub: 'Landing Page Ejecutiva · Remises Turísticos en Puerto Iguazú',
+      sub: 'Landing page ejecutiva · Remises turísticos en Puerto Iguazú',
       img: 'assets/img/portfolio/cards/traslados-marquez.webp',
       url: 'https://www.trasladosmarquez.com.ar',
     },
     {
       title: 'LGK Traslados',
-      sub: 'Landing Page Comercial · Viajes en la Triple Frontera',
+      sub: 'Landing page comercial · Viajes en la Triple Frontera',
       img: 'assets/img/portfolio/cards/lgk-traslados.webp',
       url: 'https://www.trasladoslgk.com.ar',
     },
     {
       title: 'Simulador de Amortización',
-      sub: 'Web App Financiera · Cálculo Interactivo de Préstamos',
+      sub: 'Web app financiera · Cálculo interactivo de préstamos',
       img: 'assets/img/portfolio/cards/simulador-de-amortizacion.webp',
       url: 'https://amortizacion-fronted.vercel.app/',
     },
@@ -725,7 +750,10 @@
       lastIdx = idx;
       const item = landingProjects[idx];
       if (waveTitleEl) waveTitleEl.textContent = item.title;
-      if (waveSubEl) waveSubEl.textContent = item.sub;
+      if (waveSubEl) {
+        waveSubEl.textContent = item.sub;
+        localize(waveSubEl);
+      }
       if (waveCountEl) waveCountEl.textContent = `${pad2(idx + 1)} / ${pad2(n)}`;
       if (waveLinkEl) waveLinkEl.href = item.url;
     }
@@ -843,14 +871,14 @@
     {
       id: 'orbita',
       title: 'Órbita',
-      kind: 'Nuevo · Co-founder & CEO · Tiendas online sin comisión',
+      kind: 'Nuevo · Cofundador y CEO · Tiendas online sin comisión',
       img: 'assets/img/portfolio/cards/orbita.webp',
       url: 'https://orbita.site',
     },
     {
       id: 'paperflix',
       title: 'Paperflix',
-      kind: 'Plataforma EdTech · +3.200 Escuelas en Chile',
+      kind: 'Plataforma EdTech · +3.200 escuelas en Chile',
       img: 'assets/img/portfolio/cards/paperflix.webp',
       gallery: [
         'assets/img/portfolio/paperflix/1.png',
@@ -864,7 +892,7 @@
     {
       id: 'siti',
       title: 'S.I.T.I System',
-      kind: 'Sistema Full Stack + Asistente IA Propio',
+      kind: 'Sistema full stack + asistente de IA propio',
       img: 'assets/img/portfolio/cards/s-i-t-i-sistema-integral-de-tiendas-inde.webp',
       url: 'https://siti.mateorojas.com.ar',
     },
@@ -883,14 +911,14 @@
     {
       id: 'petty',
       title: 'Petty Joyas',
-      kind: 'E-Commerce + POS con QR & WhatsApp Bot',
+      kind: 'E-commerce + POS con QR y bot de WhatsApp',
       img: 'assets/img/portfolio/cards/petty-joyas.webp',
       url: 'https://pettyjoyas.com.ar',
     },
     {
       id: 'mipaperlux',
       title: 'MiPaperlux',
-      kind: 'Plataforma EdTech — Onboarding Gamificado',
+      kind: 'Plataforma EdTech · Onboarding gamificado',
       img: 'assets/img/portfolio/cards/mipaperlux.webp',
       gallery: [
         'assets/img/portfolio/mipaperlux/1.png',
@@ -902,28 +930,28 @@
     {
       id: 'gabygor',
       title: 'GabyGor',
-      kind: 'Reserva de Turnos en Tiempo Real',
+      kind: 'Reserva de turnos en tiempo real',
       img: 'assets/img/portfolio/cards/gabygor.webp',
       url: 'https://gabygor.com.ar',
     },
     {
       id: 'gvstore',
       title: 'GV Store',
-      kind: 'E-Commerce Deportivo Full Stack',
+      kind: 'E-commerce deportivo full stack',
       img: 'assets/img/portfolio/cards/gv-store.webp',
       url: 'https://gvstore.com.ar',
     },
     {
       id: 'taccu',
       title: 'Taccu Rewards',
-      kind: 'SaaS de Fidelización & Puntos',
+      kind: 'SaaS de fidelización y puntos',
       img: 'assets/img/portfolio/cards/taccu.webp',
       url: 'https://taccu.vercel.app/',
     },
     {
       id: 'tefaltacalle',
       title: 'TeFaltaCalleOK',
-      kind: 'E-Commerce Streetwear & Panel Admin',
+      kind: 'E-commerce de ropa urbana y panel de administración',
       img: 'assets/img/portfolio/cards/tefaltacalleok.webp',
       url: 'https://www.tefaltacalleok.com',
     },
@@ -949,7 +977,10 @@
     const modalTitle = document.getElementById('galleryModalTitle');
     const modalBody = document.getElementById('galleryModalBody');
     if (!modal || !modalBody) return;
-    if (modalTitle) modalTitle.textContent = `${title} — Capturas del Sistema`;
+    if (modalTitle) {
+      modalTitle.innerHTML = `${title} — <span>Capturas del sistema</span>`;
+      localize(modalTitle);
+    }
     modalBody.innerHTML = images
       .map(
         (src) =>
@@ -968,10 +999,14 @@
     if (idx === activeWorkIdx) return;
     activeWorkIdx = idx;
     const w = flagshipWorks[idx];
-    if (workKindEl) workKindEl.textContent = w.kind;
+    if (workKindEl) {
+      workKindEl.textContent = w.kind;
+      localize(workKindEl);
+    }
     if (workTitleEl) workTitleEl.textContent = w.title.toUpperCase();
     if (workCtaEl) {
       workCtaEl.innerHTML = w.url ? 'VER PROYECTO EN VIVO <i class="bi bi-arrow-up-right"></i>' : 'VER GALERÍA DEL SISTEMA <i class="bi bi-images"></i>';
+      localize(workCtaEl);
       workCtaEl.href = w.url || '#works';
       workCtaEl.target = w.url ? '_blank' : '';
       workCtaEl.rel = 'noopener';
@@ -1375,13 +1410,13 @@
       .catch(() => { ghSection.style.display = 'none'; });
     window.addEventListener('resize', () => { ghDirty = true; });
     document.fonts?.ready.then(() => { ghDirty = true; requestTick(); });
-    // al cambiar de idioma se vuelven a escribir los textos de la escena (después del cambio)
-    document.getElementById('langSwitchBtn')?.addEventListener('click', () => setTimeout(() => {
+    // al cambiar de idioma se vuelven a escribir los textos de la escena
+    document.addEventListener('echo:lang', () => {
       renderGithubStats();
       ghScene = -1;
       ghDirty = true;
       requestTick();
-    }));
+    });
   }
 
   /* ========================================================================
@@ -1441,6 +1476,7 @@
   function showToast(msg) {
     if (!toastEl) return;
     toastEl.textContent = msg;
+    localize(toastEl);
     toastEl.classList.add('is-visible');
     setTimeout(() => toastEl.classList.remove('is-visible'), 2600);
   }
@@ -1495,13 +1531,14 @@
       const readerBody = document.getElementById('articleReaderBody');
       if (!readerModal || !readerBody) return;
 
-      const articlesMap = window.ARTICLES || {};
-      const item = articlesMap[id];
+      // en inglés, la versión de articles.en.js
+      const item = (i18n.lang === 'en' && window.ARTICLES_EN?.[id]) || window.ARTICLES?.[id];
       if (item) {
-        if (readerTitle) readerTitle.textContent = item.cat || 'Artículo Técnico';
-        readerBody.innerHTML = `<h2 style="font-size:1.65rem;margin-bottom:0.5rem">${item.title}</h2><p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted-dark);margin-bottom:1.5rem">${item.date} · ${item.read}</p><div style="line-height:1.75;color:rgba(255,255,255,0.86)">${item.body}</div>`;
+        if (readerTitle) readerTitle.textContent = item.category || (i18n.lang === 'en' ? 'Article' : 'Artículo');
+        readerBody.innerHTML = `<h2 style="font-size:1.65rem;margin-bottom:0.5rem">${item.title}</h2><p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted-dark);margin-bottom:1.5rem">${item.meta}</p><div style="line-height:1.75;color:rgba(255,255,255,0.86)">${item.body}</div>`;
       } else {
         readerBody.innerHTML = `<p>Artículo seleccionado (#${id}).</p>`;
+        localize(readerBody);
       }
       readerModal.classList.add('is-open');
     });
@@ -1514,7 +1551,7 @@
       e.preventDefault();
       const fd = new FormData(contactForm);
       const name = fd.get('name') || '';
-      const subject = fd.get('subject') || 'Consulta desde Portfolio';
+      const subject = fd.get('subject') || (i18n.lang === 'en' ? 'Inquiry from portfolio' : 'Consulta desde el portfolio');
       const message = fd.get('message') || '';
       const mailto = `mailto:rojas.mateo.web@gmail.com?subject=${encodeURIComponent(
         `${subject} — ${name}`
@@ -1524,18 +1561,15 @@
     });
   }
 
-  // Bilingual Toggle (ES / EN)
+  // Idioma (ES / EN): el botón muestra el otro idioma; los textos los cambia i18n.js
   const langBtn = document.getElementById('langSwitchBtn');
-  let currentLang = 'es';
   if (langBtn) {
+    langBtn.textContent = i18n.lang === 'es' ? 'EN' : 'ES';
     langBtn.addEventListener('click', () => {
-      currentLang = currentLang === 'es' ? 'en' : 'es';
-      langBtn.textContent = currentLang === 'es' ? 'EN' : 'ES';
-      document.documentElement.lang = currentLang;
-      document.querySelectorAll('[data-es][data-en]').forEach((el) => {
-        el.textContent = el.getAttribute(`data-${currentLang}`) || el.textContent;
-      });
-      showToast(currentLang === 'es' ? 'Idioma: Español' : 'Language: English');
+      finishTyping();
+      i18n.set(i18n.lang === 'es' ? 'en' : 'es');
+      langBtn.textContent = i18n.lang === 'es' ? 'EN' : 'ES';
+      showToast(i18n.lang === 'es' ? 'Idioma: Español' : 'Language: English');
     });
   }
 })();
