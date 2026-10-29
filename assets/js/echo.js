@@ -319,7 +319,7 @@
      ======================================================================== */
   const header = document.getElementById('echoHeader');
   const navPills = Array.from(document.querySelectorAll('.nav-pill'));
-  const darkIds = ['about', 'experience', 'contact'];
+  const darkIds = ['about', 'experience', 'works', 'contact'];
   let lastY = window.scrollY;
 
   // los enlaces internos (#seccion) bajan suave hasta el punto justo de cada una. El hero queda
@@ -1085,51 +1085,34 @@
   document.addEventListener('echo:lang', () => { buildStrips(); requestAnimationFrame(updateExperience); });
 
   /* ========================================================================
-     3c. FEATURED PROJECT — cinta ondulada
+     3c. PROYECTOS — la cinta ondulada con todos, empezando por los de traslados. Los que no tienen
+     web pública no muestran enlace; los privados abren sus capturas; los de código, GitHub.
      ======================================================================== */
   const landingProjects = [
-    {
-      title: 'Estudio Jurídico MJHD',
-      sub: 'Sitio web institucional y consultoría legal · SEO optimizado',
-      img: 'assets/img/portfolio/cards/estudio-juridico-mjhd.webp',
-      url: 'https://www.mjhdjuridica.com.ar',
-    },
-    {
-      title: 'PresenciaWeb Studio',
-      sub: 'Landing page de agencia digital · Diseño e identidad de marca',
-      img: 'assets/img/portfolio/cards/presenciaweb.webp',
-      url: 'https://presencia-web.vercel.app/',
-    },
-    {
-      title: 'Travel Online Agency',
-      sub: 'Landing page de turismo · Traslados y excursiones en Misiones',
-      img: 'assets/img/portfolio/cards/travelonlineagency.webp',
-      url: 'https://www.travelonlineagency.com.ar',
-    },
-    {
-      title: 'DanyTours Iguazú',
-      sub: 'Landing page turística · Reservas directas por WhatsApp',
-      img: 'assets/img/portfolio/cards/danytours.webp',
-      url: 'https://www.danytours.com.ar',
-    },
-    {
-      title: 'Traslados Márquez',
-      sub: 'Landing page ejecutiva · Remises turísticos en Puerto Iguazú',
-      img: 'assets/img/portfolio/cards/traslados-marquez.webp',
-      url: 'https://www.trasladosmarquez.com.ar',
-    },
-    {
-      title: 'LGK Traslados',
-      sub: 'Landing page comercial · Viajes en la Triple Frontera',
-      img: 'assets/img/portfolio/cards/lgk-traslados.webp',
-      url: 'https://www.trasladoslgk.com.ar',
-    },
-    {
-      title: 'Simulador de Amortización',
-      sub: 'Web app financiera · Cálculo interactivo de préstamos',
-      img: 'assets/img/portfolio/cards/simulador-de-amortizacion.webp',
-      url: 'https://amortizacion-fronted.vercel.app/',
-    },
+    { title: 'Traslados Márquez', sub: 'Landing page ejecutiva · Remises turísticos en Puerto Iguazú', img: 'assets/img/portfolio/cards/traslados-marquez.webp', url: 'https://www.trasladosmarquez.com.ar' },
+    { title: 'LGK Traslados', sub: 'Landing page comercial · Viajes en la Triple Frontera', img: 'assets/img/portfolio/cards/lgk-traslados.webp', url: 'https://www.trasladoslgk.com.ar' },
+    { title: 'DanyTours Iguazú', sub: 'Landing page turística · Reservas directas por WhatsApp', img: 'assets/img/portfolio/cards/danytours.webp', url: 'https://www.danytours.com.ar' },
+    { title: 'Travel Online Agency', sub: 'Landing page de turismo · Traslados y excursiones en Misiones', img: 'assets/img/portfolio/cards/travelonlineagency.webp', url: 'https://www.travelonlineagency.com.ar' },
+    { title: 'Edu Rodríguez Traslados', sub: 'Landing page · Traslados en Puerto Iguazú', img: 'assets/img/portfolio/cards/edurodrigueztraslados.webp' },
+    { title: 'Maxi Traslados', sub: 'Landing page · Remises y traslados en Misiones', img: 'assets/img/portfolio/cards/maxi-traslados.webp' },
+    { title: 'Traslados Tres Fronteras', sub: 'Landing page · Traslados en la Triple Frontera', img: 'assets/img/portfolio/cards/traslados-tres-fronteras.webp' },
+    { title: 'Órbita', sub: 'Nuevo · Cofundador y CEO · Tiendas online sin comisión', img: 'assets/img/portfolio/cards/orbita.webp', url: 'https://orbita.site' },
+    { title: 'Paperflix', sub: 'Plataforma EdTech · +3.200 escuelas en Chile', img: 'assets/img/portfolio/cards/paperflix.webp', gallery: 'paperflix' },
+    { title: 'S.I.T.I System', sub: 'Sistema full stack + asistente de IA propio', img: 'assets/img/portfolio/cards/s-i-t-i-sistema-integral-de-tiendas-inde.webp', url: 'https://siti.mateorojas.com.ar' },
+    { title: 'NeuroBrand AI', sub: 'Proyecto personal · Identidad de marca con IA y neuromarketing', img: 'assets/img/portfolio/cards/neurobrand.webp', gallery: 'neurobrand' },
+    { title: 'Petty Joyas', sub: 'E-commerce + POS con QR y bot de WhatsApp', img: 'assets/img/portfolio/cards/petty-joyas.webp', url: 'https://pettyjoyas.com.ar' },
+    { title: 'MiPaperlux', sub: 'Plataforma EdTech · Onboarding gamificado', img: 'assets/img/portfolio/cards/mipaperlux.webp', gallery: 'mipaperlux' },
+    { title: 'GV Store', sub: 'E-commerce deportivo full stack', img: 'assets/img/portfolio/cards/gv-store.webp', url: 'https://gvstore.com.ar' },
+    { title: 'GabyGor', sub: 'Reserva de turnos en tiempo real', img: 'assets/img/portfolio/cards/gabygor.webp', url: 'https://gabygor.com.ar' },
+    { title: 'Taccu Rewards', sub: 'SaaS de fidelización y puntos', img: 'assets/img/portfolio/cards/taccu.webp', url: 'https://taccu.vercel.app/' },
+    { title: 'TeFaltaCalleOK', sub: 'E-commerce de ropa urbana y panel de administración', img: 'assets/img/portfolio/cards/tefaltacalleok.webp', url: 'https://www.tefaltacalleok.com' },
+    { title: 'Estudio Jurídico MJHD', sub: 'Sitio web institucional y consultoría legal · SEO optimizado', img: 'assets/img/portfolio/cards/estudio-juridico-mjhd.webp', url: 'https://www.mjhdjuridica.com.ar' },
+    { title: 'PresenciaWeb Studio', sub: 'Landing page de agencia digital · Diseño e identidad de marca', img: 'assets/img/portfolio/cards/presenciaweb.webp', url: 'https://presencia-web.vercel.app/' },
+    { title: 'Simulador de Amortización', sub: 'Web app financiera · Cálculo interactivo de préstamos', img: 'assets/img/portfolio/cards/simulador-de-amortizacion.webp', url: 'https://amortizacion-fronted.vercel.app/' },
+    { title: 'HealthTrack', sub: 'Sistema Médico Angular + Laravel', img: 'assets/img/portfolio/cards/healthtrack.webp', url: 'https://github.com/MateoRo2003/PROYECTO-healthtrack' },
+    { title: 'Sistema de Turnos Barbería', sub: 'Sistema PHP MVC + Docker', img: 'assets/img/portfolio/cards/sistema-de-turnos-barberia.webp', url: 'https://github.com/MateoRo2003/AppSalon_PHP_MVC_JS_SASS_FIN' },
+    { title: 'DevWebCamp', sub: 'Plataforma de Eventos', img: 'assets/img/portfolio/cards/devwebcamp.webp', url: 'https://github.com/MateoRo2003/DevWebCamp' },
+    { title: 'Sistema de Bienes Raíces', sub: 'Portal Inmobiliario MVC', img: 'assets/img/portfolio/cards/sistema-de-bienes-raices.webp', url: 'https://github.com/MateoRo2003/bienesRaicesMVC' },
   ];
 
   const landings = document.getElementById('landings');
@@ -1173,7 +1156,18 @@
         localize(waveSubEl);
       }
       if (waveCountEl) waveCountEl.textContent = `${pad2(idx + 1)} / ${pad2(n)}`;
-      if (waveLinkEl) waveLinkEl.href = item.url;
+      if (waveLinkEl) {
+        const code = item.url?.startsWith('https://github.com/');
+        waveLinkEl.closest('.wave-project-meta')?.classList.toggle('no-link', !item.url && !item.gallery);
+        waveLinkEl.href = item.url || '#landings';
+        waveLinkEl.target = item.url ? '_blank' : '';
+        waveLinkEl.textContent = item.gallery ? 'VER CAPTURAS ↗' : code ? 'VER CÓDIGO ↗' : 'VISITAR WEB ↗';
+        waveLinkEl.onclick = item.gallery ? (e) => {
+          e.preventDefault();
+          openGalleryModal(item.title, galleries[item.gallery]);
+        } : null;
+        localize(waveLinkEl);
+      }
     }
 
     function draw() {
@@ -1294,118 +1288,24 @@
   }
 
   /* ========================================================================
-     3d. WORKS '26 — anillo hexagonal que se vuelve tambor 3D
+     3d. PROYECTOS DESTACADOS — a pantalla completa, uno por uno
+     La sección queda fija y, al bajar, cada proyecto sube por un arco (como el del hero) tapando
+     al anterior, que se oscurece. El texto de cada uno aparece cuando su arco ya llenó la pantalla.
+     El fondo es un video si el proyecto tiene data-video; si no, su imagen. Los videos se cargan
+     recién cuando su proyecto está cerca y solo corre el que está al frente.
      ======================================================================== */
-  const flagshipWorks = [
-    {
-      id: 'orbita',
-      title: 'Órbita',
-      kind: 'Nuevo · Cofundador y CEO · Tiendas online sin comisión',
-      img: 'assets/img/portfolio/cards/orbita.webp',
-      url: 'https://orbita.site',
-    },
-    {
-      id: 'paperflix',
-      title: 'Paperflix',
-      kind: 'Plataforma EdTech · +3.200 escuelas en Chile',
-      img: 'assets/img/portfolio/cards/paperflix.webp',
-      gallery: [
-        'assets/img/portfolio/paperflix/1.png',
-        'assets/img/portfolio/paperflix/2.png',
-        'assets/img/portfolio/paperflix/3.png',
-        'assets/img/portfolio/paperflix/4.png',
-        'assets/img/portfolio/paperflix/5.png',
-        'assets/img/portfolio/paperflix/6.png',
-      ],
-    },
-    {
-      id: 'siti',
-      title: 'S.I.T.I System',
-      kind: 'Sistema full stack + asistente de IA propio',
-      img: 'assets/img/portfolio/cards/s-i-t-i-sistema-integral-de-tiendas-inde.webp',
-      url: 'https://siti.mateorojas.com.ar',
-    },
-    {
-      id: 'neurobrand',
-      title: 'NeuroBrand AI',
-      kind: 'Proyecto personal · Identidad de marca con IA y neuromarketing',
-      img: 'assets/img/portfolio/cards/neurobrand.webp',
-      gallery: [
-        'assets/img/portfolio/neurobrand/1.webp',
-        'assets/img/portfolio/neurobrand/2.webp',
-        'assets/img/portfolio/neurobrand/3.webp',
-        'assets/img/portfolio/neurobrand/4.webp',
-      ],
-    },
-    {
-      id: 'petty',
-      title: 'Petty Joyas',
-      kind: 'E-commerce + POS con QR y bot de WhatsApp',
-      img: 'assets/img/portfolio/cards/petty-joyas.webp',
-      url: 'https://pettyjoyas.com.ar',
-    },
-    {
-      id: 'mipaperlux',
-      title: 'MiPaperlux',
-      kind: 'Plataforma EdTech · Onboarding gamificado',
-      img: 'assets/img/portfolio/cards/mipaperlux.webp',
-      gallery: [
-        'assets/img/portfolio/mipaperlux/1.png',
-        'assets/img/portfolio/mipaperlux/2.png',
-        'assets/img/portfolio/mipaperlux/3.png',
-        'assets/img/portfolio/mipaperlux/4.png',
-      ],
-    },
-    {
-      id: 'gabygor',
-      title: 'GabyGor',
-      kind: 'Reserva de turnos en tiempo real',
-      img: 'assets/img/portfolio/cards/gabygor.webp',
-      url: 'https://gabygor.com.ar',
-    },
-    {
-      id: 'gvstore',
-      title: 'GV Store',
-      kind: 'E-commerce deportivo full stack',
-      img: 'assets/img/portfolio/cards/gv-store.webp',
-      url: 'https://gvstore.com.ar',
-    },
-    {
-      id: 'taccu',
-      title: 'Taccu Rewards',
-      kind: 'SaaS de fidelización y puntos',
-      img: 'assets/img/portfolio/cards/taccu.webp',
-      url: 'https://taccu.vercel.app/',
-    },
-    {
-      id: 'tefaltacalle',
-      title: 'TeFaltaCalleOK',
-      kind: 'E-commerce de ropa urbana y panel de administración',
-      img: 'assets/img/portfolio/cards/tefaltacalleok.webp',
-      url: 'https://www.tefaltacalleok.com',
-    },
-  ];
-
-  const worksSection = document.getElementById('works');
-  const worksViewport = document.getElementById('works3dViewport');
-  const worksCardsRig = document.getElementById('worksCardsRig');
-  const worksIndexList = document.getElementById('worksIndexList');
-  const workInfo = document.querySelector('.works-active-info');
-  const workKindEl = document.getElementById('worksActiveKind');
-  const workTitleEl = document.getElementById('worksActiveTitle');
-  const workCtaEl = document.getElementById('worksActiveCta');
-  let cardElements = [];
-  let indexItems = [];
-  let activeWorkIdx = -1;
-  let drumPos = 0;
-  let morph = 0;
-  let worksRingSpin = 0; // el anillo gira un poco mientras se llega a la sección
+  // las capturas de los proyectos privados (se abren en la ventana de galería)
+  const galleries = {
+    paperflix: [1, 2, 3, 4, 5, 6].map((k) => `assets/img/portfolio/paperflix/${k}.png`),
+    neurobrand: [1, 2, 3, 4].map((k) => `assets/img/portfolio/neurobrand/${k}.webp`),
+    mipaperlux: [1, 2, 3, 4].map((k) => `assets/img/portfolio/mipaperlux/${k}.png`),
+  };
 
   function openGalleryModal(title, images) {
     const modal = document.getElementById('galleryModal');
     const modalTitle = document.getElementById('galleryModalTitle');
     const modalBody = document.getElementById('galleryModalBody');
-    if (!modal || !modalBody) return;
+    if (!modal || !modalBody || !images) return;
     if (modalTitle) {
       modalTitle.innerHTML = `${title} — <span>Capturas del sistema</span>`;
       localize(modalTitle);
@@ -1419,143 +1319,74 @@
     modal.classList.add('is-open');
   }
 
-  function openWork(w) {
-    if (w.url) window.open(w.url, '_blank', 'noopener');
-    else if (w.gallery) openGalleryModal(w.title, w.gallery);
-  }
-
-  function setActiveWork(idx) {
-    if (idx === activeWorkIdx) return;
-    activeWorkIdx = idx;
-    const w = flagshipWorks[idx];
-    if (workKindEl) {
-      workKindEl.textContent = w.kind;
-      localize(workKindEl);
-    }
-    if (workTitleEl) workTitleEl.textContent = w.title.toUpperCase();
-    if (workCtaEl) {
-      workCtaEl.innerHTML = w.url ? 'VER PROYECTO EN VIVO <i class="bi bi-arrow-up-right"></i>' : 'VER GALERÍA DEL SISTEMA <i class="bi bi-images"></i>';
-      localize(workCtaEl);
-      workCtaEl.href = w.url || '#works';
-      workCtaEl.target = w.url ? '_blank' : '';
-      workCtaEl.rel = 'noopener';
-      workCtaEl.onclick = w.url ? null : (e) => {
-        e.preventDefault();
-        openGalleryModal(w.title, w.gallery);
-      };
-    }
-    indexItems.forEach((li, i) => li.classList.toggle('is-active', i === idx));
-  }
-
-  // dónde va cada tarjeta: en el anillo (6 lugares alrededor de "WORKS '26") o en el tambor
-  function placeWorks() {
-    const n = flagshipWorks.length;
-    const vh = window.innerHeight;
-    const vw = window.innerWidth;
-    const cardH = cardElements[0]?.offsetHeight || 250;
-    const ringR = Math.min(vh * 0.27, vw * 0.17);
-    const drumR = cardH * 1.9;
-    cardElements.forEach((card, i) => {
-      // anillo
-      const slot = i % 6;
-      const th = ((slot * 60 - 90 + worksRingSpin) * Math.PI) / 180;
-      const rx = Math.cos(th) * ringR;
-      const ry = Math.sin(th) * ringR;
-      const rz = (th * 180) / Math.PI + 90;
-      const ringOpacity = i < 6 ? 1 : 0;
-      // tambor
-      let delta = i - drumPos;
-      if (delta > n / 2) delta -= n;
-      if (delta < -n / 2) delta += n;
-      const a = delta * 0.75;
-      const dy = Math.sin(a) * drumR;
-      const dz = (Math.cos(a) - 1) * drumR;
-      const drumOpacity = clamp(Math.cos(a) * 1.8 - 0.1, 0, 1);
-      // mezcla
-      const m = morph;
-      const x = lerp(rx, 0, m);
-      const y = lerp(ry, dy, m);
-      const z = lerp(0, dz, m);
-      const rotZ = lerp(rz, 0, m);
-      const rotX = lerp(0, (-a * 180) / Math.PI, m);
-      const scale = lerp(0.52, 1, m);
-      const opacity = lerp(ringOpacity, drumOpacity, m);
-      card.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateZ(${rotZ.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
-      card.style.opacity = opacity.toFixed(3);
-      card.style.zIndex = String(Math.round(100 + (m > 0.5 ? dz : -slot)));
-      card.style.pointerEvents = opacity > 0.5 ? 'auto' : 'none';
-    });
-  }
-
-  function updateWorks() {
-    if (!worksSection || !cardElements.length) return;
-    const p = pinProgress(worksSection);
-    const n = flagshipWorks.length;
-    worksRingSpin = smooth(0, 0.16, p) * 40;
-    morph = smooth(0.14, 0.3, p);
-    drumPos = clamp((p - 0.3) / 0.66, 0, 1) * (n - 1);
-    worksViewport?.style.setProperty('--morph', morph.toFixed(3));
-    if (workInfo) workInfo.style.opacity = morph.toFixed(3);
-    setActiveWork(Math.round(drumPos));
-    placeWorks();
-  }
-
-  // a qué avance hay que llevar el scroll para que un proyecto quede al frente del tambor
-  const workProgress = (i) => 0.3 + (i / (flagshipWorks.length - 1)) * 0.66;
-
-  if (worksCardsRig && worksIndexList) {
-    worksCardsRig.innerHTML = flagshipWorks
-      .map(
-        (w, i) => `
-      <article class="work-3d-card" data-idx="${i}" tabindex="0" role="button" aria-label="${w.title}">
-        <div class="work-card-browser-bar">
-          <div class="browser-dots"><span></span><span></span><span></span></div>
-          <span>${w.title.toLowerCase().replace(/\s+/g, '')}.app</span>
-          <span>↗</span>
-        </div>
-        <div class="work-card-img-wrap">
-          <img src="${w.img}" alt="${w.title}" loading="lazy">
-          <span class="work-card-overlay-badge">${w.title}</span>
-        </div>
-      </article>`
-      )
-      .join('');
-    worksIndexList.innerHTML = flagshipWorks
-      .map((w, i) => `<li class="works-index-item"><button type="button" data-idx="${i}">${w.title}</button></li>`)
-      .join('');
-    cardElements = Array.from(worksCardsRig.querySelectorAll('.work-3d-card'));
-    indexItems = Array.from(worksIndexList.querySelectorAll('.works-index-item'));
-
-    cardElements.forEach((card, i) => {
-      card.addEventListener('click', () => {
-        if (morph > 0.9 && Math.round(drumPos) === i) openWork(flagshipWorks[i]);
-        else scrollToProgress(worksSection, workProgress(i));
-      });
-    });
-    indexItems.forEach((li, i) => {
-      li.querySelector('button')?.addEventListener('click', () => scrollToProgress(worksSection, workProgress(i)));
-    });
-
-    // arrastrar el tambor también lo gira (mueve el scroll de la página)
-    let dragY = null;
-    worksViewport?.addEventListener('pointerdown', (e) => { dragY = e.clientY; });
-    window.addEventListener('pointerup', (e) => {
-      if (dragY === null) return;
-      const dy = e.clientY - dragY;
-      dragY = null;
-      if (Math.abs(dy) < 36) return;
-      const next = clamp(Math.round(drumPos) + (dy < 0 ? 1 : -1), 0, flagshipWorks.length - 1);
-      scrollToProgress(worksSection, workProgress(next));
-    });
-    setActiveWork(0);
-  }
-
   document.querySelectorAll('[data-open-gallery]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const w = flagshipWorks.find((x) => x.id === btn.dataset.openGallery);
-      if (w?.gallery) openGalleryModal(w.title, w.gallery);
+      const id = btn.dataset.openGallery;
+      const title = btn.closest('.feat-slide')?.querySelector('.feat-title')?.textContent
+        || btn.closest('.catalog-card')?.querySelector('.catalog-card-title')?.textContent || '';
+      openGalleryModal(title.trim(), galleries[id]);
     });
   });
+
+  const featSection = document.getElementById('works');
+  const featSlides = Array.from(document.querySelectorAll('.feat-slide'));
+  const featDots = Array.from(document.querySelectorAll('.feat-dots span'));
+  let featActive = -1;
+  let featOnScreen = false;
+
+  // los videos: se crean cuando su proyecto está cerca y corre solo el del frente
+  function syncFeatVideos() {
+    featSlides.forEach((el, i) => {
+      const src = el.dataset.video;
+      if (!src) return;
+      let v = el.querySelector('.feat-video');
+      if (!v && Math.abs(i - featActive) <= 1) {
+        v = document.createElement('video');
+        v.className = 'feat-video';
+        v.muted = true;
+        v.loop = true;
+        v.playsInline = true;
+        v.preload = 'auto';
+        v.setAttribute('aria-hidden', 'true');
+        v.src = src;
+        v.addEventListener('playing', () => v.classList.add('is-on'), { once: true });
+        el.querySelector('.feat-media')?.append(v);
+      }
+      if (!v) return;
+      if (i === featActive && featOnScreen && !prefersReducedMotion) v.play().catch(() => {});
+      else v.pause();
+    });
+  }
+
+  function updateFeatured() {
+    if (!featSection || !featSlides.length) return;
+    const r = featSection.getBoundingClientRect();
+    const onScreen = r.bottom > 0 && r.top < window.innerHeight;
+    if (onScreen !== featOnScreen) {
+      featOnScreen = onScreen;
+      syncFeatVideos();
+    }
+    if (!onScreen) return;
+    const n = featSlides.length;
+    // f va de 0 a n-1; cada cambio de proyecto ocupa el medio de su tramo y deja quieto el resto
+    const f = pinProgress(featSection) * (n - 1);
+    let active = 0;
+    featSlides.forEach((el, i) => {
+      const t = i === 0 ? 1 : smooth(0.12, 0.82, f - (i - 1));
+      const dim = i < n - 1 ? smooth(0.12, 0.82, f - i) : 0;
+      if (t > 0.5) active = i;
+      el.style.setProperty('--t', t.toFixed(4));
+      el.style.setProperty('--dim', dim.toFixed(3));
+      el.style.setProperty('--info', (smooth(0.75, 1, t) * (1 - smooth(0, 0.3, dim))).toFixed(3));
+      // lo que no se ve no se pinta: el que todavía no subió y el que ya quedó tapado
+      el.style.visibility = t < 0.001 || dim > 0.999 ? 'hidden' : '';
+    });
+    if (active !== featActive) {
+      featActive = active;
+      featDots.forEach((d, i) => d.classList.toggle('is-on', i === active));
+      syncFeatVideos();
+    }
+  }
 
   /* ========================================================================
      3f. GITHUB — las contribuciones reales contadas en cuatro escenas
@@ -1862,7 +1693,7 @@
     updateAbout();
     updateExperience();
     updateRibbon();
-    updateWorks();
+    updateFeatured();
     updateGithub();
     // las estelas (velocidad) se apagan solas unos cuadros después de parar
     if ((aboutVel > 0.01 || expVel > 0.01) && settle++ < 40) requestTick();

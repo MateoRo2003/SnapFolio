@@ -130,8 +130,8 @@
       <a class="nav-pill is-active" href="#home">INICIO</a>
       <a class="nav-pill" href="#about">SOBRE MÍ</a>
       <a class="nav-pill" href="#experience">EXPERIENCIA</a>
-      <a class="nav-pill" href="#landings">LANDINGS</a>
-      <a class="nav-pill" href="#works">PROYECTOS</a>
+      <a class="nav-pill" href="#landings">PROYECTOS</a>
+      <a class="nav-pill" href="#works">DESTACADOS</a>
       <a class="nav-pill" href="#services">SERVICIOS</a>
     </nav>
 
@@ -156,8 +156,8 @@
       <a href="#home"><span>01</span>INICIO</a>
       <a href="#about"><span>02</span>SOBRE MÍ</a>
       <a href="#experience"><span>03</span>EXPERIENCIA</a>
-      <a href="#landings"><span>04</span>LANDINGS</a>
-      <a href="#works"><span>05</span>PROYECTOS</a>
+      <a href="#landings"><span>04</span>PROYECTOS</a>
+      <a href="#works"><span>05</span>DESTACADOS</a>
       <a href="#services"><span>06</span>SERVICIOS</a>
     </nav>
     <button class="nav-sheet-close" type="button" data-close-menu>CERRAR ✕</button>
@@ -504,72 +504,120 @@
     </section>
 
     <!-- ====================================================================
-         6. FEATURED PROJECT / LANDING PAGES — 3D WAVE RIBBON (00:12 - 00:17)
+         6. PROYECTOS — la cinta ondulada con todos
          ==================================================================== -->
     <section class="landings-section" id="landings">
       <div class="landings-pin">
       <div class="landings-header-row">
-        <h2 class="section-huge-label">PROYECTO DESTACADO</h2>
+        <h2 class="section-huge-label">PROYECTOS</h2>
+        <button class="all-projects-btn" type="button" data-open-modal="allProjectsModal">VER EL ARCHIVO COMPLETO ↗</button>
       </div>
 
-      <!-- 3D Sine-Wave Curved Ribbon Canvas (f_140.png) -->
+      <!-- la cinta ondulada con todos los proyectos, empezando por los de traslados (echo.js) -->
       <div class="wave-ribbon-stage">
-        <canvas id="waveRibbonCanvas" aria-label="Carrusel ondulado 3D de Landing Pages"></canvas>
+        <canvas id="waveRibbonCanvas" aria-label="Carrusel ondulado de todos los proyectos"></canvas>
       </div>
 
       <div class="wave-active-caption">
-        <h3 class="wave-project-title" id="waveProjectTitle">Estudio Jurídico MJHD</h3>
-        <p class="wave-project-sub" id="waveProjectSub">Sitio web institucional y consultoría legal · SEO optimizado</p>
+        <h3 class="wave-project-title" id="waveProjectTitle">Traslados Márquez</h3>
+        <p class="wave-project-sub" id="waveProjectSub">Landing page ejecutiva · Remises turísticos en Puerto Iguazú</p>
         <div class="wave-project-meta">
-          <span id="waveProjectCount">01 / 07</span>
-          <span>•</span>
-          <a class="wave-project-link" id="waveProjectLink" href="https://www.mjhdjuridica.com.ar" target="_blank" rel="noopener">
-            VISITAR WEB ↗
-          </a>
+          <span id="waveProjectCount">01 / 24</span>
+          <span class="wave-project-sep">•</span>
+          <a class="wave-project-link" id="waveProjectLink" href="https://www.trasladosmarquez.com.ar" target="_blank" rel="noopener">VISITAR WEB ↗</a>
         </div>
       </div>
 
       <div class="landings-footer-row">
-        <span class="section-huge-label">LANDING PAGES</span>
+        <span class="wave-hint">↓ BAJÁ O ARRASTRÁ LA CINTA PARA RECORRERLOS</span>
       </div>
       </div>
     </section>
 
     <!-- ====================================================================
-         7. WORKS '26 — HEXAGON RING & 3D DRUM CAROUSEL (00:18 - 00:25)
+         7. PROYECTOS DESTACADOS — pantalla completa, con video de fondo
          ==================================================================== -->
-    <section class="works-section" id="works">
-      <div class="works-pin">
-      <div class="works-stage-grid">
-        <!-- Left Active Project Panel -->
-        <div class="works-active-info">
-          <span class="works-active-kind" id="worksActiveKind">Plataforma EdTech · +3.200 escuelas en Chile</span>
-          <h2 class="works-active-title" id="worksActiveTitle">Paperflix</h2>
-          <div class="works-active-actions">
-            <a class="works-cta-btn" id="worksActiveCta" href="#works">
-              VER GALERÍA DEL SISTEMA <i class="bi bi-images"></i>
-            </a>
+    <!-- los proyectos destacados, a pantalla completa y uno por uno: al bajar, el siguiente sube por un
+         arco como el del hero. El fondo de cada uno es un video: poné la ruta en data-video
+         (por ejemplo data-video="assets/video/orbita.mp4"); mientras esté vacío, se ve la imagen -->
+    <section class="featured-section" id="works">
+      <div class="featured-pin">
+      <article class="feat-slide" data-video="">
+        <div class="feat-media">
+          <img class="feat-poster" src="assets/img/portfolio/featured/orbita.webp" alt="" loading="lazy" decoding="async">
+        </div>
+        <div class="feat-info">
+          <div class="feat-top"><span class="feat-num">01 / 04</span><span class="feat-kind">COFUNDADOR Y CEO · 2026</span></div>
+          <h3 class="feat-title">Órbita</h3>
+          <div class="feat-body">
+            <p class="feat-desc">Tiendas online con catálogo, stock y pedidos en un solo panel, sin comisiones por venta y con dominio propio. Incluye a Orbi, un asistente con IA que conoce cada negocio.</p>
+            <dl class="feat-facts">
+              <div><dt>DATO</dt><dd>0 % de comisión por venta</dd></div>
+              <div><dt>ROL</dt><dd>Cofundador y CEO</dd></div>
+              <div><dt>STACK</dt><dd>Next.js 16 · NestJS · Supabase · Cloud Run</dd></div>
+            </dl>
+            <a class="feat-cta" href="https://orbita.site" target="_blank" rel="noopener">VER EN VIVO ↗</a>
           </div>
         </div>
-
-        <!-- Center 3D Hexagon Ring / Vertical Drum Stage -->
-        <div class="works-3d-viewport" id="works3dViewport">
-          <span class="works-center-label">PROYECTOS ’26</span>
-          <div class="works-cards-rig" id="worksCardsRig"></div>
+      </article>
+      <article class="feat-slide" data-video="">
+        <div class="feat-media">
+          <img class="feat-poster" src="assets/img/portfolio/featured/paperflix.webp" alt="" loading="lazy" decoding="async">
         </div>
-
-        <!-- Right Sticky Index List -->
-        <ul class="works-index-list" id="worksIndexList" aria-label="Lista de sistemas destacados"></ul>
-      </div>
-
-      <div class="works-bottom-controls">
-        <span class="drum-hint-pill">
-          ↓ SCROLL O ARRASTRÁ EL TAMBOR PARA ROTAR
-        </span>
-        <button class="all-projects-btn" type="button" data-open-modal="allProjectsModal">
-          VER LOS 24 PROYECTOS ↗
-        </button>
-      </div>
+        <div class="feat-info">
+          <div class="feat-top"><span class="feat-num">02 / 04</span><span class="feat-kind">PLATAFORMA EDTECH · PAPERLUX, CHILE</span></div>
+          <h3 class="feat-title">Paperflix</h3>
+          <div class="feat-body">
+            <p class="feat-desc">Plataforma educativa gamificada que usan escuelas de todo Chile. La IA arma los recursos: lee un enlace y completa título, descripción, materia y etiquetas.</p>
+            <dl class="feat-facts">
+              <div><dt>DATO</dt><dd>+3.200 escuelas · 60 % menos tiempo para crear contenido</dd></div>
+              <div><dt>ROL</dt><dd>Desarrollador full stack</dd></div>
+              <div><dt>STACK</dt><dd>Next.js 14 · NestJS · Prisma · Supabase · Groq</dd></div>
+            </dl>
+            <button class="feat-cta" type="button" data-open-gallery="paperflix">VER CAPTURAS ↗</button>
+          </div>
+        </div>
+      </article>
+      <article class="feat-slide" data-video="">
+        <div class="feat-media">
+          <img class="feat-poster" src="assets/img/portfolio/featured/siti.webp" alt="" loading="lazy" decoding="async">
+        </div>
+        <div class="feat-info">
+          <div class="feat-top"><span class="feat-num">03 / 04</span><span class="feat-kind">SISTEMA DE GESTIÓN · IA PROPIA</span></div>
+          <h3 class="feat-title">S.I.T.I</h3>
+          <div class="feat-body">
+            <p class="feat-desc">Sistema integral para tiendas multimarca: ventas, stock y clientes con cinco roles, y un asistente de IA entrenado para el negocio que responde en milisegundos.</p>
+            <dl class="feat-facts">
+              <div><dt>DATO</dt><dd>5 roles · IA propia, sin APIs externas</dd></div>
+              <div><dt>ROL</dt><dd>Full stack, de punta a punta</dd></div>
+              <div><dt>STACK</dt><dd>Angular 17 · Laravel 12 · Python</dd></div>
+            </dl>
+            <a class="feat-cta" href="https://siti.mateorojas.com.ar" target="_blank" rel="noopener">VER EN VIVO ↗</a>
+          </div>
+        </div>
+      </article>
+      <article class="feat-slide" data-video="">
+        <div class="feat-media">
+          <img class="feat-poster" src="assets/img/portfolio/featured/neurobrand.webp" alt="" loading="lazy" decoding="async">
+        </div>
+        <div class="feat-info">
+          <div class="feat-top"><span class="feat-num">04 / 04</span><span class="feat-kind">PROYECTO PERSONAL · IA</span></div>
+          <h3 class="feat-title">NeuroBrand AI</h3>
+          <div class="feat-body">
+            <p class="feat-desc">A partir de una frase arma logo, paleta, tipografías y una maqueta web, con cada decisión respaldada por neuromarketing.</p>
+            <dl class="feat-facts">
+              <div><dt>DATO</dt><dd>De una frase a una marca en 60 segundos</dd></div>
+              <div><dt>ROL</dt><dd>Idea, diseño y desarrollo</dd></div>
+              <div><dt>STACK</dt><dd>Next.js 14 · Three.js · Zod · Supabase</dd></div>
+            </dl>
+            <button class="feat-cta" type="button" data-open-gallery="neurobrand">VER CAPTURAS ↗</button>
+          </div>
+        </div>
+      </article>
+        <div class="feat-hud" aria-hidden="true">
+          <span class="feat-label">PROYECTOS DESTACADOS</span>
+          <div class="feat-dots"><span></span><span></span><span></span><span></span></div>
+        </div>
       </div>
     </section>
 
