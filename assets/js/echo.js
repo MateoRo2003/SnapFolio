@@ -337,6 +337,7 @@
   let heroHidden = false;
   let windowKick = null;
   let nightKick = null; // vuelve a dibujar la noche (3·b2)
+  let aboutDustKick = null; // y el polvo de la tarjeta del "About me" (3·b3)
 
   function updateHeroOut() {
     const aboutEl = document.getElementById('about');
@@ -347,6 +348,7 @@
     hero.style.setProperty('--out', e.toFixed(4));
     aboutEl.classList.toggle('is-flat', q >= 1);
     nightKick?.(); // la del "About me" arranca al llegar arriba
+    aboutDustKick?.();
     const fade = (1 - smooth(0.25, 0.9, e)).toFixed(3);
     if (heroLine1) {
       heroLine1.style.transform = `translate3d(0, ${(-e * 16).toFixed(2)}vh, 0)`;
@@ -603,6 +605,121 @@
 
     document.addEventListener('visibilitychange', kick);
     window.addEventListener('resize', kick);
+  }
+
+  /* ========================================================================
+     3·b3. EL POLVO DEL HAZ (tarjeta del "About me")
+     Sobre la imagen de la figura flotan motas de luz vivas: suben despacio por el haz, se mecen y
+     titilan. El haz se midió en la imagen (1600 x 978): su eje baja de (1276, 0) a la izquierda,
+     0,648 px por cada px, y se ensancha hacia abajo. El canvas lleva la misma clase que la imagen,
+     así se agranda con ella; las motas se ubican con el mismo encuadre (cover, 50% 45%).
+     Solo dibuja con el "About me" arriba y en pantalla, a 30 cuadros por segundo.
+     ======================================================================== */
+  const aboutDust = document.getElementById('aboutDust');
+  if (aboutDust && !prefersReducedMotion) {
+    const ctx = aboutDust.getContext('2d');
+    const portal = document.getElementById('about');
+    const IMG_W = 1600;
+    const IMG_H = 978;
+    const axisX = (y) => 1276 - 0.648 * y;
+    const halfW = (y) => 68 + 0.09 * y;
+    let seed = 5;
+    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const gauss = () => (rnd() + rnd() + rnd() - 1.5) / 1.5;
+    const motes = Array.from({ length: 240 }, () => ({
+      y: rnd() * (IMG_H + 60) - 30, // en píxeles de la imagen
+      o: gauss() * 1.25, // a lo ancho del haz, en medios anchos
+      v: 9 + rnd() * 20, // sube, px de la imagen por segundo
+      r: rnd() < 0.1 ? 1.6 + rnd() * 1 : 0.6 + rnd() * 0.9, // px de pantalla
+      a: 0.5 + rnd() * 0.5,
+      ph: rnd() * Math.PI * 2,
+      sw: 3 + rnd() * 7, // cuánto se mece
+    }));
+
+    // una mota: punto con halo, dibujada una vez
+    const sprite = document.createElement('canvas');
+    sprite.width = sprite.height = 32;
+    const sg = sprite.getContext('2d');
+    const grad = sg.createRadialGradient(16, 16, 0, 16, 16, 16);
+    grad.addColorStop(0, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.25, 'rgba(255,255,255,0.7)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    sg.fillStyle = grad;
+    sg.fillRect(0, 0, 32, 32);
+
+    let W = 0;
+    let H = 0;
+    let dpr = 1;
+    let raf = 0;
+    let last = 0;
+    let frameNo = 0;
+    let onScreen = false;
+
+    function fitDust() {
+      const cw = aboutDust.clientWidth;
+      const ch = aboutDust.clientHeight;
+      const d = Math.min(window.devicePixelRatio || 1, 1.5);
+      if (cw === W && ch === H && d === dpr) return;
+      W = cw;
+      H = ch;
+      dpr = d;
+      aboutDust.width = Math.round(W * dpr);
+      aboutDust.height = Math.round(H * dpr);
+    }
+
+    function drawDust(now, dt) {
+      fitDust();
+      const s = Math.max(W / IMG_W, H / IMG_H);
+      const ox = (W - IMG_W * s) * 0.5;
+      const oy = (H - IMG_H * s) * 0.45;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      const t = now / 1000;
+      for (const m of motes) {
+        m.y -= m.v * dt;
+        if (m.y < -30) {
+          m.y += IMG_H + 60;
+          m.o = gauss() * 1.25;
+        }
+        const iy = m.y;
+        const ix = axisX(iy) + m.o * halfW(iy) + Math.sin(t * 0.6 + m.ph) * m.sw;
+        const x = ox + ix * s;
+        const y = oy + iy * s;
+        if (x < -8 || y < -8 || x > W + 8 || y > H + 8) continue;
+        // más brillo en el medio del haz, y titila
+        const inBeam = clamp(1 - Math.abs(m.o) * 0.45, 0.2, 1);
+        const tw = 0.55 + 0.45 * Math.sin(t * (1.6 + m.sw * 0.12) + m.ph * 3);
+        ctx.globalAlpha = m.a * inBeam * tw;
+        const size = m.r * 6;
+        ctx.drawImage(sprite, x - size / 2, y - size / 2, size, size);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    const shownDust = () => onScreen && !document.hidden && !!portal?.classList.contains('is-flat');
+
+    function dustFrame(now) {
+      raf = 0;
+      if (!shownDust()) return;
+      const dt = Math.min(0.1, (now - (last || now)) / 1000);
+      // un cuadro sí y uno no: las motas van despacio
+      if (frameNo++ % 2 === 0) {
+        last = now;
+        drawDust(now, dt);
+      }
+      raf = requestAnimationFrame(dustFrame);
+    }
+
+    aboutDustKick = () => {
+      if (raf || !shownDust()) return;
+      last = 0;
+      raf = requestAnimationFrame(dustFrame);
+    };
+    new IntersectionObserver((entries) => {
+      onScreen = entries[entries.length - 1].isIntersecting;
+      aboutDustKick();
+    }).observe(aboutDust);
+    document.addEventListener('visibilitychange', aboutDustKick);
   }
 
   /* ========================================================================
