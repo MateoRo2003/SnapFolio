@@ -44,7 +44,8 @@
   .word { font-weight: 900; letter-spacing: -0.02em; }
 
   /* A: el logo se arma */
-  .intro { position: absolute; left: 50%; top: 50%; display: flex; align-items: center; gap: 46px; transform: translate(-50%, -50%); }
+  .intro-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .intro { display: flex; align-items: center; gap: 46px; }
   #lgA { width: 240px; height: 240px; }
   #lgA .ring { border-width: 8px; }
   #lgA .planet { box-shadow: 0 0 80px rgba(59,130,246,0.55); }
@@ -163,10 +164,10 @@
 
   <section class="scene" id="A">
     <div class="flare" id="flare"></div>
-    <div class="intro">
+    <div class="intro-wrap"><div class="intro">
       <span class="lg" id="lgA"><span class="ring"></span><span class="planet"></span><span class="orb"><span class="sat"></span></span></span>
       <div class="word" id="wordA"></div>
-    </div>
+    </div></div>
   </section>
 
   <section class="scene" id="B">
@@ -321,7 +322,9 @@
   tl.fromTo('#lgA .sat', { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 0.85);
   tl.fromTo('#flare', { opacity: 0, scale: 0.4 }, { keyframes: { opacity: [0, 1, 0.5] }, scale: 1.3, duration: 1.2, ease: 'power2.out' }, 0.55);
   // el logo arranca centrado y se corre a la izquierda mientras entra la palabra
-  tl.fromTo('.intro', { x: 260 }, { x: 0, duration: 0.8, ease: 'power3.inOut' }, 1.1);
+  // el logo solo queda en el centro; al entrar la palabra, el conjunto se acomoda centrado
+  const introShift = () => (document.getElementById('wordA').offsetWidth + 46) / 2;
+  tl.fromTo('.intro', { x: introShift }, { x: 0, duration: 0.8, ease: 'power3.inOut' }, 1.1);
   tl.fromTo('#wordA span', { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.55, ease: 'power4.out', stagger: 0.05 }, 1.3);
   tl.fromTo('.intro', { scale: 1 }, { scale: 1.04, duration: 1.2, ease: 'none', immediateRender: false }, 1.9);
   // se achica hacia la esquina
