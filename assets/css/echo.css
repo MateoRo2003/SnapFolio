@@ -418,6 +418,17 @@ html.is-loading .hero-window {
   transform: translate3d(calc(var(--px, 0) * var(--k) * 1px), calc(var(--py, 0) * var(--k) * 1px), 0) scale(1.08);
 }
 
+/* la noche que se mueve (echo.js, 3·b2): va encima de su imagen y aparece cuando ya dibujó */
+.night-gl {
+  display: block;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.night-gl.is-on {
+  opacity: 1;
+}
+
 .hero-meta-left,
 .hero-meta-right {
   position: absolute;

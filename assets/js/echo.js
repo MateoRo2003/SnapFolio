@@ -336,6 +336,7 @@
   const heroMetas = Array.from(document.querySelectorAll('.hero-meta-left > *, .hero-meta-right > *'));
   let heroHidden = false;
   let windowKick = null;
+  let nightKick = null; // vuelve a dibujar la noche (3·b2)
 
   function updateHeroOut() {
     const aboutEl = document.getElementById('about');
@@ -345,6 +346,7 @@
     const e = q * q * (3 - 2 * q);
     hero.style.setProperty('--out', e.toFixed(4));
     aboutEl.classList.toggle('is-flat', q >= 1);
+    nightKick?.(); // la del "About me" arranca al llegar arriba
     const fade = (1 - smooth(0.25, 0.9, e)).toFixed(3);
     if (heroLine1) {
       heroLine1.style.transform = `translate3d(0, ${(-e * 16).toFixed(2)}vh, 0)`;
@@ -367,6 +369,7 @@
       heroHidden = covered;
       hero.style.visibility = covered ? 'hidden' : '';
       if (!covered) windowKick?.();
+      nightKick?.();
     }
   }
 
@@ -394,6 +397,251 @@
     };
     document.addEventListener('visibilitychange', () => { if (!document.hidden) windowKick(); });
     windowKick();
+  }
+
+  /* ========================================================================
+     3·b2. LA NOCHE SE MUEVE
+     La noche estrellada (la del arco y la del "About me") se dibuja en WebGL encima de su imagen:
+     cada trazo corre a lo largo de sí mismo, las ventanas del castillo se prenden y se apagan, y
+     el mouse revuelve las líneas a su alrededor y prende las ventanas cercanas.
+     El sentido de cada trazo sale de starry-flow.webp, calculado una vez desde la imagen:
+     RG = hacia dónde corre, B = número de ventana (0 = ninguna), A = desfase del ciclo.
+     Solo dibuja mientras se ve; quieta va a 30 cuadros por segundo y con el mouse, a 60.
+     ======================================================================== */
+  const nightCanvases = Array.from(document.querySelectorAll('canvas[data-night]'));
+  if (nightCanvases.length && !prefersReducedMotion && window.WebGL2RenderingContext) {
+    const VERT = `#version 300 es
+      in vec2 aPos;
+      void main() { gl_Position = vec4(aPos, 0.0, 1.0); }`;
+    const FRAG = `#version 300 es
+      precision highp float;
+      uniform sampler2D uImg;
+      uniform sampler2D uFlow;
+      uniform vec2 uRes;      // el canvas, en píxeles
+      uniform vec2 uImgSize;  // la imagen, en píxeles
+      uniform vec2 uFocus;    // object-position
+      uniform float uTime;
+      uniform vec4 uMouse;    // x, y (píxeles del canvas), cuánto revuelve, cuánto está adentro
+      uniform float uRadius;  // radio del mouse, en píxeles del canvas
+      out vec4 outColor;
+
+      float hash(float n) { return fract(sin(n * 127.1) * 43758.5453); }
+
+      // cada ventana tiene su ritmo: está prendida casi siempre y a veces se apaga un rato
+      float windowOn(float id, float t) {
+        float k = t / (4.0 + hash(id) * 9.0) + hash(id + 3.1);
+        float seg = floor(k);
+        float a = step(0.3, hash(id * 7.0 + seg));
+        float b = step(0.3, hash(id * 7.0 + seg + 1.0));
+        float s = mix(a, b, smoothstep(0.9, 1.0, fract(k)));
+        return s * (0.9 + 0.1 * sin(t * 9.0 + id * 5.0) * sin(t * 6.1 + id));
+      }
+
+      void main() {
+        vec2 frag = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
+        float scale = max(uRes.x / uImgSize.x, uRes.y / uImgSize.y);
+        vec2 shown = uImgSize * scale;
+        vec2 offset = (uRes - shown) * uFocus;
+        vec2 uv = (frag - offset) / shown;
+        vec4 flow = texture(uFlow, uv);
+        vec2 dir = flow.rg * 2.0 - 1.0;
+        // dónde hay trazos, mirado de lejos (borroso): así el remolino no corta en el borde del castillo
+        float moving = smoothstep(0.04, 0.3, length(textureLod(uFlow, uv, 4.0).rg * 2.0 - 1.0));
+
+        // el mouse revuelve: gira lo que tiene cerca (solo donde hay trazos, no el castillo)
+        vec2 d = frag - uMouse.xy;
+        float near = exp(-dot(d, d) / (uRadius * uRadius));
+        float ang = uMouse.z * near * moving;
+        vec2 stirred = uMouse.xy + mat2(cos(ang), sin(ang), -sin(ang), cos(ang)) * d;
+        uv = (stirred - offset) / shown;
+
+        // los trazos corren a lo largo de sí mismos: dos copias desfasadas que se turnan
+        vec2 step1 = dir * 22.0 / uImgSize;
+        float ph = uTime / 2.6 + flow.a * 2.0;
+        float p0 = fract(ph);
+        float p1 = fract(ph + 0.5);
+        vec3 c0 = texture(uImg, uv - step1 * p0).rgb;
+        vec3 c1 = texture(uImg, uv - step1 * p1).rgb;
+        float w = abs(2.0 * p0 - 1.0);
+        vec3 col = mix(c0, c1, w);
+        col += near * uMouse.w * moving * 0.05;
+
+        // las ventanas: apagadas quedan como el castillo; el mouse prende las que tiene cerca
+        float id = floor(texelFetch(uFlow, ivec2(uv * vec2(textureSize(uFlow, 0))), 0).b * 255.0 + 0.5);
+        if (id > 0.5) {
+          float on = max(windowOn(id, uTime), smoothstep(0.35, 0.9, near * 1.4) * uMouse.w);
+          col *= mix(0.06, 1.0, on);
+        }
+        outColor = vec4(col, 1.0);
+      }`;
+
+    const load = (src) => new Promise((ok, fail) => {
+      const im = new Image();
+      im.decoding = 'async';
+      im.onload = () => ok(im);
+      im.onerror = fail;
+      im.src = src;
+    });
+    let sources = null; // la imagen y el mapa, se piden una sola vez
+    const getSources = () => (sources ||= Promise.all([
+      load('assets/img/echo/starry-night.webp'),
+      load('assets/img/echo/starry-flow.webp'),
+    ]));
+
+    const views = [];
+    const mouse = { x: -1e4, y: -1e4, stir: 0, inside: 0, last: 0, speed: 0 };
+
+    function makeView(canvas) {
+      const gl = canvas.getContext('webgl2', { antialias: false, alpha: false, depth: false, stencil: false, powerPreference: 'low-power' });
+      if (!gl) return null;
+      const sh = (type, src) => {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      };
+      const prog = gl.createProgram();
+      gl.attachShader(prog, sh(gl.VERTEX_SHADER, VERT));
+      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
+      gl.useProgram(prog);
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, 'aPos');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      const u = {};
+      ['uImg', 'uFlow', 'uRes', 'uImgSize', 'uFocus', 'uTime', 'uMouse', 'uRadius'].forEach((n) => { u[n] = gl.getUniformLocation(prog, n); });
+      const view = { canvas, gl, u, ready: false, visible: false, w: 0, h: 0, dpr: 1 };
+      getSources().then(([img, flow]) => {
+        if (gl.isContextLost()) return;
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+        gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.NONE);
+        const tex = (unit, im, mip) => {
+          const t = gl.createTexture();
+          gl.activeTexture(gl.TEXTURE0 + unit);
+          gl.bindTexture(gl.TEXTURE_2D, t);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im);
+          if (mip) gl.generateMipmap(gl.TEXTURE_2D);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, mip ? gl.LINEAR_MIPMAP_LINEAR : gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        };
+        tex(0, img, true); // con mipmaps: achicada no titila al moverse
+        tex(1, flow, true);
+        gl.uniform1i(u.uImg, 0);
+        gl.uniform1i(u.uFlow, 1);
+        gl.uniform2f(u.uImgSize, img.naturalWidth, img.naturalHeight);
+        gl.uniform2f(u.uFocus, 0.3, 0.5); // el mismo object-position que la imagen
+        view.ready = true;
+        // un primer cuadro ya: la del "About me" queda lista antes de que el arco llegue a llenar la pantalla
+        render(view, performance.now() / 1000);
+        kick();
+      }).catch(() => {});
+      canvas.addEventListener('webglcontextlost', (e) => {
+        e.preventDefault();
+        view.ready = false;
+        canvas.classList.remove('is-on');
+      });
+      return view;
+    }
+
+    function fit(view) {
+      // hasta 1.5x y no más de ~2.4 millones de píxeles: los trazos se ven nítidos y la gráfica descansa
+      const cw = view.canvas.clientWidth;
+      const ch = view.canvas.clientHeight;
+      let dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      if (cw * ch * dpr * dpr > 2.4e6) dpr = Math.sqrt(2.4e6 / (cw * ch));
+      const w = Math.round(cw * dpr);
+      const h = Math.round(ch * dpr);
+      if (w === view.w && h === view.h) return;
+      view.w = view.canvas.width = w;
+      view.h = view.canvas.height = h;
+      view.dpr = dpr;
+      view.gl.viewport(0, 0, w, h);
+      view.gl.uniform2f(view.u.uRes, w, h);
+    }
+
+    function render(view, t) {
+      fit(view);
+      const { gl, u, canvas } = view;
+      const r = canvas.getBoundingClientRect();
+      // el canvas puede estar escalado por CSS (la noche se agranda): el mouse se pasa a sus píxeles
+      const sx = view.w / (r.width || 1);
+      const sy = view.h / (r.height || 1);
+      gl.uniform1f(u.uTime, t);
+      gl.uniform4f(u.uMouse, (mouse.x - r.left) * sx, (mouse.y - r.top) * sy, mouse.stir, mouse.inside);
+      gl.uniform1f(u.uRadius, Math.max(110, Math.min(r.width, r.height) * 0.16) * sx);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (!canvas.classList.contains('is-on')) canvas.classList.add('is-on');
+    }
+
+    let raf = 0;
+    let frameNo = 0;
+    let lastNow = 0;
+    // el arco, mientras el hero no está tapado; el del "About me", desde que llega arriba
+    const aboutPortal = document.getElementById('about');
+    const isShown = (v) => v.visible && v.ready && (v.inHero ? !heroHidden : !!aboutPortal?.classList.contains('is-flat'));
+
+    function frame(now) {
+      raf = 0;
+      if (document.hidden) return;
+      const shown = views.filter(isShown);
+      if (!shown.length) return;
+      const dt = Math.min(0.05, (now - (lastNow || now)) / 1000);
+      lastNow = now;
+      // el mouse revuelve más cuanto más rápido se mueve, y se calma solo
+      const target = clamp(mouse.speed / 1600, 0, 1) * 0.42 + 0.1;
+      mouse.stir += (target * mouse.inside - mouse.stir) * (1 - Math.exp(-dt * 4));
+      mouse.speed *= Math.exp(-dt * 5);
+      const inside = now - mouse.last < 2500 ? 1 : 0;
+      mouse.inside += (inside - mouse.inside) * (1 - Math.exp(-dt * 3));
+      const active = mouse.inside > 0.02 || Math.abs(mouse.stir) > 0.01;
+      // quieta, un cuadro sí y uno no: el flujo es lento y alcanza
+      if (active || frameNo++ % 2 === 0) shown.forEach((v) => render(v, now / 1000));
+      raf = requestAnimationFrame(frame);
+    }
+    function kick() {
+      if (!raf && !document.hidden) {
+        lastNow = 0;
+        raf = requestAnimationFrame(frame);
+      }
+    }
+    nightKick = kick;
+
+    // cada vista se crea cuando está por verse (así la del "About me" no carga antes de tiempo)
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        let v = views.find((x) => x.canvas === e.target);
+        if (!v && e.isIntersecting) {
+          v = makeView(e.target);
+          if (!v) return;
+          v.inHero = !!e.target.closest('.hero-section');
+          views.push(v);
+        }
+        if (v) v.visible = e.isIntersecting;
+      });
+      kick();
+    }, { rootMargin: '50% 0px' });
+    nightCanvases.forEach((c) => io.observe(c));
+
+    window.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const now = performance.now();
+      const dist = Math.hypot(e.clientX - mouse.x, e.clientY - mouse.y);
+      const dtm = Math.max(8, now - mouse.last);
+      if (mouse.last && dist < 400) mouse.speed = Math.max(mouse.speed, (dist / dtm) * 1000);
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      mouse.last = now;
+      kick();
+    }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', () => { mouse.last = 0; });
+    document.addEventListener('visibilitychange', kick);
+    window.addEventListener('resize', kick);
   }
 
   /* ========================================================================
