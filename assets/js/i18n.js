@@ -10,6 +10,14 @@
   'use strict';
 
   const EN = {
+    "WHATSAPP": "WHATSAPP",
+    "DEJAR UN MENSAJE": "LEAVE A MESSAGE",
+    "¿TE GUSTÓ LO QUE VISTE?": "LIKED WHAT YOU SAW?",
+    "¿TENÉS UN PROYECTO ASÍ?": "GOT A PROJECT LIKE THIS?",
+    "HABLEMOS.": "LET’S TALK.",
+    "ESCRIBIME POR WHATSAPP": "MESSAGE ME ON WHATSAPP",
+    "DEJAME UN MENSAJE": "LEAVE ME A MESSAGE",
+    "PUERTO IGUAZÚ, ARGENTINA • TRABAJO REMOTO": "PUERTO IGUAZÚ, ARGENTINA • REMOTE WORK",
     "Carrusel ondulado de proyectos": "Wave carousel of projects",
     "Y 16 proyectos más": "And 16 more projects",
     "Sistemas, e-commerce, landings y proyectos personales": "Systems, e-commerce, landing pages and personal projects",

@@ -136,6 +136,7 @@
     </nav>
 
     <div class="header-actions">
+      <button class="nav-cta" type="button" data-open-modal="contactModal">CONTACTAME</button>
       <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navSheet" aria-label="Abrir menú">MENÚ</button>
       <button class="lang-switch" id="langSwitchBtn" type="button" title="Cambiar idioma ES / EN">EN</button>
       <a class="social-icon-link" href="https://github.com/MateoRo2003" target="_blank" rel="noopener" aria-label="GitHub">
@@ -161,6 +162,16 @@
       <a href="#services"><span>06</span>SERVICIOS</a>
     </nav>
     <button class="nav-sheet-close" type="button" data-close-menu>CERRAR ✕</button>
+  </div>
+
+  <!-- contacto siempre a mano: aparece al salir del hero y se va cuando ya se ve otra llamada a contactar -->
+  <div class="contact-fab" id="contactFab">
+    <div class="fab-menu" id="fabMenu">
+      <a class="fab-option" data-wa href="https://wa.me/5493757673226" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i><span>WHATSAPP</span></a>
+      <button class="fab-option" type="button" data-open-modal="contactModal"><i class="bi bi-chat-text"></i><span>DEJAR UN MENSAJE</span></button>
+      <button class="fab-option" type="button" data-copy-email><i class="bi bi-envelope"></i><span>COPIAR EMAIL</span></button>
+    </div>
+    <button class="fab-btn" id="fabBtn" type="button" aria-expanded="false" aria-controls="fabMenu"><span class="fab-dot"></span>HABLEMOS</button>
   </div>
 
   <main>
@@ -628,6 +639,17 @@
           <div class="feat-dots"><span></span><span></span><span></span><span></span></div>
         </div>
       </div>
+    </section>
+
+    <!-- después de ver los destacados, cuando más ganas de escribir hay -->
+    <section class="cta-band" id="hablemos">
+      <p class="cta-eyebrow">¿TE GUSTÓ LO QUE VISTE?</p>
+      <h2 class="cta-title"><span>¿TENÉS UN PROYECTO ASÍ?</span><span>HABLEMOS.</span></h2>
+      <div class="cta-actions">
+        <a class="cta-btn is-primary" data-wa href="https://wa.me/5493757673226" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i>ESCRIBIME POR WHATSAPP</a>
+        <button class="cta-btn" type="button" data-open-modal="contactModal">DEJAME UN MENSAJE</button>
+      </div>
+      <p class="cta-note">PUERTO IGUAZÚ, ARGENTINA • TRABAJO REMOTO</p>
     </section>
 
     <!-- ====================================================================

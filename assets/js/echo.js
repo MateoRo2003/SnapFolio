@@ -319,7 +319,7 @@
      ======================================================================== */
   const header = document.getElementById('echoHeader');
   const navPills = Array.from(document.querySelectorAll('.nav-pill'));
-  const darkIds = ['about', 'experience', 'works', 'contact'];
+  const darkIds = ['about', 'experience', 'works', 'hablemos', 'contact'];
   let lastY = window.scrollY;
 
   // los enlaces internos (#seccion) bajan suave hasta el punto justo de cada una. El hero queda
@@ -354,6 +354,43 @@
   if (location.hash.length > 1) {
     const id = decodeURIComponent(location.hash.slice(1));
     document.addEventListener('echo:loaded', () => requestAnimationFrame(() => goTo(id, true)), { once: true });
+  }
+
+  // contacto: WhatsApp con un mensaje listo (en el idioma de la página) y el botón flotante
+  const WA_NUMBER = '5493757673226';
+  const setWaLinks = () => {
+    const text = i18n.lang === 'en'
+      ? "Hi Mateo, I saw your portfolio and I'd like to ask you about a project."
+      : 'Hola Mateo, vi tu portfolio y quiero consultarte por un proyecto.';
+    document.querySelectorAll('[data-wa]').forEach((a) => { a.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`; });
+  };
+  setWaLinks();
+  document.addEventListener('echo:lang', setWaLinks);
+
+  const fab = document.getElementById('contactFab');
+  const fabBtn = document.getElementById('fabBtn');
+  const setFab = (open) => {
+    fab?.classList.toggle('is-open', open);
+    fabBtn?.setAttribute('aria-expanded', String(open));
+  };
+  fabBtn?.addEventListener('click', () => setFab(!fab.classList.contains('is-open')));
+  fab?.querySelectorAll('.fab-option').forEach((o) => o.addEventListener('click', () => setFab(false)));
+  document.addEventListener('click', (e) => { if (fab && !fab.contains(e.target)) setFab(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setFab(false); });
+  // se ve después del hero, y no cuando en pantalla ya hay otra forma de contactar (la llamada o el pie)
+  const fabHides = ['hablemos', 'contact'].map((id) => document.getElementById(id)).filter(Boolean);
+  function updateFab(y) {
+    if (!fab) return;
+    const vh = window.innerHeight;
+    const other = fabHides.some((el) => {
+      const r = el.getBoundingClientRect();
+      return r.top < vh * 0.85 && r.bottom > vh * 0.15;
+    });
+    const show = y > vh * 0.8 && !other;
+    if (show !== fab.classList.contains('is-shown')) {
+      fab.classList.toggle('is-shown', show);
+      if (!show) setFab(false);
+    }
   }
 
   // el menú de tablet y celular
@@ -1449,9 +1486,9 @@
   }
 
   // los tramos de la sección fija, en pantallas: girar, agrandar y después uno por cada cambio
-  const PH_SPIN = 0.8; // quieto, mientras gira
-  const PH_GROW = 0.9;
-  const PH_STEP = 1.1;
+  const PH_SPIN = 0.6; // quieto, mientras gira
+  const PH_GROW = 0.7;
+  const PH_STEP = 0.8; // (la altura de la sección en el CSS es 1 + la suma de los tramos)
 
   // los videos: se crean cuando su proyecto está cerca y corre solo el del frente
   function syncFeatVideos() {
@@ -1904,6 +1941,7 @@
     ticking = false;
     const y = window.scrollY;
     updateHeader(y);
+    updateFab(y);
     updateHeroOut();
     updateAbout();
     updateExperience();
