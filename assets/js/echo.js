@@ -383,7 +383,7 @@
   function updateFab(y) {
     if (!fab) return;
     const vh = window.innerHeight;
-    const other = fabHides.some((el) => {
+    const other = document.getElementById('works')?.dataset.covering === '1' || fabHides.some((el) => {
       const r = el.getBoundingClientRect();
       return r.top < vh * 0.85 && r.bottom > vh * 0.15;
     });
@@ -1406,6 +1406,9 @@
   const featSection = document.getElementById('works');
   const featPin = featSection?.querySelector('.featured-pin');
   const featCurtain = document.getElementById('featCurtain');
+  const CURTAIN_MS = 1300;
+  const curtain = { at: 0 }; // cuándo arrancó la entrada (0: todavía no)
+  let curtainDone = false;
   const featSlides = Array.from(document.querySelectorAll('.feat-slide'));
   const featDots = Array.from(document.querySelectorAll('.feat-dots span'));
   const rouletteRig = document.getElementById('rouletteRig');
@@ -1492,7 +1495,7 @@
   }
 
   // los tramos de la sección fija, en pantallas: girar, agrandar y después uno por cada cambio
-  const PH_SPIN = 0.6; // quieto, mientras gira
+  const PH_SPIN = 0.2; // quieto, mientras gira (el resto lo da la entrada, que también queda quieta)
   const PH_GROW = 0.2; // casi nada: la tarjeta se abre sola
   const PH_STEP = 0.8; // (la altura de la sección en el CSS es 1 + la suma de los tramos)
 
@@ -1525,12 +1528,22 @@
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const r = featSection.getBoundingClientRect();
-    // la entrada, como la carga: cinco columnas negras suben escalonadas (de izquierda a derecha)
-    // tapando la cinta, y después se retiran hacia arriba en el mismo orden destapando la ruleta
-    const q = clamp(1 - r.top / vh, 0, 1);
+    // la entrada, como la carga y sola (no con el scroll): apenas se empieza a entrar, cinco columnas
+    // negras suben escalonadas (de izquierda a derecha) tapando la cinta y se retiran hacia arriba en
+    // el mismo orden destapando la ruleta. Si se sale del todo para arriba, la próxima vez se repite.
+    const nowC = performance.now();
+    if (curtain.at === 0 && r.top < vh * 0.94 && r.bottom > 0) curtain.at = prefersReducedMotion ? -1e9 : nowC;
+    else if (curtain.at !== 0 && r.top >= vh * 0.98) curtain.at = 0;
+    const q = curtain.at === 0 ? 0 : clamp((nowC - curtain.at) / CURTAIN_MS, 0, 1);
+    curtainDone = q >= 1;
+    featSection.dataset.covering = curtain.at !== 0 && r.bottom > 0 ? '1' : ''; // (el botón flotante se va)
     landings?.querySelector('.landings-pin')?.style.setProperty('--cover', q.toFixed(3));
     if (featPin && featCurtain) {
-      if (q > 0 && q < 1) {
+      if (r.top > 0 && r.top < vh) {
+        // mientras la sección no llegó arriba, la escena queda quieta en la pantalla
+        featPin.style.transform = `translateY(${(-r.top).toFixed(1)}px)`;
+      } else if (featPin.style.transform) featPin.style.transform = '';
+      if (q < 1 && r.top < vh) {
         const COLS = 5;
         const ease = (u) => u * u * (3 - 2 * u);
         const tops = [];
@@ -1540,22 +1553,20 @@
           bottoms.push(vh * (1 - ease(clamp((q - 0.45 - k * 0.05) / 0.35, 0, 1))));
         }
         const xs = (k) => (vw * k) / COLS + (k > 0 && k < COLS ? 0.5 : 0); // medio píxel encima: sin rendijas
-        const curtain = [];
+        const cols = [];
         const scene = [`0px ${vh}px`];
         for (let k = 0; k < COLS; k++) {
-          curtain.push(`${xs(k).toFixed(1)}px ${tops[k].toFixed(1)}px`, `${xs(k + 1).toFixed(1)}px ${tops[k].toFixed(1)}px`);
+          cols.push(`${xs(k).toFixed(1)}px ${tops[k].toFixed(1)}px`, `${xs(k + 1).toFixed(1)}px ${tops[k].toFixed(1)}px`);
           scene.push(`${xs(k).toFixed(1)}px ${bottoms[k].toFixed(1)}px`, `${xs(k + 1).toFixed(1)}px ${bottoms[k].toFixed(1)}px`);
         }
-        for (let k = COLS - 1; k >= 0; k--) curtain.push(`${xs(k + 1).toFixed(1)}px ${bottoms[k].toFixed(1)}px`, `${xs(k).toFixed(1)}px ${bottoms[k].toFixed(1)}px`);
+        for (let k = COLS - 1; k >= 0; k--) cols.push(`${xs(k + 1).toFixed(1)}px ${bottoms[k].toFixed(1)}px`, `${xs(k).toFixed(1)}px ${bottoms[k].toFixed(1)}px`);
         scene.push(`${vw}px ${vh}px`);
         featCurtain.style.visibility = 'visible';
-        featCurtain.style.clipPath = `polygon(${curtain.join(', ')})`;
-        featPin.style.transform = `translateY(${(-r.top).toFixed(1)}px)`; // la escena quieta en la pantalla
+        featCurtain.style.clipPath = `polygon(${cols.join(', ')})`;
         featPin.style.clipPath = `polygon(${scene.join(', ')})`;
       } else if (featPin.style.clipPath) {
         featCurtain.style.visibility = '';
         featCurtain.style.clipPath = '';
-        featPin.style.transform = '';
         featPin.style.clipPath = '';
       }
     }
@@ -1580,7 +1591,7 @@
     const fScroll = clamp((at - PH_SPIN - PH_GROW) / PH_STEP, 0, n - 1);
 
     // A. la ruleta gira sola al llegar
-    if (spin.armed && r.top <= vh * 0.15) {
+    if (spin.armed && curtainDone) {
       spin.armed = false;
       startSpin(now);
     }
@@ -1676,7 +1687,7 @@
       syncFeatVideos();
     }
     // mientras gira, se apagan los demás o la tarjeta alcanza al scroll, se sigue dibujando solo
-    if ((spin.running || (landed && (emph < 1 || pB < 1)) || fShown !== fTarget) && !ringRaf) {
+    if ((spin.running || (landed && (emph < 1 || pB < 1)) || fShown !== fTarget || (curtain.at && !curtainDone)) && !ringRaf) {
       ringRaf = requestAnimationFrame(() => {
         ringRaf = 0;
         updateFeatured();

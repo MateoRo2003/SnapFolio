@@ -1750,7 +1750,7 @@ main > section:not(.hero-section) {
    ========================================================================== */
 .featured-section {
   position: relative;
-  height: 420vh;
+  height: 380vh;
   margin-top: -100vh;
   color: var(--text-dark);
 }
