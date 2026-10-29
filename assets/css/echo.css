@@ -560,8 +560,8 @@ html.is-signing .brand-full {
 }
 
 /* ==========================================================================
-   3. HERO: "EXPLORE MY PORTFOLIO" y un arco que deja ver la noche estrellada del "About me".
-      Las letras se invierten donde cruzan el arco (blancas sobre la noche, negras sobre el gris).
+   3. HERO: "EXPLORE MY PORTFOLIO" cruzado por una ranura que deja ver la noche estrellada del
+      "About me". Las letras se invierten donde la cruzan (blancas sobre la noche, negras sobre el gris).
    ========================================================================== */
 .hero-section {
   /* queda fijo debajo: el "About me" sube por encima como un telón (ver la transición más abajo) */
@@ -611,9 +611,10 @@ html.is-signing .brand-full {
 }
 
 .hero-window {
-  --win-top: 26%;
-  --win-side: 35vw;
-  --win-r: 15vw;
+  /* una rendija fina de arriba abajo; al bajar se abre hasta llenar la pantalla */
+  --win-top: 14%;
+  --win-side: 48.6vw;
+  --win-r: 1.4vw;
   --k: calc(1 - var(--out, 0));
   position: absolute;
   inset: 0;
@@ -2803,19 +2804,9 @@ main > section:not(.hero-section) {
   }
 
   .hero-window {
-    --win-top: 30%;
-    --win-side: 17vw;
-    --win-r: 33vw;
-  }
-
-  /* abajo a la izquierda quedan encima del arco: fondo blanco lleno para que se lean */
-  .hero-news,
-  .hero-scroll-btn {
-    background: #ffffff;
-  }
-
-  .hero-est {
-    display: none;
+    --win-top: 20%;
+    --win-side: 46vw;
+    --win-r: 4vw;
   }
 
   .hero-meta-right {
