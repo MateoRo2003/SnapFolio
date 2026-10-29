@@ -611,12 +611,12 @@ html.is-signing .brand-full {
 }
 
 .hero-window {
-  /* chica y debajo del título; --win-shift baja la noche mientras es chica, para que adentro se
+  /* chica, asomando debajo del título; --win-shift baja la noche mientras es chica, para que adentro se
      vean las estrellas y no solo el agua (al llenar la pantalla vuelve a 0: es la del "About me") */
-  --win-top: 62%;
+  --win-top: 50%;
   --win-side: 42vw;
   --win-r: 8vw;
-  --win-shift: 50vh;
+  --win-shift: 42vh;
   --k: calc(1 - var(--out, 0));
   position: absolute;
   inset: 0;
@@ -2806,10 +2806,10 @@ main > section:not(.hero-section) {
   }
 
   .hero-window {
-    --win-top: 58%;
+    --win-top: 47%;
     --win-side: 30vw;
     --win-r: 20vw;
-    --win-shift: 44vh;
+    --win-shift: 36vh;
   }
 
   /* abajo a la izquierda quedan encima del arco: fondo blanco lleno para que se lean */
