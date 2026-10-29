@@ -560,8 +560,8 @@ html.is-signing .brand-full {
 }
 
 /* ==========================================================================
-   3. HERO: "EXPLORE MY PORTFOLIO" y un arco angosto que deja ver la noche estrellada del "About me".
-      Las letras se invierten donde cruzan el arco (blancas sobre la noche, negras sobre el gris).
+   3. HERO: "EXPLORE MY PORTFOLIO" y, debajo, una ventana chica en arco que deja ver la noche
+      estrellada del "About me". Al bajar crece hasta llenar la pantalla y se entra al "About me".
    ========================================================================== */
 .hero-section {
   /* queda fijo debajo: el "About me" sube por encima como un telón (ver la transición más abajo) */
@@ -611,10 +611,12 @@ html.is-signing .brand-full {
 }
 
 .hero-window {
-  /* angosto, detrás del título; al bajar se abre hasta llenar la pantalla */
-  --win-top: 20%;
-  --win-side: 43.5vw;
-  --win-r: 6.5vw;
+  /* chica y debajo del título; --win-shift baja la noche mientras es chica, para que adentro se
+     vean las estrellas y no solo el agua (al llenar la pantalla vuelve a 0: es la del "About me") */
+  --win-top: 62%;
+  --win-side: 42vw;
+  --win-r: 8vw;
+  --win-shift: 50vh;
   --k: calc(1 - var(--out, 0));
   position: absolute;
   inset: 0;
@@ -639,7 +641,7 @@ html.is-loading .hero-window {
   object-fit: cover;
   object-position: 30% 50%;
   /* igual que .about-sky al empezar; el corrimiento (mouse o deriva) se apaga al llenar la pantalla */
-  transform: translate3d(calc(var(--px, 0) * var(--k) * 1px), calc(var(--py, 0) * var(--k) * 1px), 0) scale(1.08);
+  transform: translate3d(calc(var(--px, 0) * var(--k) * 1px), calc(var(--py, 0) * var(--k) * 1px + var(--k) * var(--win-shift, 0px)), 0) scale(1.08);
 }
 
 /* la noche que se mueve (echo.js, 3·b2): va encima de su imagen y aparece cuando ya dibujó */
@@ -2804,9 +2806,10 @@ main > section:not(.hero-section) {
   }
 
   .hero-window {
-    --win-top: 24%;
-    --win-side: 36vw;
-    --win-r: 14vw;
+    --win-top: 58%;
+    --win-side: 30vw;
+    --win-r: 20vw;
+    --win-shift: 44vh;
   }
 
   /* abajo a la izquierda quedan encima del arco: fondo blanco lleno para que se lean */
