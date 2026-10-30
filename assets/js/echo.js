@@ -2129,20 +2129,38 @@
     });
   });
 
-  // Contact Form Submission feedback
+  // Formulario de contacto: lo manda la función de Vercel (api/contact.js); si no está disponible
+  // (otro hosting, sin configurar o error), abre el correo de quien escribe como antes
   const contactForm = document.getElementById('echoContactForm');
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    const sendBtn = contactForm.querySelector('button[type="submit"]');
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fd = new FormData(contactForm);
-      const name = fd.get('name') || '';
-      const subject = fd.get('subject') || (i18n.lang === 'en' ? 'Inquiry from portfolio' : 'Consulta desde el portfolio');
-      const message = fd.get('message') || '';
-      const mailto = `mailto:rojas.mateo.web@gmail.com?subject=${encodeURIComponent(
-        `${subject} — ${name}`
-      )}&body=${encodeURIComponent(String(message))}`;
-      window.location.href = mailto;
-      showToast('Abriendo tu cliente de correo...');
+      const name = String(fd.get('name') || '');
+      const email = String(fd.get('email') || '');
+      const subject = String(fd.get('subject') || (i18n.lang === 'en' ? 'Inquiry from portfolio' : 'Consulta desde el portfolio'));
+      const message = String(fd.get('message') || '');
+      if (sendBtn) sendBtn.disabled = true;
+      showToast('Enviando...');
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, subject, message }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.success) throw new Error(data.error || String(res.status));
+        contactForm.reset();
+        showToast('¡Mensaje enviado! Te respondo pronto.');
+      } catch {
+        window.location.href = `mailto:rojas.mateo.web@gmail.com?subject=${encodeURIComponent(
+          `${subject} — ${name}`
+        )}&body=${encodeURIComponent(message)}`;
+        showToast('Abriendo tu cliente de correo...');
+      } finally {
+        if (sendBtn) sendBtn.disabled = false;
+      }
     });
   }
 

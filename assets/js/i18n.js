@@ -229,6 +229,8 @@
     "ENVIAR MENSAJE": "SEND MESSAGE",
     "Email copiado: rojas.mateo.web@gmail.com": "Email copied: rojas.mateo.web@gmail.com",
     "Abriendo tu cliente de correo...": "Opening your email client...",
+    "Enviando...": "Sending...",
+    "¡Mensaje enviado! Te respondo pronto.": "Message sent! I'll get back to you soon.",
     "ARCHIVO COMPLETO DE PROYECTOS (24)": "FULL PROJECT ARCHIVE (24)",
     "Nuevo · Cofundador y CEO": "New · Co-founder & CEO",
     "Tiendas online con catálogo, stock y pedidos, sin comisiones por venta, con dominio propio y Orbi, un asistente con IA. Next.js, NestJS, Supabase, Cloud Run.": "Online stores with catalog, stock and orders, no sales commissions, their own domain and Orbi, an AI assistant. Next.js, NestJS, Supabase, Cloud Run.",
