@@ -471,13 +471,6 @@ html.is-signing .brand-full {
   transform: translateY(-2px);
 }
 
-.fab-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 8px #4ade80;
-}
 
 .fab-menu {
   display: flex;
@@ -979,16 +972,6 @@ main > section:not(.hero-section) {
   white-space: nowrap;
 }
 
-.about-loc i {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  margin-right: 0.45rem;
-  border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 8px #4ade80;
-  vertical-align: middle;
-}
 
 .about-bottom {
   display: flex;
@@ -1286,17 +1269,6 @@ main > section:not(.hero-section) {
   text-shadow: none;
 }
 
-.exp-tab-btn.is-new::after {
-  content: '';
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  margin-left: 0.45rem;
-  border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 8px #4ade80;
-  vertical-align: middle;
-}
 
 .exp-slide-meta .line {
   width: 42px;

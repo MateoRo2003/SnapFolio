@@ -344,11 +344,11 @@
   const esAttr = new WeakMap(); // elemento → { atributo: su valor en español }
   const root = document.documentElement;
   const esTitle = document.title;
-  // se abre en inglés; el español queda si alguien lo eligió antes
-  let lang = 'en';
+  // se abre en español; el inglés queda si alguien lo eligió antes
+  let lang = 'es';
   try {
-    if (localStorage.getItem('echo-lang') === 'es') lang = 'es';
-  } catch (_) { /* sin almacenamiento: queda en inglés */ }
+    if (localStorage.getItem('echo-lang') === 'en') lang = 'en';
+  } catch (_) { /* sin almacenamiento: queda en español */ }
 
   // el texto en el idioma actual, conservando los espacios de los costados
   function swap(es) {
