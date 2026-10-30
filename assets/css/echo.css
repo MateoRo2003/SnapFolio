@@ -1709,8 +1709,25 @@ main > section:not(.hero-section) {
   color: #6b6b72;
 }
 
+/* paradas del scroll en el celular (echo.js las ubica): cada gesto frena en el proyecto siguiente.
+   proximity: fuera de esas secciones no hay marcas cerca y el scroll queda libre */
+@media (max-width: 768px), (pointer: coarse) {
+  html { scroll-snap-type: y proximity; }
+}
+.snap-mark {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
 /* en el celular la pista sobra (se recorre bajando) y el botón de contacto la tapaba */
 @media (max-width: 768px) {
+  /* con 380vh cada proyecto de la cinta tocaba a un quinto de pantalla de scroll: un gesto pasaba varios */
+  .landings-section { height: 520vh; }
   .landings-footer-row { display: none; }
   .wave-active-caption { padding-bottom: 4.5rem; }
 }

@@ -2289,6 +2289,41 @@
     });
   });
 
+  // En el celular, un deslizamiento con impulso pasaba varios proyectos de golpe en las secciones que
+  // avanzan con el scroll. Ahí se ponen marcas de parada (scroll-snap, con snap-stop): cada gesto
+  // frena en el proyecto siguiente. El resto de la página scrollea libre (ver .snap-mark en el CSS).
+  const touchSnap = window.matchMedia('(max-width: 768px), (pointer: coarse)');
+  function placeSnaps() {
+    document.querySelectorAll('.snap-mark').forEach((m) => m.remove());
+    if (!touchSnap.matches || prefersReducedMotion) return;
+    const vh = window.innerHeight;
+    const mark = (section, y) => {
+      const m = document.createElement('i');
+      m.className = 'snap-mark';
+      m.setAttribute('aria-hidden', 'true');
+      m.style.top = `${Math.round(y)}px`;
+      section.append(m);
+    };
+    // Experiencia: donde cada tarjeta queda en su lugar
+    if (expSection && expSlides.length) {
+      const span = expSection.offsetHeight - vh;
+      expSlides.forEach((s) => mark(expSection, span * slideProgress(s)));
+    }
+    // Proyectos: cada tarjeta de la cinta en el centro (la cinta usa el alto menos dos pantallas)
+    if (landings) {
+      const span = landings.offsetHeight - 2 * vh;
+      const n = landingProjects.length;
+      for (let k = 0; k < n; k++) mark(landings, (span * k) / (n - 1));
+    }
+    // Destacados: cada proyecto a pantalla completa
+    if (featSection) featSlides.forEach((_, k) => mark(featSection, (PH_SPIN + PH_GROW + PH_STEP * k) * vh));
+  }
+  let snapTimer = 0;
+  const queueSnaps = () => { clearTimeout(snapTimer); snapTimer = setTimeout(placeSnaps, 250); };
+  window.addEventListener('load', placeSnaps);
+  window.addEventListener('resize', queueSnaps);
+  touchSnap.addEventListener?.('change', placeSnaps);
+
   // Formulario de contacto: lo manda la función de Vercel (api/contact.js); si no está disponible
   // (otro hosting, sin configurar o error), abre el correo de quien escribe como antes
   const contactForm = document.getElementById('echoContactForm');
