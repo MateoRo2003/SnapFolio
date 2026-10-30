@@ -3371,3 +3371,24 @@ button.catalog-card-link { background: none; border: 0; padding: 0; cursor: poin
 @media (min-aspect-ratio: 4/5) {
   html:not(.is-flow) .feat-media { bottom: 14vh; }
 }
+
+/* los socios de Órbita, con link a sus sitios */
+.person-link {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  white-space: nowrap;
+  transition: text-decoration-color 0.2s ease;
+}
+.person-link::after {
+  content: '↗';
+  display: inline-block;
+  margin-left: 0.15em;
+  font-size: 0.8em;
+  transition: transform 0.25s var(--ease-out-expo);
+}
+.person-link:hover { text-decoration-color: #ffffff; }
+.person-link:hover::after { transform: translate(2px, -2px); }
