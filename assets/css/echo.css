@@ -2009,13 +2009,13 @@ main > section:not(.hero-section) {
   opacity: 1;
 }
 
-/* oscurecido para que se lea el texto; el de atrás, más todavía */
+/* oscurecido solo abajo, donde va el texto: el video se ve casi limpio (el de atrás, más oscuro) */
 .feat-media::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: 0 0 -6px; /* pasa unos píxeles el borde del video: en uno claro quedaba una línea */
   background:
-    linear-gradient(0deg, rgba(6, 6, 7, 0.96) 0%, rgba(6, 6, 7, 0.72) 45%, rgba(6, 6, 7, 0.5) 100%),
+    linear-gradient(0deg, rgb(6, 6, 7) 0%, rgba(6, 6, 7, 0.78) 20%, rgba(6, 6, 7, 0.3) 38%, rgba(6, 6, 7, 0) 52%),
     rgba(6, 6, 7, calc(var(--dim) * 0.7));
   opacity: var(--shade);
 }
@@ -2049,7 +2049,7 @@ main > section:not(.hero-section) {
 .feat-title {
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: clamp(3.2rem, 11vw, 12rem);
+  font-size: clamp(2.8rem, 6.4vw, 7.2rem); /* más grande tapaba el centro del video */
   line-height: 0.86;
   letter-spacing: -0.035em;
   text-transform: uppercase;
@@ -3364,4 +3364,10 @@ button.catalog-card-link { background: none; border: 0; padding: 0; cursor: poin
 
 @media (prefers-reduced-motion: reduce) {
   .art-view, .art-top, .art-hero-in, .art-body, .art-next { transition: none !important; }
+}
+
+/* en compu el video termina un poco antes del borde de abajo: su contenido (siempre al centro) sube y
+   no cae debajo del título; lo de abajo es el mismo negro del fondo, sin corte */
+@media (min-aspect-ratio: 4/5) {
+  html:not(.is-flow) .feat-media { bottom: 14vh; }
 }
