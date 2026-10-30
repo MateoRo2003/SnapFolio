@@ -15,6 +15,13 @@
   'use strict';
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // En celulares y tablets táctiles la cinta y los destacados no quedan fijos: scrollean normal
+  // (la cinta se desliza de costado y los destacados van uno debajo del otro). La ruleta, la cortina
+  // y el avance con el scroll quedan para la compu. Ver .is-flow en el CSS.
+  const flowMQ = window.matchMedia('(max-width: 768px), (hover: none) and (pointer: coarse)');
+  const flow = flowMQ.matches;
+  document.documentElement.classList.toggle('is-flow', flow);
+  flowMQ.addEventListener?.('change', () => window.location.reload());
   const root = document.documentElement;
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -1373,7 +1380,7 @@
     window.addEventListener('resize', () => { dirty = true; wake(); });
 
     updateRibbon = () => {
-      if (dragging || performance.now() < manualUntil) return;
+      if (flow || dragging || performance.now() < manualUntil) return;
       const span = landings.offsetHeight - 2 * window.innerHeight;
       const next = (span > 0 ? clamp(-landings.getBoundingClientRect().top / span, 0, 1) : 0) * (n - 1);
       if (next !== target) {
@@ -1397,7 +1404,11 @@
     const endDrag = () => {
       if (!dragging) return;
       dragging = false;
-      target = Math.round(target);
+      // un deslizamiento corto ya pasa a la siguiente (redondear lo devolvía a la misma)
+      const moved = target - dragPos;
+      target = Math.abs(moved) > 0.12
+        ? Math.round(dragPos) + Math.sign(moved) * Math.max(1, Math.round(Math.abs(moved)))
+        : Math.round(target);
       manualUntil = performance.now() + 1500;
       wake();
     };
@@ -1724,6 +1735,26 @@
     if (!featSection || !featSlides.length) return;
     const vw = window.innerWidth;
     const vh = window.innerHeight;
+    if (flow) {
+      // uno debajo del otro: corre el video del que más se ve
+      let best = -1;
+      let bestVis = vh * 0.35;
+      featSlides.forEach((el, i) => {
+        const b = el.getBoundingClientRect();
+        const vis = Math.min(b.bottom, vh) - Math.max(b.top, 0);
+        if (vis > bestVis) {
+          bestVis = vis;
+          best = i;
+        }
+      });
+      featSection.dataset.tone = 'dark';
+      if (best !== featActive || featOnScreen !== best >= 0) {
+        featActive = best;
+        featOnScreen = best >= 0;
+        syncFeatVideos();
+      }
+      return;
+    }
     const r = featSection.getBoundingClientRect();
     // la entrada, como la carga y sola (no con el scroll): apenas se empieza a entrar, cinco columnas
     // negras suben escalonadas (de izquierda a derecha) tapando la cinta y se retiran hacia arriba en
@@ -2323,41 +2354,6 @@
       readerModal.classList.add('is-open');
     });
   });
-
-  // En el celular, un deslizamiento con impulso pasaba varios proyectos de golpe en las secciones que
-  // avanzan con el scroll. Ahí se ponen marcas de parada (scroll-snap, con snap-stop): cada gesto
-  // frena en el proyecto siguiente. El resto de la página scrollea libre (ver .snap-mark en el CSS).
-  const touchSnap = window.matchMedia('(max-width: 768px), (pointer: coarse)');
-  function placeSnaps() {
-    document.querySelectorAll('.snap-mark').forEach((m) => m.remove());
-    if (!touchSnap.matches || prefersReducedMotion) return;
-    const vh = window.innerHeight;
-    const mark = (section, y) => {
-      const m = document.createElement('i');
-      m.className = 'snap-mark';
-      m.setAttribute('aria-hidden', 'true');
-      m.style.top = `${Math.round(y)}px`;
-      section.append(m);
-    };
-    // Experiencia: donde cada tarjeta queda en su lugar
-    if (expSection && expSlides.length) {
-      const span = expSection.offsetHeight - vh;
-      expSlides.forEach((s) => mark(expSection, span * slideProgress(s)));
-    }
-    // Proyectos: cada tarjeta de la cinta en el centro (la cinta usa el alto menos dos pantallas)
-    if (landings) {
-      const span = landings.offsetHeight - 2 * vh;
-      const n = landingProjects.length;
-      for (let k = 0; k < n; k++) mark(landings, (span * k) / (n - 1));
-    }
-    // Destacados: cada proyecto a pantalla completa
-    if (featSection) featSlides.forEach((_, k) => mark(featSection, (PH_SPIN + PH_GROW + PH_STEP * k) * vh));
-  }
-  let snapTimer = 0;
-  const queueSnaps = () => { clearTimeout(snapTimer); snapTimer = setTimeout(placeSnaps, 250); };
-  window.addEventListener('load', placeSnaps);
-  window.addEventListener('resize', queueSnaps);
-  touchSnap.addEventListener?.('change', placeSnaps);
 
   // Formulario de contacto: lo manda la función de Vercel (api/contact.js); si no está disponible
   // (otro hosting, sin configurar o error), abre el correo de quien escribe como antes

@@ -37,6 +37,7 @@
     "Carrusel ondulado de todos los proyectos": "Wave carousel of all projects",
     "↓ BAJÁ O ARRASTRÁ LA CINTA PARA RECORRERLOS": "↓ SCROLL OR DRAG THE RIBBON TO BROWSE THEM",
     "VER CAPTURAS ↗": "VIEW SCREENSHOTS ↗",
+    "← DESLIZÁ LA CINTA PARA VER MÁS →": "← SWIPE THE RIBBON TO SEE MORE →",
     "VER CASO ↗": "VIEW CASE ↗",
     "Ver caso ↗": "View case ↗",
     "CASO DE ESTUDIO": "CASE STUDY",
