@@ -11,12 +11,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Faltan campos obligatorios' });
   }
 
-  // Configurar tu cuenta Gmail o SMTP
+  // La contraseña de aplicación de Gmail vive en las variables de entorno de Vercel (GMAIL_APP_PASSWORD),
+  // nunca en el repo: es público
+  if (!process.env.GMAIL_APP_PASSWORD) {
+    return res.status(503).json({ success: false, error: "Correo no configurado" });
+  }
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: "rojas.mateo.web@gmail.com",
-      pass: "qhrg ltho xche rwld"
+      pass: process.env.GMAIL_APP_PASSWORD
     }
   });
 
