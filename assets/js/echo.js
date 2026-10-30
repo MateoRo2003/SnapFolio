@@ -1244,52 +1244,64 @@
       wCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
       wCtx.clearRect(0, 0, cw, ch);
 
-      const cardW = clamp(cw * 0.4, 250, 640);
+      // en el celular la tarjeta del centro ocupa casi todo el ancho y la onda es suave: con la curva
+      // de escritorio la del medio quedaba retorcida y chica
+      const narrow = cw < 700;
+      const cardW = narrow ? cw * 0.78 : clamp(cw * 0.4, 250, 640);
       const cardH = Math.min(cardW * 0.6, ch * 0.62);
-      const stepX = cardW * 1.06;
+      const stepX = cardW * (narrow ? 1.1 : 1.06);
+      const wave = narrow ? 0.07 : 0.17; // cuánto sube y baja, en fracción del alto
+      const swell = narrow ? 0.14 : 0.28; // cuánto se agranda hacia los bordes
       const centerIndex = Math.round(pos);
       caption(centerIndex);
 
       // cada tarjeta se dibuja en tiras verticales que siguen una curva en S: a la izquierda baja,
       // a la derecha sube, y en los bordes se agranda (más cerca), como la cinta del video
-      const slices = Math.round(clamp(cardW / 5, 48, 110)); // tiras finas: el borde de la curva queda liso
+      const slices = Math.round(clamp(cardW / 3, 48, 140));
       for (let offset = -2; offset <= 2; offset++) {
         const v = centerIndex + offset;
         const img = imgs[((v % n) + n) % n];
         const left = cw * 0.5 + (v - pos) * stepX - cardW * 0.5;
         if (left > cw + 50 || left + cardW < -50) continue;
         const stripW = cardW / slices;
-        const tops = [];
-        const bottoms = [];
-        const shadeAt = [];
+        const strips = [];
+        for (let s = 0; s <= slices; s++) {
+          const x = left + s * stripW;
+          const nx = (x - cw * 0.5) / (cw * 0.5);
+          const bend = Math.sin(nx * Math.PI * 0.9) * ch * wave * Math.min(1, Math.abs(nx) * 1.5);
+          const h = cardH * (1 + Math.min(1, Math.abs(nx)) * swell);
+          strips.push({ x, y: (ch - h) * 0.5 - bend, h, shade: Math.min(0.45, Math.abs(nx) * 0.32) });
+        }
+        // el contorno une los bordes de las tiras en diagonal: así la curva queda lisa y no en escalones
+        wCtx.save();
+        wCtx.beginPath();
+        strips.forEach((p, k) => (k ? wCtx.lineTo(p.x, p.y) : wCtx.moveTo(p.x, p.y)));
+        for (let k = strips.length - 1; k >= 0; k--) wCtx.lineTo(strips[k].x, strips[k].y + strips[k].h);
+        wCtx.closePath();
+        wCtx.clip();
+        const iw = img.naturalWidth || img.width;
+        const ready = iw && (img.complete || img === moreCard);
+        if (!ready) wCtx.fillStyle = '#1d1d22';
         for (let s = 0; s < slices; s++) {
-          const sx = left + s * stripW;
-          const nx = (sx + stripW * 0.5 - cw * 0.5) / (cw * 0.5);
-          const bend = Math.sin(nx * Math.PI * 0.9) * ch * 0.17 * Math.min(1, Math.abs(nx) * 1.5);
-          const stripH = cardH * (1 + Math.min(1, Math.abs(nx)) * 0.28);
-          const sy = (ch - stripH) * 0.5 - bend;
-          const iw = img.naturalWidth || img.width;
-          if (iw && (img.complete || img === moreCard)) {
+          const a = strips[s];
+          const b = strips[s + 1];
+          // cada tira cubre de su borde más alto al más bajo; el recorte se lleva lo que sobra
+          const y = Math.min(a.y, b.y);
+          const hh = Math.max(a.y + a.h, b.y + b.h) - y;
+          if (ready) {
             const srcW = iw / slices;
-            wCtx.drawImage(img, s * srcW, 0, srcW, img.naturalHeight || img.height, sx, sy, stripW + 0.8, stripH);
+            wCtx.drawImage(img, s * srcW, 0, srcW, img.naturalHeight || img.height, a.x, y, stripW + 0.8, hh);
           } else {
-            wCtx.fillStyle = '#1d1d22';
-            wCtx.fillRect(sx, sy, stripW + 0.8, stripH);
+            wCtx.fillRect(a.x, y, stripW + 0.8, hh);
           }
-          tops.push([sx, sy], [sx + stripW, sy]);
-          bottoms.push([sx, sy + stripH], [sx + stripW, sy + stripH]);
-          shadeAt.push(Math.min(0.45, Math.abs(nx) * 0.32));
         }
         // la sombra de los costados va en una sola pasada, con un degradé parejo: tira por tira se
         // pisaban en los bordes y en el medio (donde no había sombra) quedaba una franja más clara
         const grad = wCtx.createLinearGradient(left, 0, left + cardW, 0);
-        shadeAt.forEach((a, s) => grad.addColorStop((s + 0.5) / slices, `rgba(9,9,11,${a.toFixed(3)})`));
-        wCtx.beginPath();
-        tops.forEach(([x, y], k) => (k ? wCtx.lineTo(x, y) : wCtx.moveTo(x, y)));
-        for (let k = bottoms.length - 1; k >= 0; k--) wCtx.lineTo(bottoms[k][0], bottoms[k][1]);
-        wCtx.closePath();
+        strips.forEach((p, s) => grad.addColorStop(s / slices, `rgba(9,9,11,${p.shade.toFixed(3)})`));
         wCtx.fillStyle = grad;
-        wCtx.fill();
+        wCtx.fillRect(left, 0, cardW, ch);
+        wCtx.restore();
       }
     }
 

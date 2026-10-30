@@ -1709,6 +1709,12 @@ main > section:not(.hero-section) {
   color: #6b6b72;
 }
 
+/* en el celular la pista sobra (se recorre bajando) y el botón de contacto la tapaba */
+@media (max-width: 768px) {
+  .landings-footer-row { display: none; }
+  .wave-active-caption { padding-bottom: 4.5rem; }
+}
+
 /* los proyectos sin web pública no tienen enlace */
 .wave-project-meta.no-link .wave-project-sep,
 .wave-project-meta.no-link .wave-project-link {
