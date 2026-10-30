@@ -2033,6 +2033,9 @@ main > section:not(.hero-section) {
   line-height: 0.86;
   letter-spacing: -0.035em;
   text-transform: uppercase;
+  /* el degradé pinta solo dentro de la caja: sin este aire arriba se perdía la tilde de ÓRBITA */
+  padding-top: 0.16em;
+  margin-top: -0.16em;
   background: linear-gradient(180deg, #ffffff 0%, #d4d4d8 70%, #9a9aa2 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -2979,6 +2982,8 @@ button.catalog-card-link { background: none; border: 0; padding: 0; cursor: poin
   line-height: 0.88;
   letter-spacing: -0.045em;
   text-transform: uppercase;
+  padding-top: 0.16em;
+  margin-top: 0.44rem;
   background: linear-gradient(180deg, #ffffff 30%, #b9b9c2);
   -webkit-background-clip: text;
   background-clip: text;
@@ -3126,4 +3131,30 @@ button.catalog-card-link { background: none; border: 0; padding: 0; cursor: poin
 }
 @media (prefers-reduced-motion: reduce) {
   .case-cols i, .case-scroll, .case-overlay.is-open .case-scroll { transition: none; }
+}
+
+/* Destacados en pantallas verticales: los videos son 16:9 y a pantalla completa se recortaban hasta
+   quedar un pedazo del medio. Ahí el video va entero arriba, como una pantalla, y el texto abajo. */
+@media (max-aspect-ratio: 4/5) {
+  .feat-media {
+    background: radial-gradient(120% 60% at 50% 22%, #1a1a20 0%, #060607 70%);
+  }
+
+  .feat-poster,
+  .feat-video {
+    top: clamp(5.5rem, 15vh, 9rem);
+    left: 4vw;
+    width: 92vw;
+    height: calc(92vw * 9 / 16);
+    border-radius: 14px;
+    object-fit: cover;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  /* el oscurecido ya no tapa el video: solo la parte de abajo, donde va el texto */
+  .feat-media::after {
+    background:
+      linear-gradient(0deg, rgba(6, 6, 7, 0.9) 0%, rgba(6, 6, 7, 0) 45%),
+      rgba(6, 6, 7, calc(var(--dim) * 0.7));
+  }
 }
