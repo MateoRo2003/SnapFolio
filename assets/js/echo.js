@@ -1156,9 +1156,11 @@
     // la tarjeta del final: "+16" dibujado en un canvas, que la cinta usa como una imagen más
     const moreCard = document.createElement('canvas');
     const paintMore = () => {
-      moreCard.width = 720;
-      moreCard.height = 450;
+      // al mismo tamaño que las capturas (1440x900), así se ve igual de nítida
+      moreCard.width = 1440;
+      moreCard.height = 900;
       const g = moreCard.getContext('2d');
+      g.scale(2, 2);
       g.fillStyle = '#111113';
       g.fillRect(0, 0, 720, 450);
       g.fillStyle = '#ffffff';
@@ -1172,6 +1174,7 @@
       g.fillText((en ? 'MORE PROJECTS' : 'PROYECTOS MÁS').split('').join(' '), 360, 300);
       g.fillStyle = '#ffffff';
       g.fillText(en ? 'SEE THEM ALL ↗' : 'VER TODOS ↗', 360, 360);
+      scaled.delete(moreCard);
       dirty = true;
       wake();
     };
@@ -1183,6 +1186,37 @@
       im.onload = () => { dirty = true; wake(); };
       return im;
     });
+    // cada imagen se reescala una vez al ancho real de la tarjeta (en píxeles del dispositivo) con
+    // suavizado de calidad: después la cinta corta tiras casi 1:1 y el texto de las webs se ve nítido
+    const scaled = new Map(); // imagen → { w, canvas }
+    function sharp(img, w) {
+      const iw = img.naturalWidth || img.width;
+      const ih = img.naturalHeight || img.height;
+      if (!iw || !ih) return null;
+      const hit = scaled.get(img);
+      if (hit && hit.w === w) return hit.canvas;
+      const halve = (src, sw, sh) => {
+        const c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(sw));
+        c.height = Math.max(1, Math.round(sh));
+        const g = c.getContext('2d');
+        g.imageSmoothingQuality = 'high';
+        g.drawImage(src, 0, 0, c.width, c.height);
+        return c;
+      };
+      // de a mitades: una reducción grande de un saque saltea píxeles y el texto titila
+      let src = img;
+      let sw = iw;
+      let sh = ih;
+      while (sw / 2 >= w) {
+        src = halve(src, sw / 2, sh / 2);
+        sw = src.width;
+        sh = src.height;
+      }
+      const out = halve(src, w, (w * ih) / iw);
+      scaled.set(img, { w, canvas: out });
+      return out;
+    }
     let pos = 0;
     let target = 0;
     let dragging = false;
@@ -1243,6 +1277,7 @@
       }
       wCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
       wCtx.clearRect(0, 0, cw, ch);
+      wCtx.imageSmoothingQuality = 'high';
 
       // en el celular la tarjeta del centro ocupa casi todo el ancho y la onda es suave: con la curva
       // de escritorio la del medio quedaba retorcida y chica
@@ -1280,17 +1315,17 @@
         wCtx.closePath();
         wCtx.clip();
         const iw = img.naturalWidth || img.width;
-        const ready = iw && (img.complete || img === moreCard);
-        if (!ready) wCtx.fillStyle = '#1d1d22';
+        const src = iw && (img.complete || img === moreCard) ? sharp(img, Math.round(cardW * dpr)) : null;
+        if (!src) wCtx.fillStyle = '#1d1d22';
         for (let s = 0; s < slices; s++) {
           const a = strips[s];
           const b = strips[s + 1];
           // cada tira cubre de su borde más alto al más bajo; el recorte se lleva lo que sobra
           const y = Math.min(a.y, b.y);
           const hh = Math.max(a.y + a.h, b.y + b.h) - y;
-          if (ready) {
-            const srcW = iw / slices;
-            wCtx.drawImage(img, s * srcW, 0, srcW, img.naturalHeight || img.height, a.x, y, stripW + 0.8, hh);
+          if (src) {
+            const srcW = src.width / slices;
+            wCtx.drawImage(src, s * srcW, 0, srcW, src.height, a.x, y, stripW + 0.8, hh);
           } else {
             wCtx.fillRect(a.x, y, stripW + 0.8, hh);
           }
