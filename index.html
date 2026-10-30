@@ -596,7 +596,7 @@
               <div><dt>ROL</dt><dd>Desarrollador full stack</dd></div>
               <div><dt>STACK</dt><dd>Next.js 14 · NestJS · Prisma · Supabase · Groq</dd></div>
             </dl>
-            <button class="feat-cta" type="button" data-open-gallery="paperflix">VER CAPTURAS ↗</button>
+            <button class="feat-cta" type="button" data-open-case="paperflix">VER CASO ↗</button>
           </div>
         </div>
       </article>
@@ -614,7 +614,7 @@
               <div><dt>ROL</dt><dd>Desarrollador full stack</dd></div>
               <div><dt>STACK</dt><dd>Next.js 14 · Supabase · Framer Motion · React PDF</dd></div>
             </dl>
-            <button class="feat-cta" type="button" data-open-gallery="mipaperlux">VER CAPTURAS ↗</button>
+            <button class="feat-cta" type="button" data-open-case="mipaperlux">VER CASO ↗</button>
           </div>
         </div>
       </article>
@@ -846,6 +846,7 @@
               <span class="catalog-card-kind">EdTech · +3.200 Escuelas en Chile</span>
               <h3 class="catalog-card-title">Paperflix</h3>
               <p class="catalog-card-desc">Plataforma educativa gamificada con IA integrada (Groq). Next.js 14, NestJS, Prisma, Supabase.</p>
+              <button class="catalog-card-link" type="button" data-open-case="paperflix">Ver caso ↗</button>
             </div>
           </article>
           <article class="catalog-card">
@@ -872,6 +873,7 @@
               <span class="catalog-card-kind">Plataforma EdTech · Chile</span>
               <h3 class="catalog-card-title">MiPaperlux</h3>
               <p class="catalog-card-desc">Onboarding gamificado para docentes con seguimiento de progreso y certificados PDF.</p>
+              <button class="catalog-card-link" type="button" data-open-case="mipaperlux">Ver caso ↗</button>
             </div>
           </article>
           <article class="catalog-card">
@@ -1123,6 +1125,12 @@
       </div>
       <div class="echo-modal-body" id="galleryModalBody"></div>
     </div>
+  </div>
+
+  <!-- Caso de estudio (Paperflix / MiPaperlux): cortina de columnas y el caso adentro (echo.js) -->
+  <div class="case-overlay" id="caseOverlay" role="dialog" aria-modal="true" aria-labelledby="caseTitle" aria-hidden="true">
+    <div class="case-cols" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i></div>
+    <div class="case-scroll"></div>
   </div>
 
   <!-- Toast Notification -->

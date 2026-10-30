@@ -1403,6 +1403,154 @@
     });
   });
 
+  // Casos confidenciales (Paperflix, MiPaperlux): sin enlace público por contrato; se cuentan con su
+  // video, el enfoque y las capturas. Se abren con una cortina de columnas escalonadas, la misma idea
+  // que la entrada de Destacados, y al cerrar se vuelve al mismo lugar.
+  // (cada texto va en su propio nodo: i18n.js los traduce de a uno)
+  const CASES = {
+    paperflix: {
+      title: 'Paperflix',
+      kind: 'PLATAFORMA EDTECH · PAPERLUX, CHILE',
+      lead: 'Una biblioteca de recursos interactivos para cada materia, pensada para la pantalla táctil del aula y cargada con ayuda de IA.',
+      video: 'assets/video/paperflix.mp4',
+      poster: 'assets/img/portfolio/featured/paperflix.webp',
+      role: 'Desarrollador full stack',
+      stack: 'Next.js 14 · NestJS · Prisma · Supabase · Groq',
+      challenge: 'Los recursos interactivos que usan los docentes están repartidos en enlaces de distintos sitios, y la clase se da en una pantalla táctil grande, sin teclado ni mouse. Cargar y ordenar cada recurso a mano era lento, y encontrarlo en plena clase también.',
+      approach: 'Una biblioteca ordenada por materia y nivel, hecha para tocar: tarjetas grandes, un toque para abrir el recurso y un teclado virtual propio para buscar. Detrás, un panel donde el equipo de Paperlux carga y revisa el contenido.',
+      decisions: [
+        ['La IA completa cada ficha', 'Desde un enlace, el sistema lee la página (título, descripción, texto e imagen de portada) y Groq propone título, descripción, materia, nivel y etiquetas. El equipo solo revisa.'],
+        ['Importación masiva desde Excel', 'Una planilla con enlaces se convierte en recursos listos de una sola vez, en lugar de cargarlos uno por uno.'],
+        ['Hecha para la pantalla del aula', 'La interfaz y el teclado virtual están pensados para el dedo en una pantalla táctil grande, sin depender de teclado ni mouse.'],
+      ],
+      results: [['+3.200', 'escuelas en Chile'], ['60 %', 'menos tiempo para crear contenido']],
+      gallery: [1, 2, 3, 4, 5, 6].map((k) => `assets/img/portfolio/paperflix/${k}.png`),
+    },
+    mipaperlux: {
+      title: 'MiPaperlux',
+      kind: 'PLATAFORMA DOCENTE · PAPERLUX, CHILE',
+      lead: 'La plataforma del docente para su Paperlux: aprende a usarlo, crea actividades con IA, escribe sobre sus PDF y la institución sigue el avance en tiempo real.',
+      video: 'assets/video/mipaperlux.mp4',
+      poster: 'assets/img/portfolio/featured/mipaperlux.webp',
+      role: 'Desarrollador full stack',
+      stack: 'Next.js 14 · Supabase · Groq · pdf.js · pdf-lib · Framer Motion',
+      challenge: 'Cada institución que compra un Paperlux necesita que sus docentes lo usen de verdad: que aprendan el equipo, que tengan material para sus clases y que la institución pueda ver que se está usando.',
+      approach: 'Una sola plataforma para todo el recorrido del docente: capacitación autónoma con certificado, actividades creadas con IA, sus PDF editables con el lápiz y una comunidad para compartir. Y un panel para cada actor: institución, equipo comercial, soporte y administración.',
+      decisions: [
+        ['Capacitarse en menos de 30 minutos', 'Cinco módulos cortos, del encendido a la primera clase con alumnos, y un certificado al terminar.'],
+        ['IA que no deja al docente sin actividad', 'Las actividades se generan con Groq desde un tema o desde el PPT o PDF del docente. Si el modelo principal falla, está caído o devuelve un JSON inválido, una cadena de modelos de respaldo toma la posta.'],
+        ['El PDF del docente, editable', 'Las guías se ven con pdf.js y lo que el docente escribe y subraya con el lápiz se guarda en el mismo archivo con pdf-lib.'],
+      ],
+      results: [['7', 'tipos de actividades generadas con IA'], ['< 30 min', 'para aprender a usar el equipo']],
+      gallery: [1, 2, 3, 4].map((k) => `assets/img/portfolio/mipaperlux/${k}.png`),
+    },
+  };
+  const CASE_ORDER = Object.keys(CASES);
+  const caseEl = document.getElementById('caseOverlay');
+  const caseScroll = caseEl?.querySelector('.case-scroll');
+  let caseOpen = '';
+  let caseTimer = 0;
+
+  function renderCase(id) {
+    const c = CASES[id];
+    const n = CASE_ORDER.indexOf(id);
+    const next = CASE_ORDER[(n + 1) % CASE_ORDER.length];
+    const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const pad2 = (v) => String(v).padStart(2, '0');
+    caseScroll.innerHTML = `
+      <header class="case-top">
+        <span class="case-kicker"><span>CASO DE ESTUDIO</span> · ${pad2(n + 1)} / ${pad2(CASE_ORDER.length)}</span>
+        <button class="case-close" type="button" data-case-close><span>CERRAR</span> ✕</button>
+      </header>
+      <div class="case-wrap">
+        <p class="case-kind">${esc(c.kind)}</p>
+        <h2 class="case-title" id="caseTitle">${esc(c.title)}</h2>
+        <p class="case-lead">${esc(c.lead)}</p>
+        <div class="case-video"><video muted loop playsinline preload="none" poster="${c.poster}" src="${c.video}"></video></div>
+        <dl class="case-meta">
+          <div><dt>CLIENTE</dt><dd>Paperlux · Chile</dd></div>
+          <div><dt>ROL</dt><dd>${esc(c.role)}</dd></div>
+          <div><dt>STACK</dt><dd>${esc(c.stack)}</dd></div>
+          <div><dt>ENLACE</dt><dd>Confidencial: sin enlace público</dd></div>
+        </dl>
+        <section class="case-row"><h3>EL DESAFÍO</h3><p>${esc(c.challenge)}</p></section>
+        <section class="case-row"><h3>EL ENFOQUE</h3><p>${esc(c.approach)}</p></section>
+        <section class="case-row"><h3>DECISIONES</h3>
+          <ol class="case-decisions">${c.decisions.map(([t, d], i) => `<li><span class="case-num">${pad2(i + 1)}</span><b>${esc(t)}</b><p>${esc(d)}</p></li>`).join('')}</ol>
+        </section>
+        <section class="case-row"><h3>RESULTADO</h3>
+          <div class="case-results">${c.results.map(([v, l]) => `<div><strong>${esc(v)}</strong><span>${esc(l)}</span></div>`).join('')}</div>
+        </section>
+        <section class="case-gallery">
+          <div class="case-gallery-head"><h3>GALERÍA</h3>
+            <div class="case-arrows"><button type="button" data-case-scroll="-1" aria-label="Anterior">←</button><button type="button" data-case-scroll="1" aria-label="Siguiente">→</button></div>
+          </div>
+          <div class="case-strip">${c.gallery.map((src) => `<button type="button" class="case-shot" data-case-zoom="${src}"><img src="${src}" alt="${esc(c.title)}" loading="lazy"></button>`).join('')}</div>
+        </section>
+        <button class="case-next" type="button" data-case-open="${next}"><span>SIGUIENTE CASO</span><b>${esc(CASES[next].title)} →</b></button>
+      </div>
+      <div class="case-zoom" hidden><img alt=""></div>`;
+    localize(caseScroll);
+    caseScroll.scrollTop = 0;
+  }
+
+  function openCase(id) {
+    if (!caseEl || !CASES[id]) return;
+    clearTimeout(caseTimer);
+    const swapping = caseOpen !== '';
+    caseOpen = id;
+    renderCase(id);
+    caseEl.classList.remove('is-closing');
+    caseEl.classList.add('is-open');
+    caseEl.setAttribute('aria-hidden', 'false');
+    document.documentElement.style.overflow = 'hidden';
+    // el video del destacado se pausa: suena (y gasta) uno solo
+    document.querySelectorAll('.feat-video').forEach((v) => v.pause());
+    const v = caseScroll.querySelector('video');
+    caseTimer = setTimeout(() => { if (!prefersReducedMotion) v?.play().catch(() => {}); }, swapping ? 0 : 500);
+    caseScroll.querySelector('[data-case-close]')?.focus({ preventScroll: true });
+  }
+
+  function closeCase() {
+    if (!caseEl || !caseOpen) return;
+    caseOpen = '';
+    clearTimeout(caseTimer);
+    caseScroll.querySelector('video')?.pause();
+    caseEl.classList.add('is-closing');
+    caseEl.classList.remove('is-open');
+    caseEl.setAttribute('aria-hidden', 'true');
+    caseTimer = setTimeout(() => {
+      caseEl.classList.remove('is-closing');
+      caseScroll.innerHTML = '';
+      document.documentElement.style.overflow = '';
+      syncFeatVideos();
+    }, prefersReducedMotion ? 0 : 900);
+  }
+
+  document.querySelectorAll('[data-open-case]').forEach((btn) => {
+    btn.addEventListener('click', () => openCase(btn.dataset.openCase));
+  });
+  caseEl?.addEventListener('click', (e) => {
+    const t = e.target.closest('button, .case-zoom');
+    if (!t) return;
+    if (t.matches('[data-case-close]')) closeCase();
+    else if (t.matches('[data-case-open]')) openCase(t.dataset.caseOpen);
+    else if (t.matches('[data-case-scroll]')) {
+      const strip = caseScroll.querySelector('.case-strip');
+      strip.scrollBy({ left: Number(t.dataset.caseScroll) * strip.clientWidth * 0.8, behavior: 'smooth' });
+    } else if (t.matches('[data-case-zoom]')) {
+      const zoom = caseScroll.querySelector('.case-zoom');
+      zoom.querySelector('img').src = t.dataset.caseZoom;
+      zoom.hidden = false;
+    } else if (t.matches('.case-zoom')) t.hidden = true;
+  });
+  window.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || !caseOpen) return;
+    const zoom = caseScroll.querySelector('.case-zoom');
+    if (zoom && !zoom.hidden) zoom.hidden = true;
+    else closeCase();
+  });
+
   const featSection = document.getElementById('works');
   const featPin = featSection?.querySelector('.featured-pin');
   const featCurtain = document.getElementById('featCurtain');
