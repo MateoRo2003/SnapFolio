@@ -2333,27 +2333,126 @@
     }
   });
 
-  // Technical Articles reader inside Articles Modal (uses window.ARTICLES from articles.js if loaded)
-  document.querySelectorAll('[data-read-article]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const id = btn.getAttribute('data-read-article');
-      const readerModal = document.getElementById('articleReaderModal');
-      const readerTitle = document.getElementById('articleReaderTitle');
-      const readerBody = document.getElementById('articleReaderBody');
-      if (!readerModal || !readerBody) return;
+  // Artículos: la tarjeta crece desde donde está hasta llenar la pantalla y se vuelve el artículo
+  // (como la tarjeta de la ruleta en Destacados). Portada con la noche, título grande, barra de
+  // lectura y el siguiente al final. Al cerrar, se achica de vuelta a su tarjeta.
+  const artView = document.getElementById('articleView');
+  const artScroll = artView?.querySelector('.art-scroll');
+  const artBar = artView?.querySelector('.art-progress i');
+  const artCards = Array.from(document.querySelectorAll('[data-read-article]')).map((btn) => ({
+    id: btn.getAttribute('data-read-article'),
+    card: btn.closest('.catalog-card') || btn,
+  }));
+  let artOpen = null; // la tarjeta de la que salió
+  let artTimer = 0;
+  let artOverflow = '';
+  // cada artículo se lleva un pedazo distinto del cielo
+  const ART_SKY = ['18% 12%', '62% 8%', '84% 30%', '40% 22%', '8% 40%', '72% 46%', '30% 6%', '52% 34%'];
 
-      // en inglés, la versión de articles.en.js
-      const item = (i18n.lang === 'en' && window.ARTICLES_EN?.[id]) || window.ARTICLES?.[id];
-      if (item) {
-        if (readerTitle) readerTitle.textContent = item.category || (i18n.lang === 'en' ? 'Article' : 'Artículo');
-        readerBody.innerHTML = `<h2 style="font-size:1.65rem;margin-bottom:0.5rem">${item.title}</h2><p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted-dark);margin-bottom:1.5rem">${item.meta}</p><div style="line-height:1.75;color:rgba(255,255,255,0.86)">${item.body}</div>`;
-      } else {
-        readerBody.innerHTML = `<p>Artículo seleccionado (#${id}).</p>`;
-        localize(readerBody);
-      }
-      readerModal.classList.add('is-open');
-    });
+  const rectClip = (el) => {
+    const r = el.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    return `inset(${Math.max(0, r.top).toFixed(1)}px ${Math.max(0, vw - r.right).toFixed(1)}px ${Math.max(0, vh - r.bottom).toFixed(1)}px ${Math.max(0, r.left).toFixed(1)}px round 14px)`;
+  };
+
+  function renderArticle(id) {
+    const item = (i18n.lang === 'en' && window.ARTICLES_EN?.[id]) || window.ARTICLES?.[id];
+    if (!item) return false;
+    const k = artCards.findIndex((a) => a.id === id);
+    const next = artCards[(k + 1) % artCards.length];
+    const nextItem = (i18n.lang === 'en' && window.ARTICLES_EN?.[next.id]) || window.ARTICLES?.[next.id];
+    const sky = ART_SKY[(Number(id) || k) % ART_SKY.length];
+    artScroll.innerHTML = `
+      <header class="art-top">
+        <span class="art-kicker">${item.category || ''}</span>
+        <button class="case-close" type="button" data-art-close><span>CERRAR</span> ✕</button>
+      </header>
+      <section class="art-hero" style="--sky:${sky}">
+        <div class="art-hero-in">
+          <p class="art-meta">${item.meta || ''}</p>
+          <h2 class="art-title" id="articleViewTitle">${item.title}</h2>
+        </div>
+      </section>
+      <article class="art-body">${item.body}</article>
+      ${nextItem ? `<button class="case-next art-next" type="button" data-art-next="${next.id}"><span>SIGUIENTE ARTÍCULO</span><b>${nextItem.title} →</b></button>` : ''}`;
+    localize(artScroll.querySelector('.art-top'));
+    localize(artScroll.querySelector('.art-next') || artScroll);
+    artScroll.scrollTop = 0;
+    if (artBar) artBar.style.transform = 'scaleX(0)';
+    return true;
+  }
+
+  function openArticle(id, card) {
+    if (!artView || !renderArticle(id)) return;
+    clearTimeout(artTimer);
+    artOpen = card;
+    artOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    artView.classList.remove('is-closing', 'is-in');
+    artView.setAttribute('aria-hidden', 'false');
+    artView.classList.add('is-open');
+    if (prefersReducedMotion || !card) {
+      artView.style.clipPath = '';
+      artView.classList.add('is-in');
+    } else {
+      artView.style.transition = 'none';
+      artView.style.clipPath = rectClip(card);
+      void artView.offsetWidth; // que arranque desde la tarjeta
+      artView.style.transition = '';
+      artView.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
+      artTimer = setTimeout(() => artView.classList.add('is-in'), 380);
+    }
+    artScroll.querySelector('[data-art-close]')?.focus({ preventScroll: true });
+  }
+
+  function closeArticle() {
+    if (!artView?.classList.contains('is-open')) return;
+    clearTimeout(artTimer);
+    artView.classList.remove('is-in');
+    artView.classList.add('is-closing');
+    artView.setAttribute('aria-hidden', 'true');
+    const card = artOpen && artOpen.getClientRects().length ? artOpen : null;
+    if (!prefersReducedMotion && card) artView.style.clipPath = rectClip(card);
+    artTimer = setTimeout(() => {
+      artView.classList.remove('is-open', 'is-closing');
+      artView.style.clipPath = '';
+      artScroll.innerHTML = '';
+      document.documentElement.style.overflow = artOverflow;
+      artOpen = null;
+    }, prefersReducedMotion || !card ? 250 : 760);
+  }
+
+  artCards.forEach(({ id, card }) => {
+    card.classList.add('is-article');
+    card.addEventListener('click', () => openArticle(id, card));
   });
+  artView?.addEventListener('click', (e) => {
+    const t = e.target.closest('button');
+    if (!t) return;
+    if (t.matches('[data-art-close]')) closeArticle();
+    else if (t.matches('[data-art-next]')) {
+      const nextCard = artCards.find((a) => a.id === t.dataset.artNext);
+      artView.classList.remove('is-in');
+      setTimeout(() => {
+        renderArticle(t.dataset.artNext);
+        artOpen = nextCard?.card || artOpen;
+        artView.classList.add('is-in');
+      }, prefersReducedMotion ? 0 : 280);
+    }
+  });
+  artScroll?.addEventListener('scroll', () => {
+    const max = artScroll.scrollHeight - artScroll.clientHeight;
+    if (artBar) artBar.style.transform = `scaleX(${max > 0 ? (artScroll.scrollTop / max).toFixed(4) : 0})`;
+    // pasada la portada, la barra de arriba se vuelve sólida y el texto no se mezcla con ella
+    artView.classList.toggle('is-reading', artScroll.scrollTop > artScroll.clientHeight * 0.45);
+  }, { passive: true });
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && artView?.classList.contains('is-open')) {
+      e.stopImmediatePropagation();
+      closeArticle();
+    }
+  }, true);
 
   // Formulario de contacto: lo manda la función de Vercel (api/contact.js); si no está disponible
   // (otro hosting, sin configurar o error), abre el correo de quien escribe como antes

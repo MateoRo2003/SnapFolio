@@ -1107,14 +1107,10 @@
   </div>
 
   <!-- Modal 4: Article Reader -->
-  <div class="echo-modal" id="articleReaderModal" role="dialog" aria-modal="true" aria-labelledby="articleReaderTitle">
-    <div class="echo-modal-box">
-      <div class="echo-modal-head">
-        <span class="echo-modal-title" id="articleReaderTitle">ARTÍCULO</span>
-        <button class="echo-modal-close" type="button" data-close-modal>CERRAR ✕</button>
-      </div>
-      <div class="echo-modal-body" id="articleReaderBody"></div>
-    </div>
+  <!-- Artículo: la tarjeta crece hasta llenar la pantalla y se vuelve el artículo (echo.js) -->
+  <div class="art-view" id="articleView" role="dialog" aria-modal="true" aria-labelledby="articleViewTitle" aria-hidden="true">
+    <div class="art-progress" aria-hidden="true"><i></i></div>
+    <div class="art-scroll"></div>
   </div>
 
   <!-- Modal 5: System Screenshots Gallery (Paperflix / MiPaperlux) -->
