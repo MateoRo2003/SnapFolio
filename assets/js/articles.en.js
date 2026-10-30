@@ -112,5 +112,81 @@ window.ARTICLES_EN = {
         <h6>The role of technology</h6>
         <p>The goal of these tools is not to replace human judgment but to free it from repetitive tasks. By handing digital paperwork to AI, educators and administrators can spend their time designing better learning strategies.</p>
       `
+          },
+          13: {
+            category: "Automation & AI",
+            title: "How I connected an AI chatbot to WhatsApp Business without it making up prices",
+            meta: "July 2026 &nbsp;·&nbsp; 8 min read",
+            body: `
+        <p>For Petty Joyas, an online jewelry store, I built a bot that answers on the store's WhatsApp number: prices, stock, shipping and order status with real data from the database. It remembers the conversation and knows when to hand it over to a person.</p>
+        <h6>The official API, not a shortcut</h6>
+        <p>I used the <strong>WhatsApp Cloud API</strong>, Meta's official route: a verified business number, free within its limits. Unofficial libraries that emulate WhatsApp Web break the terms and can get the number banned, and for a store that number is a sales channel.</p>
+        <p>Setup happens once: an app in Meta for Developers, the number and business verified in Business Manager, a permanent token and the webhook pointing to the site's API.</p>
+        <h6>A webhook that only accepts Meta</h6>
+        <p>Meta verifies the webhook with a challenge (<code>hub_challenge</code>) and then signs every message. The Laravel backend validates the <code>X-Hub-Signature-256</code> header with the App Secret and drops any payload that doesn't come from Meta.</p>
+        <pre><code>GET  /api/whatsapp/webhook   # verification (hub_challenge)
+POST /api/whatsapp/webhook   # incoming messages, signed
+POST /api/whatsapp/send      # manual reply from the dashboard</code></pre>
+        <h6>The AI queries the database, it doesn't memorize it</h6>
+        <p>I don't load the whole catalog into the model. I give it <strong>tools</strong> (function calling) and it decides which one to use: <code>buscar_productos</code>, <code>detalle_producto</code>, <code>info_envios</code>, <code>info_pagos</code>, <code>estado_pedido</code>… Each one is a real database query, so the bot never invents a price or a stock level.</p>
+        <p>The engine is Groq with Llama models plus a list of fallback models: if one is overloaded or retired, the answer comes from the next. The tool loop is capped at five rounds so the model can't keep calling the same thing in circles.</p>
+        <h6>One brain for the website and WhatsApp</h6>
+        <p>The site chat and the WhatsApp bot share the same AI service. The difference is memory: on WhatsApp I keep the history per number (the last 16 messages, for 3 hours of inactivity), so if the customer already gave their order number, they aren't asked again.</p>
+        <p>The WhatsApp number is also matched to registered customers by comparing the last 10 digits, to tolerate phones saved with prefixes or dashes.</p>
+        <h6>When a person steps in</h6>
+        <p>If the customer writes something like “I want to talk to a person”, the team gets an email, once per conversation so the inbox doesn't flood. From the dashboard you can <strong>pause the AI</strong> in that chat and reply by hand; the bot stays out meanwhile.</p>
+        <p>One design rule: the bot informs and hands off, but never moves money or stock on its own. Purchases still go through checkout.</p>
+        <h6>Details that add up</h6>
+        <p>The dashboard also configures the welcome message, the <em>ice breakers</em> (conversation starter buttons) and slash commands, which sync with Meta. They're pure WhatsApp features: they work even with the bot off.</p>
+      `
+          },
+          14: {
+            category: "Marketing & social",
+            title: "Social media in an e-commerce: Meta Pixel, Instagram and link previews that sell",
+            meta: "August 2026 &nbsp;·&nbsp; 6 min read",
+            body: `
+        <p>Integrating social media into a store isn't adding Instagram icons to the footer. At Petty Joyas I worked on three fronts: letting Meta know what happens in the store to optimize ads, keeping the Instagram feed on the site without breaking anything, and making every product look good when someone shares it.</p>
+        <h6>Meta Pixel with the events that matter</h6>
+        <p>The base script (init and <code>PageView</code>) goes once in the layout. Conversion events live in a separate module, so no component repeats the “does <code>fbq</code> exist?” logic:</p>
+        <ul>
+          <li><strong>ViewContent</strong>: someone opens a product page.</li>
+          <li><strong>AddToCart</strong>: they add it to the cart.</li>
+          <li><strong>InitiateCheckout</strong>: they reach checkout with a cart.</li>
+          <li><strong>Purchase</strong>: confirmed purchase, with the real value in pesos.</li>
+        </ul>
+        <pre><code>trackPurchase({ orderNumber, items, value });
+// eventID = order number</code></pre>
+        <p>The <code>Purchase</code> event carries the order number as its <code>eventID</code>. If the same event ever also arrives through the server-side Conversions API, Meta counts it once. And if the customer reloads the “order confirmed” page, the purchase isn't recorded again.</p>
+        <h6>The Instagram feed, without breaking the site</h6>
+        <p>I first tried a third-party widget and it injected global CSS that broke other parts of the site, like the cart and the mobile menu. I replaced it with the <strong>official Instagram embed</strong>: free, no API key, and each post lives in its own iframe, isolated from the rest.</p>
+        <p>Post links are managed from the admin panel, so the client changes the gallery without touching code. And a performance detail: the list is memoized by content, because otherwise every re-render reprocessed the embeds and fired repeated requests to Instagram.</p>
+        <h6>Previews that sell</h6>
+        <p>A good share of a small store's sales start on WhatsApp or an Instagram DM. Every product page generates its own <strong>Open Graph</strong> metadata with the name, short description and first photo, so pasting the link in a chat shows the piece with its photo instead of a generic logo.</p>
+        <h6>Takeaway</h6>
+        <p>Social media works better when the store speaks its language: well-named events for ads, isolated content so the design doesn't break, and metadata built for how people actually share.</p>
+      `
+          },
+          15: {
+            category: "Full Stack",
+            title: "A point of sale that keeps selling without internet",
+            meta: "September 2026 &nbsp;·&nbsp; 7 min read",
+            body: `
+        <p>A physical store can't stop charging because the WiFi went down. For the Petty Joyas shop I built a point of sale that works offline: it records sales, stock adjustments and new products, and syncs everything when the connection comes back.</p>
+        <h6>Barcode scanners without an SDK</h6>
+        <p>USB and Bluetooth scanners behave like a keyboard: they “type” the code and press Enter. No proprietary SDK needed. The frontend captures that input and the backend resolves the code with a single endpoint:</p>
+        <pre><code>GET /api/products/lookup?barcode=7791234567890</code></pre>
+        <p>It accepts EAN-13, EAN-8, Code 128, Code 39 and QR, and the barcode column is unique and indexed so lookups are instant.</p>
+        <h6>Sync events, not databases</h6>
+        <p>The key idea: I don't copy the shop's database to the cloud. The point of sale (a PWA) stores <strong>business events</strong> in IndexedDB: sale created, stock adjusted, product created or edited, inventory counted. When the connection returns, it sends them in order to the API.</p>
+        <pre><code>POST /api/sync/events   # one event or a batch
+→ { id, status: "accepted" | "duplicate" | "error" }</code></pre>
+        <h6>Idempotency: the rule that prevents double sales</h6>
+        <p>Every event is born with a UUID generated on the device. If the connection drops mid-request and the point of sale retries, the backend recognizes the <code>id</code> and marks it <code>duplicate</code> instead of recording the sale again.</p>
+        <p>Events are processed in the order they happened in the shop, and each type has its own backend action: the sale goes to sale creation, the adjustment to stock movements, and so on.</p>
+        <h6>Stock as history</h6>
+        <p>Stock isn't a number that gets overwritten: it's the sum of its movements. So if the same item sold offline in the shop and online at the same time, nothing is lost: both movements are recorded and the conflict is visible and resolved with data, not blindly.</p>
+        <h6>Result</h6>
+        <p>The shop sells the same with or without internet, and the online and physical stores share one inventory without anyone entering anything twice.</p>
+      `
           }
         };

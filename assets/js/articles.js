@@ -230,5 +230,81 @@ window.ARTICLES = {
         <h6>El rol de la tecnología</h6>
         <p>El objetivo de estas herramientas no es reemplazar el criterio humano, sino liberarlo de tareas repetitivas. Al delegar la burocracia digital a la IA, los educadores y administradores pueden dedicar su tiempo a diseñar mejores estrategias de aprendizaje.</p>
       `
+          },
+          13: {
+            category: "Automatización e IA",
+            title: "Cómo conecté un chatbot con IA a WhatsApp Business sin que invente precios",
+            meta: "Julio 2026 &nbsp;·&nbsp; 8 min de lectura",
+            body: `
+        <p>Para Petty Joyas, una joyería online, armé un bot que atiende por el número de WhatsApp del negocio: responde precios, stock, envíos y el estado de un pedido con datos reales de la base, recuerda la charla y sabe cuándo pasarle la conversación a una persona.</p>
+        <h6>La API oficial, no un atajo</h6>
+        <p>Usé <strong>WhatsApp Cloud API</strong>, la vía oficial de Meta: número empresarial verificado y gratis dentro de sus límites. Las librerías no oficiales que emulan WhatsApp Web violan los términos y pueden hacer que bloqueen el número, que para un comercio es su canal de ventas.</p>
+        <p>El alta se hace una sola vez: app en Meta for Developers, número y negocio verificados en Business Manager, un token permanente y el webhook apuntando a la API del sitio.</p>
+        <h6>Un webhook que solo acepta a Meta</h6>
+        <p>Meta verifica el webhook con un desafío (<code>hub_challenge</code>) y después firma cada mensaje. El backend en Laravel valida el header <code>X-Hub-Signature-256</code> con el App Secret y descarta cualquier payload que no venga de Meta.</p>
+        <pre><code>GET  /api/whatsapp/webhook   # verificación (hub_challenge)
+POST /api/whatsapp/webhook   # mensajes entrantes, con firma
+POST /api/whatsapp/send      # respuesta manual desde el panel</code></pre>
+        <h6>La IA consulta la base, no la memoriza</h6>
+        <p>No le cargo el catálogo entero al modelo. Le doy <strong>herramientas</strong> (function calling) y él decide cuál usar: <code>buscar_productos</code>, <code>detalle_producto</code>, <code>info_envios</code>, <code>info_pagos</code>, <code>estado_pedido</code>… Cada una es una consulta real a la base. Así el bot nunca inventa un precio ni un stock.</p>
+        <p>El motor es Groq con modelos Llama y una lista de modelos de respaldo: si uno está saturado o fue dado de baja, la respuesta sale con el siguiente. El loop de herramientas tiene un tope de cinco vueltas, para que el modelo no se quede llamando lo mismo en círculo.</p>
+        <h6>Un solo cerebro para la web y para WhatsApp</h6>
+        <p>El chat del sitio y el bot de WhatsApp usan el mismo servicio de IA. La diferencia es la memoria: en WhatsApp guardo el historial por número (los últimos 16 mensajes, durante 3 horas sin actividad), así si el cliente ya dio su número de pedido, no se lo vuelvo a pedir.</p>
+        <p>Además, el número de WhatsApp se cruza con los clientes registrados comparando los últimos 10 dígitos, para tolerar teléfonos cargados con 0, con 15 o con guiones.</p>
+        <h6>Cuándo entra una persona</h6>
+        <p>Si el cliente escribe algo como “quiero hablar con una persona”, el equipo recibe un mail, una sola vez por conversación para no llenar la bandeja. Desde el panel se puede <strong>pausar la IA</strong> en esa charla y responder a mano; el bot no se mete mientras tanto.</p>
+        <p>Una regla de diseño: el bot informa y deriva, pero nunca mueve dinero ni stock por su cuenta. Las compras siguen pasando por el checkout.</p>
+        <h6>Detalles que suman</h6>
+        <p>Desde el panel también se configuran el mensaje de bienvenida, los <em>ice breakers</em> (los botones de inicio de conversación) y los comandos con barra, que se sincronizan con Meta. Son puro WhatsApp: funcionan aunque el bot esté apagado.</p>
+      `
+          },
+          14: {
+            category: "Marketing y redes",
+            title: "Redes sociales en un e-commerce: Pixel de Meta, Instagram y vistas previas que venden",
+            meta: "Agosto 2026 &nbsp;·&nbsp; 6 min de lectura",
+            body: `
+        <p>Integrar redes en una tienda no es poner íconos de Instagram en el footer. En Petty Joyas trabajé tres frentes: que Meta sepa qué pasa en la tienda para optimizar los anuncios, que el feed de Instagram viva en el sitio sin romper nada, y que cada producto se vea bien cuando alguien lo comparte.</p>
+        <h6>Pixel de Meta con los eventos que importan</h6>
+        <p>El script base (inicialización y <code>PageView</code>) va una sola vez en el layout. Los eventos de conversión están en un módulo aparte, así ningún componente repite la lógica de “¿existe <code>fbq</code>?”:</p>
+        <ul>
+          <li><strong>ViewContent</strong>: alguien abre la ficha de un producto.</li>
+          <li><strong>AddToCart</strong>: lo suma al carrito.</li>
+          <li><strong>InitiateCheckout</strong>: llega al checkout con el carrito armado.</li>
+          <li><strong>Purchase</strong>: compra confirmada, con el valor real y en pesos.</li>
+        </ul>
+        <pre><code>trackPurchase({ orderNumber, items, value });
+// eventID = número de pedido</code></pre>
+        <p>El <code>Purchase</code> lleva como <code>eventID</code> el número de pedido. Así, si algún día el mismo evento llega también por la Conversions API desde el servidor, Meta lo cuenta una sola vez. Y si el cliente recarga la página de “pedido confirmado”, la compra no se registra de nuevo.</p>
+        <h6>El feed de Instagram, sin romper el sitio</h6>
+        <p>Primero probé un widget de terceros y metía un CSS global que rompía otras partes del sitio, como el carrito y el menú en celular. Lo reemplacé por el <strong>embed oficial de Instagram</strong>: gratis, sin API key, y cada publicación vive en su propio iframe, aislada del resto.</p>
+        <p>Los links de las publicaciones se cargan desde el panel de administración, así el cliente cambia la galería sin tocar código. Y un detalle de rendimiento: la lista se memoriza por contenido, porque sin eso cada re-render volvía a procesar los embeds y disparaba pedidos repetidos a Instagram.</p>
+        <h6>Vistas previas que venden</h6>
+        <p>Buena parte de las ventas de una tienda chica se empiezan por WhatsApp o por un mensaje privado de Instagram. Cada ficha de producto genera sus metadatos de <strong>Open Graph</strong> con el nombre, la descripción corta y la primera foto. Así, al pegar el link en un chat, aparece la joya con su foto y no un logo genérico.</p>
+        <h6>Lo que me llevo</h6>
+        <p>Las redes funcionan mejor cuando la tienda les habla en su idioma: eventos bien nombrados para los anuncios, contenido aislado para no romper el diseño y metadatos pensados para cómo se comparte de verdad.</p>
+      `
+          },
+          15: {
+            category: "Full Stack",
+            title: "Un punto de venta que sigue vendiendo sin internet",
+            meta: "Septiembre 2026 &nbsp;·&nbsp; 7 min de lectura",
+            body: `
+        <p>Una tienda física no puede dejar de cobrar porque se cayó el WiFi. Para el local de Petty Joyas armé un punto de venta que funciona sin conexión: registra ventas, ajustes de stock y altas de productos, y lo sincroniza todo cuando vuelve internet.</p>
+        <h6>Lectores de código sin SDK</h6>
+        <p>Los lectores USB y Bluetooth se comportan como un teclado: “tipean” el código y un Enter. No hace falta ningún SDK propietario. El frontend captura esa entrada y el backend resuelve el código con un solo endpoint:</p>
+        <pre><code>GET /api/products/lookup?barcode=7791234567890</code></pre>
+        <p>Acepta EAN-13, EAN-8, Code 128, Code 39 y QR, y la columna del código es única e indexada para que la búsqueda sea instantánea.</p>
+        <h6>Sincronizar eventos, no bases de datos</h6>
+        <p>La idea clave: no copio la base del local a la nube. El punto de venta (una PWA) guarda <strong>eventos de negocio</strong> en IndexedDB: venta creada, stock ajustado, producto creado o editado, inventario contado. Al volver la conexión, los manda en orden a la API.</p>
+        <pre><code>POST /api/sync/events   # un evento o un lote
+→ { id, status: "accepted" | "duplicate" | "error" }</code></pre>
+        <h6>Idempotencia: la regla que evita ventas dobles</h6>
+        <p>Cada evento nace con un UUID generado en el dispositivo. Si la conexión se corta a mitad de un envío y el punto de venta reintenta, el backend reconoce el <code>id</code> y lo marca como <code>duplicate</code> en vez de registrar la venta otra vez.</p>
+        <p>Los eventos se procesan en el orden en que ocurrieron en el local, y cada tipo tiene su propia acción en el backend: la venta va a la creación de ventas, el ajuste a los movimientos de stock, y así.</p>
+        <h6>El stock como historial</h6>
+        <p>El stock no es un número que se pisa: es la suma de sus movimientos. Por eso, si se vendió lo mismo en el local sin conexión y en la web al mismo tiempo, no se pierde nada: los dos movimientos quedan registrados y el conflicto se ve y se resuelve con datos, no a ciegas.</p>
+        <h6>Resultado</h6>
+        <p>El local vende igual con o sin internet, y la tienda online y la física comparten un solo inventario sin que nadie tenga que cargar nada dos veces.</p>
+      `
           }
         };
