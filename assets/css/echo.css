@@ -1753,7 +1753,7 @@ main > section:not(.hero-section) {
    ========================================================================== */
 .featured-section {
   position: relative;
-  height: 380vh;
+  height: 340vh;
   margin-top: -100vh;
   color: var(--text-dark);
 }

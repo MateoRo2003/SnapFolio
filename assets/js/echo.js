@@ -1495,8 +1495,10 @@
   }
 
   // los tramos de la sección fija, en pantallas: girar, agrandar y después uno por cada cambio
-  const PH_SPIN = 0.2; // quieto, mientras gira (el resto lo da la entrada, que también queda quieta)
-  const PH_GROW = 0.2; // casi nada: la tarjeta se abre sola
+  // la ruleta gira y se abre durante la entrada (la escena ya queda quieta mientras sube la sección):
+  // sumarle tramos propios dejaba al primer proyecto el doble de scroll que a los demás
+  const PH_SPIN = 0;
+  const PH_GROW = 0;
   const PH_STEP = 0.8; // (la altura de la sección en el CSS es 1 + la suma de los tramos)
 
   // los videos: se crean cuando su proyecto está cerca y corre solo el del frente
