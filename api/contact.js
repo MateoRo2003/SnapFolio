@@ -39,7 +39,8 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error("Error enviando correo:", error);
-    return res.status(500).json({ success: false, error: "Error al enviar el correo" });
+    // el código de nodemailer (EAUTH, ECONNECTION...) dice qué falló sin exponer datos
+    return res.status(500).json({ success: false, error: "Error al enviar el correo", code: error.code || null });
   }
   }
 
