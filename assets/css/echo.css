@@ -3392,3 +3392,39 @@ button.catalog-card-link { background: none; border: 0; padding: 0; cursor: poin
 }
 .person-link:hover { text-decoration-color: #ffffff; }
 .person-link:hover::after { transform: translate(2px, -2px); }
+
+/* Sobre mí: formación y certificados (los que tienen certificado público llevan link) */
+.about-learn { margin-top: 1.1rem; display: grid; gap: 0.15rem; }
+.about-learn .about-craft { margin-bottom: 0.45rem; gap: 0.5rem 0.9rem; }
+.about-certs { gap: 0.45rem !important; }
+.cert-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.78);
+  white-space: nowrap;
+}
+a.cert-chip { color: #ffffff; border-color: rgba(255, 255, 255, 0.45); transition: background 0.2s, color 0.2s; }
+a.cert-chip i { font-style: normal; opacity: 0.7; }
+a.cert-chip:hover { background: #ffffff; color: #111113; }
+/* sobre la luz del haz los chips llevan un fondo oscuro; en el celular van en una fila que se desliza */
+.cert-chip { background: rgba(9, 9, 11, 0.45); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+@media (max-width: 768px) {
+  .about-certs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 0.2rem;
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
+  .about-certs::-webkit-scrollbar { display: none; }
+  .about-certs b, .about-certs .line { flex-shrink: 0; }
+}
