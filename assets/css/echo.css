@@ -3428,3 +3428,43 @@ a.cert-chip:hover { background: #ffffff; color: #111113; }
   .about-certs::-webkit-scrollbar { display: none; }
   .about-certs b, .about-certs .line { flex-shrink: 0; }
 }
+
+/* Sobre mí en el celular: la foto del haz ocupa solo el hueco de arriba (el muñequito no queda detrás del
+   texto) y se funde con el fondo; "CERTIFICADOS" va arriba y los certificados se deslizan en su fila */
+.cert-list { display: contents; }
+@media (max-width: 768px) {
+  .about-card .about-card-img {
+    inset: 0 0 auto 0;
+    height: var(--beam-h, 58%);
+    -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 98%);
+    mask-image: linear-gradient(180deg, #000 62%, transparent 98%);
+  }
+  .about-card-content { gap: 1rem; }
+  .about-learn { margin-top: 0.9rem; }
+  .about-bottom { align-items: stretch; }
+  .about-bottom > * { min-width: 0; max-width: 100%; }
+  .about-learn { grid-template-columns: minmax(0, 1fr); }
+  .about-certs {
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+    gap: 0.55rem !important;
+  }
+  .about-certs .line { display: none; }
+  .cert-list {
+    display: flex;
+    gap: 0.45rem;
+    width: calc(100% + clamp(1.25rem, 3vw, 2.6rem));
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+    -webkit-mask-image: linear-gradient(90deg, #000 82%, transparent);
+    mask-image: linear-gradient(90deg, #000 82%, transparent);
+  }
+  .cert-list::-webkit-scrollbar { display: none; }
+  .cert-chip { flex-shrink: 0; }
+  .about-craft { row-gap: 0.35rem; }
+}

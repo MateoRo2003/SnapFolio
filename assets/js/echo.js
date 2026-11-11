@@ -754,6 +754,19 @@
      así se agranda con ella; las motas se ubican con el mismo encuadre (cover, 50% 45%).
      Solo dibuja con el "About me" arriba y en pantalla, a 30 cuadros por segundo.
      ======================================================================== */
+  // En el celular la foto del haz ocupa solo el hueco libre de arriba de la tarjeta (el CSS usa --beam-h):
+  // se mide dónde empieza el texto de abajo para que el muñequito nunca quede detrás de las letras.
+  const aboutCardEl = document.getElementById('aboutCard');
+  const aboutBottomEl = aboutCardEl?.querySelector('.about-bottom');
+  if (aboutCardEl && aboutBottomEl) {
+    const fitBeam = () => aboutCardEl.style.setProperty('--beam-h', `${Math.round(aboutBottomEl.offsetTop * 1.08)}px`);
+    fitBeam();
+    window.addEventListener('resize', fitBeam);
+    window.addEventListener('load', fitBeam);
+    document.fonts?.ready.then(fitBeam);
+    new MutationObserver(fitBeam).observe(aboutBottomEl, { childList: true, subtree: true, characterData: true });
+  }
+
   const aboutDust = document.getElementById('aboutDust');
   if (aboutDust && !prefersReducedMotion) {
     const ctx = aboutDust.getContext('2d');
