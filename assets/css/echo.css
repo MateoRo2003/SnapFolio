@@ -3470,17 +3470,15 @@ a.cert-chip:hover { background: #ffffff; color: #111113; }
 }
 
 /* ==========================================================================
-   TECNOLOGÍAS: una marquesina por área. Letra Outfit gigante en contorno; la que tocás se llena de
-   blanco y la fila se frena para leerla. Solo se anima transform; echo.js pone --dur a cada fila
-   (misma velocidad para todas) y .is-live mientras la sección está en pantalla.
+   TECNOLOGÍAS: grilla de logos por área, sobre el fondo claro de GitHub. Los logos van en gris y,
+   al pasar el mouse, toman el color de su marca (--c). En pantallas táctiles (sin hover) van en color.
+   Entran en cascada cuando la sección aparece (echo.js pone .is-in; --i es el orden de cada logo).
    ========================================================================== */
 .tech-section {
   position: relative;
-  background: var(--bg-dark);
-  color: var(--text-light);
-  padding: clamp(4.5rem, 14vh, 9rem) 0 clamp(4rem, 12vh, 8rem);
-  border-top: 1px solid var(--border-dark);
-  overflow: hidden;
+  background: var(--bg-light);
+  color: var(--text-dark);
+  padding: clamp(4rem, 12vh, 7.5rem) var(--pad-x) clamp(3.5rem, 10vh, 6.5rem);
 }
 
 .tech-head {
@@ -3488,11 +3486,8 @@ a.cert-chip:hover { background: #ffffff; color: #111113; }
   align-items: flex-end;
   justify-content: space-between;
   gap: 1.5rem;
-  padding: 0 var(--pad-x);
-  margin-bottom: clamp(2rem, 6vh, 3.75rem);
+  margin-bottom: clamp(2.25rem, 6vh, 3.5rem);
 }
-
-.tech-head .section-huge-label { color: #ffffff; }
 
 .tech-head-side {
   display: grid;
@@ -3505,104 +3500,127 @@ a.cert-chip:hover { background: #ffffff; color: #111113; }
   max-width: 30ch;
   font-size: 0.86rem;
   line-height: 1.5;
-  color: var(--text-muted-dark);
+  color: var(--text-muted-light);
 }
 
 .tech-count {
   font-family: var(--font-mono);
   font-size: 0.66rem;
   letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--text-dark);
 }
 
-.tech-row {
+.tech-areas {
   display: grid;
-  grid-template-columns: clamp(8.5rem, 13vw, 12rem) minmax(0, 1fr);
-  align-items: center;
-  border-top: 1px solid var(--border-dark);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 5vh, 3rem) clamp(1.5rem, 3.5vw, 3.5rem);
 }
 
-.tech-row:last-child { border-bottom: 1px solid var(--border-dark); }
+.tech-area {
+  display: grid;
+  align-content: start;
+  gap: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border-light);
+}
 
 .tech-label {
   display: flex;
   align-items: baseline;
   gap: 0.7rem;
-  padding-left: var(--pad-x);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.7);
-  white-space: nowrap;
+  color: var(--text-dark);
 }
 
 .tech-label b {
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-muted-light);
 }
 
-.tech-track {
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-}
-
-.tech-belt {
-  display: flex;
-  width: max-content;
-  animation: techSlide var(--dur, 60s) linear infinite;
-  animation-play-state: paused;
-}
-
-.tech-row.is-rev .tech-belt { animation-direction: reverse; }
-.tech-section.is-live .tech-belt { animation-play-state: running; }
-.tech-section.is-live .tech-row:hover .tech-belt { animation-play-state: paused; }
-
-/* cuatro copias iguales: correr una copia (25 %) deja todo igual y la vuelta no se nota */
-@keyframes techSlide {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-25%, 0, 0); }
-}
-
-.tech-group {
-  display: flex;
-  align-items: center;
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.6rem;
   list-style: none;
 }
 
-.tech-item {
-  padding: 0.12em 0;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(2.6rem, 6.4vw, 6.2rem);
-  line-height: 1.08;
-  letter-spacing: -0.035em;
-  text-transform: uppercase;
+.tech-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  aspect-ratio: 1 / 0.92;
+  padding: 0.6rem 0.35rem;
+  border-radius: 14px;
+  background: var(--bg-light-elev);
+  border: 1px solid var(--border-light);
+  transition: transform 0.35s var(--ease-out-expo), box-shadow 0.35s var(--ease-out-expo), border-color 0.25s;
+}
+
+.tech-ico {
+  width: clamp(1.6rem, 2.3vw, 2.1rem);
+  height: clamp(1.6rem, 2.3vw, 2.1rem);
+  font-size: clamp(1.6rem, 2.3vw, 2.1rem);
+  line-height: 1;
+  fill: currentColor;
+  color: #8d8d94;
+  transition: color 0.25s ease, transform 0.35s var(--ease-out-expo);
+}
+
+.tech-tile span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
-  /* contorno: trazo de 2px pintado debajo del relleno (color del fondo), así las letras de Outfit que se
-     dibujan con trazos cruzados no muestran sus líneas internas y queda solo el borde de afuera */
-  color: var(--bg-dark);
-  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.4);
-  paint-order: stroke fill;
-  transition: color 0.25s ease, -webkit-text-stroke-color 0.25s ease, text-shadow 0.25s ease;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted-light);
+  transition: color 0.25s;
 }
 
-.tech-item:hover {
-  color: #ffffff;
-  -webkit-text-stroke-color: #ffffff;
-  text-shadow: 0 0 28px rgba(255, 255, 255, 0.35);
+.tech-tile:hover {
+  transform: translateY(-4px);
+  border-color: rgba(17, 17, 19, 0.16);
+  box-shadow: 0 14px 30px -18px rgba(17, 17, 19, 0.35);
 }
 
-.tech-sep {
-  flex-shrink: 0;
-  width: 0.38rem;
-  height: 0.38rem;
-  margin: 0 clamp(1rem, 2.4vw, 2.2rem);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
+.tech-tile:hover .tech-ico {
+  color: var(--c);
+  transform: scale(1.08);
+}
+
+.tech-tile:hover span { color: var(--text-dark); }
+
+/* entrada en cascada (solo opacity/transform) */
+.tech-section:not(.is-in) .tech-tile {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.tech-section.is-in .tech-tile {
+  transition: opacity 0.6s ease calc(var(--i) * 18ms), transform 0.6s var(--ease-out-expo) calc(var(--i) * 18ms),
+    box-shadow 0.35s var(--ease-out-expo), border-color 0.25s;
+}
+
+.tech-section.is-in .tech-tile:hover { transition-delay: 0s; }
+
+/* táctil: sin hover, los logos van con su color */
+@media (hover: none) {
+  .tech-ico { color: var(--c); }
+  .tech-tile span { color: var(--text-dark); }
+}
+
+@media (max-width: 1100px) {
+  .tech-areas { grid-template-columns: 1fr; }
+  .tech-grid { grid-template-columns: repeat(auto-fill, minmax(5.6rem, 1fr)); }
 }
 
 @media (max-width: 768px) {
+  .tech-section { padding-top: 3.5rem; }
   .tech-head {
     flex-direction: column;
     align-items: flex-start;
@@ -3611,23 +3629,13 @@ a.cert-chip:hover { background: #ffffff; color: #111113; }
     justify-items: start;
     text-align: left;
   }
-  .tech-row {
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
-    padding-top: 0.9rem;
+  .tech-areas { gap: 1.75rem; }
+  .tech-area { gap: 0.7rem; }
+  .tech-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.4rem;
   }
-  .tech-item { font-size: clamp(2.2rem, 11vw, 3.4rem); }
-  /* en el celular no hay hover: el contorno va un poco más visible */
-  .tech-item { -webkit-text-stroke-color: rgba(255, 255, 255, 0.5); }
-  .tech-section { padding-top: 3.5rem; }
-}
-
-/* sin movimiento: cada área queda quieta y las tecnologías se acomodan en renglones */
-@media (prefers-reduced-motion: reduce) {
-  .tech-belt { animation: none; width: auto; padding: 0 var(--pad-x) 0.6rem 0; }
-  .tech-group { flex-wrap: wrap; }
-  .tech-group[aria-hidden] { display: none; }
-  .tech-group .tech-sep:last-child { display: none; }
-  .tech-track { -webkit-mask-image: none; mask-image: none; }
-  .tech-item { font-size: clamp(1.6rem, 3.6vw, 3rem); }
+  .tech-tile { aspect-ratio: auto; min-height: 4.1rem; border-radius: 11px; gap: 0.4rem; padding: 0.55rem 0.2rem 0.5rem; }
+  .tech-ico { width: 1.35rem; height: 1.35rem; font-size: 1.35rem; }
+  .tech-tile span { font-size: 0.5rem; letter-spacing: -0.02em; line-height: 1.15; text-align: center; white-space: normal; overflow-wrap: break-word; }
 }

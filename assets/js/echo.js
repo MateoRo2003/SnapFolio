@@ -326,7 +326,7 @@
      ======================================================================== */
   const header = document.getElementById('echoHeader');
   const navPills = Array.from(document.querySelectorAll('.nav-pill'));
-  const darkIds = ['about', 'experience', 'stack', 'works', 'hablemos', 'contact'];
+  const darkIds = ['about', 'experience', 'works', 'hablemos', 'contact'];
   let lastY = window.scrollY;
 
   // los enlaces internos (#seccion) bajan suave hasta el punto justo de cada una. El hero queda
@@ -2502,20 +2502,18 @@
     });
   }
 
-  // Tecnologías: todas las filas a la misma velocidad (px por segundo), sea cual sea su largo,
-  // y solo se mueven mientras la sección está en pantalla.
+  // Tecnologías: los logos entran en cascada la primera vez que la sección aparece en pantalla.
   const techSection = document.getElementById('stack');
   if (techSection) {
-    const belts = [...techSection.querySelectorAll('.tech-belt')];
-    const fitTech = () => {
-      const pxs = window.innerWidth < 769 ? 38 : 60;
-      for (const belt of belts) belt.style.setProperty('--dur', `${(belt.scrollWidth / 4 / pxs).toFixed(1)}s`);
-    };
-    fitTech();
-    window.addEventListener('resize', fitTech);
-    document.fonts?.ready.then(fitTech);
-    document.getElementById('langSwitchBtn')?.addEventListener('click', () => requestAnimationFrame(fitTech));
-    new IntersectionObserver(([e]) => techSection.classList.toggle('is-live', e.isIntersecting)).observe(techSection);
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) techSection.classList.add('is-in');
+    else {
+      const io = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return;
+        techSection.classList.add('is-in');
+        io.disconnect();
+      }, { threshold: 0.15 });
+      io.observe(techSection);
+    }
   }
 
   // Idioma (ES / EN): el botón muestra el otro idioma; los textos los cambia i18n.js
