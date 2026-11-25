@@ -2516,6 +2516,37 @@
     }
   }
 
+  // Vista para reclutadores: se abre con "¿Sos reclutador?" o directo con el link mateorojas.com.ar/#reclutador
+  // (para pegar en el CV y en las postulaciones). Al cerrarla, el link vuelve a quedar limpio.
+  const recModal = document.getElementById('reclutador');
+  if (recModal) {
+    const REC_HASH = /^#(reclutador|recruiter)$/i;
+    const setRecWa = () => {
+      const text = i18n.lang === 'en'
+        ? "Hi Mateo, I saw your portfolio and I'd like to talk to you about a job opening."
+        : 'Hola Mateo, vi tu portfolio y quiero hablarte de una búsqueda laboral.';
+      recModal.querySelectorAll('[data-wa-rec]').forEach((a) => { a.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`; });
+    };
+    setRecWa();
+    document.addEventListener('echo:lang', setRecWa);
+    const openRec = () => {
+      closeMenu();
+      setFab(false);
+      recModal.classList.add('is-open');
+      recModal.querySelector('.rec-body')?.scrollTo(0, 0);
+      if (!REC_HASH.test(location.hash)) history.replaceState(null, '', '#reclutador');
+      recModal.querySelector('.rec-close')?.focus({ preventScroll: true });
+    };
+    document.querySelectorAll('[data-open-rec]').forEach((btn) => btn.addEventListener('click', (e) => { e.preventDefault(); openRec(); }));
+    new MutationObserver(() => {
+      if (!recModal.classList.contains('is-open') && REC_HASH.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+    }).observe(recModal, { attributes: true, attributeFilter: ['class'] });
+    // los casos y "Proyectos destacados" se ven en la página: la vista se cierra para dejarlos ver
+    recModal.querySelectorAll('[data-open-case], [data-rec-go]').forEach((el) => el.addEventListener('click', () => recModal.classList.remove('is-open')));
+    if (REC_HASH.test(location.hash)) openRec();
+    window.addEventListener('hashchange', () => { if (REC_HASH.test(location.hash)) openRec(); });
+  }
+
   // Idioma (ES / EN): el botón muestra el otro idioma; los textos los cambia i18n.js
   const langBtn = document.getElementById('langSwitchBtn');
   if (langBtn) {

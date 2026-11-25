@@ -136,6 +136,7 @@
     </nav>
 
     <div class="header-actions">
+      <button class="nav-rec" type="button" data-open-rec>¿SOS RECLUTADOR?</button>
       <button class="nav-cta" type="button" data-open-modal="contactModal">CONTACTAME</button>
       <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navSheet" aria-label="Abrir menú">MENÚ</button>
       <button class="lang-switch" id="langSwitchBtn" type="button" title="Cambiar idioma ES / EN">EN</button>
@@ -153,6 +154,7 @@
 
   <!-- el menú en tablet y celular (los botones del navbar no entran) -->
   <div class="nav-sheet" id="navSheet" aria-hidden="true">
+    <button class="nav-sheet-rec" type="button" data-open-rec>¿SOS RECLUTADOR? VER MI PERFIL EN 1 MINUTO →</button>
     <nav class="nav-sheet-links" aria-label="Menú">
       <a href="#home"><span>01</span>INICIO</a>
       <a href="#about"><span>02</span>SOBRE MÍ</a>
@@ -167,6 +169,7 @@
   <!-- contacto siempre a mano: aparece al salir del hero y se va cuando ya se ve otra llamada a contactar -->
   <div class="contact-fab" id="contactFab">
     <div class="fab-menu" id="fabMenu">
+      <button class="fab-option" type="button" data-open-rec><i class="bi bi-person-badge"></i><span>SOY RECLUTADOR</span></button>
       <a class="fab-option" data-wa href="https://wa.me/5493757673226" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i><span>WHATSAPP</span></a>
       <button class="fab-option" type="button" data-open-modal="contactModal"><i class="bi bi-chat-text"></i><span>DEJAR UN MENSAJE</span></button>
       <button class="fab-option" type="button" data-copy-email><i class="bi bi-envelope"></i><span>COPIAR EMAIL</span></button>
@@ -856,6 +859,7 @@
         <a class="footer-pill" href="https://www.linkedin.com/in/mateo-rojas-ba696926b/" target="_blank" rel="noopener">LINKEDIN</a>
         <button class="footer-pill" type="button" data-copy-email>COPIAR EMAIL</button>
         <button class="footer-pill" type="button" data-open-modal="articlesModal">ESCRITOS Y BLOG</button>
+        <button class="footer-pill" type="button" data-open-rec>¿SOS RECLUTADOR?</button>
         <button class="footer-pill primary" type="button" data-open-modal="contactModal">CONTACTAME</button>
       </div>
     </div>
@@ -871,6 +875,118 @@
        ==================================================================== -->
 
   <!-- Modal 1: Contact Form -->
+  <!-- Vista para reclutadores: el portfolio en un minuto, como una hoja de CV.
+       Se abre con "¿Sos reclutador?" o directo con mateorojas.com.ar/#reclutador (echo.js) -->
+  <div class="echo-modal rec-modal" id="reclutador" role="dialog" aria-modal="true" aria-labelledby="recTitle">
+    <div class="rec-box">
+      <div class="rec-head">
+        <span class="rec-head-title">VISTA PARA RECLUTADORES · 1 MINUTO</span>
+        <button class="rec-close" type="button" data-close-modal>CERRAR ✕</button>
+      </div>
+
+      <div class="rec-body">
+        <aside class="rec-side">
+          <h2 class="rec-name" id="recTitle">Mateo Rojas Arce</h2>
+          <p class="rec-role">Desarrollador Full Stack SSr</p>
+          <p class="rec-role-sub">Next.js · NestJS · PostgreSQL · Integración de IA</p>
+
+          <dl class="rec-facts">
+            <div><dt>EXPERIENCIA</dt><dd>+3 años, proyectos en producción</dd></div>
+            <div><dt>MODALIDAD</dt><dd>Remoto, híbrido o presencial</dd></div>
+            <div><dt>UBICACIÓN</dt><dd>Puerto Iguazú, Misiones, Argentina (GMT−3)</dd></div>
+            <div><dt>IDIOMAS</dt><dd>Español nativo · Portugués intermedio · Inglés técnico (lectura)</dd></div>
+          </dl>
+
+          <div class="rec-actions">
+            <a class="rec-btn is-primary" href="assets/files/CV-Mateo-Rojas-Arce.pdf" download="CV-Mateo-Rojas-Arce.pdf"><i class="bi bi-download" aria-hidden="true"></i><span>DESCARGAR CV (PDF)</span></a>
+            <a class="rec-btn is-wide" href="assets/files/CV-Mateo-Rojas-Arce.pdf" target="_blank" rel="noopener"><i class="bi bi-file-earmark-text" aria-hidden="true"></i><span>VER CV EN EL NAVEGADOR</span></a>
+            <a class="rec-btn" href="https://www.linkedin.com/in/mateo-rojas-ba696926b/" target="_blank" rel="noopener"><i class="bi bi-linkedin" aria-hidden="true"></i><span>LINKEDIN</span></a>
+            <a class="rec-btn" href="https://github.com/MateoRo2003" target="_blank" rel="noopener"><i class="bi bi-github" aria-hidden="true"></i><span>GITHUB</span></a>
+            <a class="rec-btn" data-wa-rec href="https://wa.me/5493757673226" target="_blank" rel="noopener"><i class="bi bi-whatsapp" aria-hidden="true"></i><span>WHATSAPP</span></a>
+            <button class="rec-btn" type="button" data-copy-email><i class="bi bi-envelope" aria-hidden="true"></i><span>COPIAR EMAIL</span></button>
+          </div>
+        </aside>
+
+        <div class="rec-main">
+          <section class="rec-block">
+            <h3 class="rec-label">EN POCAS PALABRAS</h3>
+            <p class="rec-summary">Desarrollador Full Stack con más de 3 años construyendo productos que están en producción. Lideré plataformas educativas usadas por más de 3.200 escuelas en Chile e integro IA (OpenAI, Gemini, Groq) en sistemas reales. Vengo del análisis de sistemas: relevo requisitos, diseño la solución y la entrego de punta a punta.</p>
+          </section>
+
+          <ul class="rec-stats">
+            <li><b>3.200+</b><span>escuelas usan Paperflix</span></li>
+            <li><b>−60 %</b><span>tiempo de generación de contenido con IA</span></li>
+            <li><b>+15</b><span>proyectos en producción</span></li>
+            <li><b>−40 %</b><span>tiempo de búsqueda en S.I.T.I. con IA</span></li>
+          </ul>
+
+          <section class="rec-block">
+            <h3 class="rec-label">EXPERIENCIA</h3>
+            <ol class="rec-jobs">
+              <li>
+                <span class="rec-when">ABR 2026 — HOY</span>
+                <div>
+                  <p class="rec-job"><b>Co-Founder y Lead Full Stack</b> · Órbita</p>
+                  <p class="rec-job-text">Plataforma SaaS multi-tenant para comercios: tiendas online, pedidos, pagos con Mercado Pago, asistente de IA y WhatsApp Business API.</p>
+                </div>
+              </li>
+              <li>
+                <span class="rec-when">ENE — NOV 2026</span>
+                <div>
+                  <p class="rec-job"><b>Líder de proyecto y Full Stack</b> · Paperlux, Chile (remoto)</p>
+                  <p class="rec-job-text">Lideré MiPaperlux (plataforma docente con IA y telemetría en tiempo real) y desarrollé Paperflix, en más de 3.200 escuelas.</p>
+                </div>
+              </li>
+              <li>
+                <span class="rec-when">MAR 2026 — HOY</span>
+                <div>
+                  <p class="rec-job"><b>Docente de Ciencia de Datos e IA, y de Robótica</b> · Instituto Superior Crecer e Instituto Itec</p>
+                </div>
+              </li>
+              <li>
+                <span class="rec-when">JUN 2023 — MAR 2026</span>
+                <div>
+                  <p class="rec-job"><b>Analista funcional y Full Stack</b> · Freelance</p>
+                  <p class="rec-job-text">Más de 15 proyectos en producción: sistemas de gestión, e-commerce y plataformas SaaS.</p>
+                </div>
+              </li>
+              <li>
+                <span class="rec-when">SEP — NOV 2025</span>
+                <div>
+                  <p class="rec-job"><b>Pasantía en Infraestructura y Soporte IT</b> · Hotel Gran Iguazú</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+
+          <section class="rec-block">
+            <h3 class="rec-label">STACK PRINCIPAL</h3>
+            <ul class="rec-chips">
+              <li>Next.js</li><li>React</li><li>TypeScript</li><li>NestJS</li><li>Node.js</li><li>PostgreSQL</li><li>Supabase</li><li>Prisma</li><li>Docker</li><li>Vercel</li><li>OpenAI · Gemini · Groq</li><li>n8n</li>
+            </ul>
+            <p class="rec-also">También: Angular, Vue.js, .NET, Laravel, PHP, Python, AWS y Cloudflare.</p>
+          </section>
+
+          <section class="rec-block">
+            <h3 class="rec-label">FORMACIÓN</h3>
+            <p class="rec-edu"><b>Técnico Superior en Análisis de Sistemas</b> · IAES, 2023 — 2025</p>
+            <p class="rec-edu"><b>Licenciatura en Gestión de Recursos Tecnológicos</b> · UGD, en curso</p>
+          </section>
+
+          <section class="rec-block">
+            <h3 class="rec-label">PARA VER</h3>
+            <div class="rec-links">
+              <button class="rec-link" type="button" data-open-case="paperflix">Caso Paperflix ↗</button>
+              <button class="rec-link" type="button" data-open-case="mipaperlux">Caso MiPaperlux ↗</button>
+              <a class="rec-link" href="https://orbita.site" target="_blank" rel="noopener">Órbita en vivo ↗</a>
+              <a class="rec-link" href="#works" data-rec-go>Proyectos destacados ↓</a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="echo-modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
     <div class="echo-modal-box">
       <div class="echo-modal-head">
