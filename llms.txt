@@ -38,5 +38,5 @@ IA: integración de modelos GPT, Groq, automatización con n8n, MCP
 - Web: https://mateorojas.com.ar
 - Email: rojas.mateo.web@gmail.com
 - GitHub: https://github.com/MateoRo2003
-- LinkedIn: https://linkedin.com/in/mateo-rojas
+- LinkedIn: https://www.linkedin.com/in/mateo-rojas-ba696926b/
 - Ubicación: Puerto Iguazú, Misiones, Argentina
